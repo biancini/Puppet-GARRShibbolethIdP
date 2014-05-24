@@ -1,19 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<list key="installedFeatures">
+		<item value="com.puppetlabs.geppetto.product:4.1.0.v20140215-1425"/>
+		<item value="com.puppetlabs.geppetto.puppetdb:4.1.0.v20140128-0831"/>
+		<item value="com.puppetlabs.geppetto:4.1.0.v20140215-1425"/>
+		<item value="org.eclipse.egit:3.0.3.201309161630-r"/>
+		<item value="org.eclipse.emf.common.ui:2.8.0.v20130902-0605"/>
+		<item value="org.eclipse.emf.common:2.9.1.v20130827-0309"/>
+		<item value="org.eclipse.emf.ecore.edit:2.8.0.v20130902-0605"/>
+		<item value="org.eclipse.emf.ecore:2.9.1.v20130827-0309"/>
+		<item value="org.eclipse.emf.edit.ui:2.9.0.v20130902-0605"/>
+		<item value="org.eclipse.emf.edit:2.9.0.v20130902-0605"/>
+		<item value="org.eclipse.jgit:3.0.3.201309161630-r"/>
+		<item value="org.eclipse.rcp:4.3.1.v20130911-1000"/>
+		<item value="org.eclipse.team.svn:1.1.1.I20130816-1700"/>
+		<item value="org.polarion.eclipse.team.svn.connector.svnkit17:3.0.5.I20140122-1700"/>
+		<item value="org.polarion.eclipse.team.svn.connector:3.0.5.I20140122-1700"/>
+	</list>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="390" key="DIALOG_Y_ORIGIN"/>
+		<item value="612" key="DIALOG_X_ORIGIN"/>
+	</section>
 	<section name="org.eclipse.ui.internal.ide.dialogs.ProjectContentsLocationArea">
 		<item value="/home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/garr-common/puppetlabs/apache" key="OUTSIDE_LOCATION"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
 	</section>
 	<section name="ExternalProjectImportWizard">
 		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="/home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/puppetlabs"/>
 			<item value="/home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/garr-common/garr"/>
 			<item value="/home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/garr"/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
 			<item value=""/>
 		</list>
+	</section>
+	<section name="CleanDialogSettings">
+		<item value="583" key="DIALOG_WIDTH"/>
+		<item value="378" key="DIALOG_Y_ORIGIN"/>
+		<item value="393" key="DIALOG_HEIGHT"/>
+		<item value="711" key="DIALOG_X_ORIGIN"/>
+		<item value="true" key="TOGGLE_SELECTED"/>
 	</section>
 	<section name="NewWizardAction">
 	</section>
