@@ -1,0 +1,35 @@
+dn: uid=test,ou=people,<%= @basedn %>
+objectClass: inetOrgPerson
+objectClass: eduPerson
+objectClass: schacPersonalCharacteristics
+objectClass: schacLinkageIdentifiers
+objectClass: schacContactLocation
+objectClass: schacEmployeeInfo
+objectClass: schacExperimentalOC
+objectClass: schacEntryMetadata
+uid: test
+userPassword: pass
+sn: User
+givenName: Test
+cn: Test User
+displayName: Test User
+schacDateOfBirth: 19000101
+schacYearOfBirth: 1900
+schacPlaceOfBirth: Roma
+schacPersonalUniqueID: urn:schac:personalUniqueID:IT:CF:TSTSRU00A01H501K
+street: Via di Prova, 1
+l: Roma
+postalCode: 00100
+st: Roma
+mail: test@<%= @domain_name %>
+telephoneNumber: 06000000
+schacPersonalPosition: urn:schac:personalPosition:IT:<%= @domain_name %>:Utente di test
+ou: Dipartimento IT
+o: <%= @metadata_information['it']['nameOrg'] %>
+eduPersonOrgDN: o=<%= @metadata_information['it']['nameOrg'] %>,<%= @basedn %>
+eduPersonOrgUnitDN: ou=Dipartimento IT,o=<%= @metadata_information['it']['nameOrg'] %>,<%= @basedn %>
+schacHomeOrganization: <%= @domain_name %>
+schacHomeOrganizationType: urn:schac:homeOrganizationType:IT:Research hospital
+eduPersonAffiliation: member
+eduPersonNickname: test
+eduPersonEntitlement: urn:mace:internet2:terena:nl:garr:service

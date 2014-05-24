@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE template SYSTEM "../template.dtd">
+
+<template>
+   <askcontainer>1</askcontainer>
+   <description>Identity Provider: User modification</description>
+   <icon>ldap-user.png</icon>
+   <invalid>0</invalid>
+   <rdn>uid</rdn>
+   <regexp>^uid=.*,ou=people,dc=.*</regexp>
+   <title>Identity Provider: User modification</title>
+   <visible>1</visible>
+
+   <objectClasses>
+      <objectClass id="inetOrgPerson"></objectClass>
+      <objectClass id="eduPerson"></objectClass>
+      <objectClass id="schacPersonalCharacteristics"></objectClass>
+      <objectClass id="schacLinkageIdentifiers"></objectClass>
+      <objectClass id="schacContactLocation"></objectClass>
+      <objectClass id="schacEmployeeInfo"></objectClass>
+      <objectClass id="schacExperimentalOC"></objectClass>
+      <objectClass id="schacEntryMetadata"></objectClass>
+   </objectClasses>
+   <attributes>
+
+      <attribute id="sn">
+         <hint>Example: Rossi</hint>
+         <display>Surname *</display>
+         <icon>ldap-uid.png</icon>
+         <onchange>=autoFill(cn;%givenName% %sn%)</onchange>
+         <order>1</order>
+         <page>1</page>
+      </attribute>
+      
+      <attribute id="givenName">
+         <hint>Example: Mario</hint>
+         <display>Name *</display>
+         <icon>ldap-uid.png</icon>
+         <onchange>=autoFill(cn;%givenName% %sn%)</onchange>
+         <order>2</order>
+         <page>1</page>
+      </attribute>
+      
+      <attribute id="cn">
+         <hint>Example: Mario Rossi</hint>
+         <display>Name and Surname</display>
+         <icon>ldap-uid.png</icon>
+         <order>3</order>
+         <onchange>=autoFill(displayName;%cn%)</onchange>
+         <page>1</page>
+         <spacer>1</spacer>
+      </attribute>
+      
+      <attribute id="displayName">
+         <display>Display name</display>
+         <order>4</order>
+         <page>1</page>
+         <spacer>1</spacer>
+      </attribute>
+      
+      <attribute id="mail">
+         <hint>Example: mario.rossi@<%= @domain_name %></hint>
+         <display>E-mail address *</display>
+         <icon>mail.png</icon>
+         <order>5</order>
+         <page>1</page>
+      </attribute>
+      
+      <attribute id="o">
+         <hint>Example: IRCCS-ZS of Milan</hint>
+         <display>Organization *</display>
+         <icon>ldap-ou.png</icon>
+         <onchange>=autoFill(eduPersonOrgDN;o=%o%,<%= @basedn %>)</onchange>
+         <value><%= @metadata_information['it']['nameOrg'] %></value>
+         <order>6</order>
+         <page>1</page>
+      </attribute>
+      
+      <attribute id="eduPersonOrgDN">
+         <order>7</order>
+         <page>1</page>
+         <value>o=<%= @metadata_information['it']['nameOrg'] %>,<%= @basedn %></value>
+      </attribute>
+      
+      <attribute id="schacHomeOrganization">
+         <display>schacHomeOrganization</display>
+         <hint>Example: <%= @domain_name %></hint>
+         <icon>home-big.png</icon>
+         <order>8</order>
+         <value><%= @domain_name %></value>
+         <page>1</page>
+      </attribute>
+      
+      <attribute id="schacHomeOrganizationType">
+         <display>schacHomeOrganizationType</display>
+         <hint>Example: urn:schac:homeOrganizationType:int:library</hint>
+         <icon>home-big.png</icon>
+         <order>9</order>
+         <value>urn:schac:homeOrganizationType:int:library</value>
+         <page>1</page>
+      </attribute>
+
+      <attribute id="eduPersonAffiliation">
+         <display>eduPersonAffiliation *</display>
+         <hint>Example: member</hint>
+         <icon>schema-big.png</icon>
+         <order>10</order>
+         <value>member</value>
+         <page>1</page>
+      </attribute>
+
+      <attribute id="eduPersonEntitlement">
+         <display>eduPersonEntitlement</display>
+         <hint>Example: urn:mace:internet2:terena:nl:garr:service</hint>
+         <order>11</order>
+         <icon>schema-big.png</icon>
+         <page>1</page>
+      </attribute>
+
+   </attributes>
+</template>

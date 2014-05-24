@@ -1,0 +1,110 @@
+#!/usr/bin/env ruby
+
+require 'ldap'
+require "rexml/document"
+
+# BEGIN CONFIGURATION PARAMETERS
+basedn     = "<%= @basedn %>"
+adminuser  = "<%= @rootdn %>"
+ldappasswd = "<%= @rootldappw %>"
+ldapsrv    = "<%= @ldap_host %>"
+searchuser = "<%= @searchuser %>"
+idphome    = "/opt/shibboleth-idp"
+fqdn       = "<%= @idpfqdn %>"
+ssl        = <%= @use_ssl %>
+tls        = <%= @use_tls %>
+# END   CONFIGURATION PARAMETERS	
+
+ldapport = 0
+if ldapsrv.include?(':')
+  ldapport = ldapsrv.split(':')[1].to_i
+  ldapsrv = ldapsrv.split(':')[0]
+end
+
+if (ssl == true)
+  if ldapport == 0
+  	ldapport = LDAP::LDAPS_PORT
+  end
+  conn = LDAP::SSLConn.new(ldapsrv, ldapport, start_tls = false) or raise puts("LDAP SSL Connection failed")
+elsif (tls == true)
+  if ldapport == 0
+  	ldapport = LDAP::LDAPS_PORT
+  end
+  conn = LDAP::SSLConn.new(ldapsrv, ldapport, start_tls = true) or raise puts("LDAP TLS Connection failed")
+else
+  if ldapport == 0
+  	ldapport = LDAP::LDAP_PORT
+  end
+  conn = LDAP::Conn.new(ldapsrv, ldapport) or raise puts("LDAP Plain Connection failed")
+end
+
+user_found = false
+wrong_attribute = false
+
+begin
+    aaclicommand = "#{idphome}/bin/aacli.sh --issuer=https://#{fqdn}/idp/shibboleth --principal=test --configDir=#{idphome}/conf"
+    aaclioutput = %x[bash -c "source /etc/environment; export JAVA_HOME; #{aaclicommand}"]
+    if !($? == 0)
+      puts "check_aacli: CRITICAL. Error while executing aacli command."
+      puts aaclioutput
+      exit 2
+    end
+
+    xmlstring = ""
+    addtostring = false
+    aaclioutput.each_line { |line|
+       addtostring = true if line.include?("<?xml")
+       xmlstring = "#{xmlstring}\n#{line}" if addtostring
+    }
+
+    # Open the XML string and create a new xmldoc to modify it
+    xmldoc = REXML::Document.new xmlstring
+    user_found = false
+    # Perform a search, with the base DN 'resource[:ldif_search]', 
+    # the scope LDAP::LDAP_SCOPE_BASE (Search only the base node)
+    # the search filter '(objectclass=*)' ==> any objectclass
+    # the attributes that the search should return ( ['*'] == All Attributes)
+    attrs = ['sn',
+        'givenName',
+        'cn',
+        'mail',
+        'eduPersonScopedAffiliation',
+        'eduPersonTargetedID',
+        'eduPersonPrincipalName']
+
+   conn.search("#{searchuser},#{basedn}", LDAP::LDAP_SCOPE_BASE, '(objectclass=*)', attrs) do |entry|
+      entry.attrs.each do |saml_attr|
+         value = entry.vals("#{saml_attr}")
+         #puts " #{saml_attr} : #{value} \n"
+         #fail("Attribute #{saml_attr} not release") unless entry.vals("#{saml_attr}").to_s == REXML::XPath.match(xmldoc, "//saml2:Attribute[@FriendlyName='#{saml_attr}']/saml2:AttributeValue/text()" ).to_s
+         wrong_attribute = true if entry.vals("#{saml_attr}").to_s != REXML::XPath.match(xmldoc, "//saml2:Attribute[@FriendlyName='#{saml_attr}']/saml2:AttributeValue/text()" ).to_s
+      end
+              
+      user_found = true
+   end
+   # If the search fails an LDAP::ResultError exception will raise up
+   # The LDAP::ResultError will be saved into 'err' variable
+   rescue LDAP::ResultError => err
+      fail("Ldap Search for user 'test' is failed with  error: #{err}")
+   # In case of an error, the new, bind or unbind methods raise an LDAP::Error exception
+   # The LDAP::Error will be saved into 'msg' variable
+   rescue LDAP::Error => msg
+      # If an LDAP::Error exception rises up, Puppet show that exception message into its exception error 
+      raise(Puppet::Error, "Error while executing LDAP search for uid=test,ou=people,#{basedn}: #{msg}")
+end
+
+# Finally unbind the LDAP connection
+conn.unbind
+
+if (user_found == true)
+   if (wrong_attribute == false)
+      puts "check_aacli: OK. User found with the correct attributes."
+      exit 0
+   else
+      puts "check_aacli: WARNING. User found but with wrong attributes."
+      exit 1
+   end
+else 
+   puts "check_aacli: CRITICAL. User not found."
+   exit 2
+end

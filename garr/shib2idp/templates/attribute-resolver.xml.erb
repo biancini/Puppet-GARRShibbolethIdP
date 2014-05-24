@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This file is an EXAMPLE configuration file.  While the configuration presented in this 
+    example file is functional, it isn't very interesting.  However, there are lots of example
+    attributes, encoders, and a couple example data connectors.
+    
+    Not all attribute definitions, data connectors, or principal connectors are demonstrated.
+    Deployers should refer to the Shibboleth 2 documentation for a complete list of components 
+    and their options.
+-->
+<resolver:AttributeResolver xmlns:resolver="urn:mace:shibboleth:2.0:resolver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                            xmlns:pc="urn:mace:shibboleth:2.0:resolver:pc" xmlns:ad="urn:mace:shibboleth:2.0:resolver:ad" 
+                            xmlns:dc="urn:mace:shibboleth:2.0:resolver:dc" xmlns:enc="urn:mace:shibboleth:2.0:attribute:encoder" 
+                            xmlns:sec="urn:mace:shibboleth:2.0:security" 
+                            xsi:schemaLocation="urn:mace:shibboleth:2.0:resolver classpath:/schema/shibboleth-2.0-attribute-resolver.xsd
+                                               urn:mace:shibboleth:2.0:resolver:pc classpath:/schema/shibboleth-2.0-attribute-resolver-pc.xsd
+                                               urn:mace:shibboleth:2.0:resolver:ad classpath:/schema/shibboleth-2.0-attribute-resolver-ad.xsd
+                                               urn:mace:shibboleth:2.0:resolver:dc classpath:/schema/shibboleth-2.0-attribute-resolver-dc.xsd
+                                               urn:mace:shibboleth:2.0:attribute:encoder classpath:/schema/shibboleth-2.0-attribute-encoder.xsd
+                                               urn:mace:shibboleth:2.0:security classpath:/schema/shibboleth-2.0-security.xsd">
+
+    <!-- ========================================== -->
+    <!--      Attribute Definitions                 -->
+    <!-- ========================================== -->
+    
+<%- scope.lookupvar("shib2idp::idp::attributes::attribute_definition").sort.each do |attr, value| -%>
+    <resolver:AttributeDefinition id="<%= value['id'] %>" xsi:type="<%= value['type'] %>" <%- if value['type'] == "ad:Scoped" -%>scope="<%= value['scope']%>"<%- end -%> sourceAttributeID="<%= value['sourceAttributeID'] %>">
+        <resolver:Dependency ref="<%= value['dependency'] %>" />
+<%-         value['langs'].sort.each do |lang, val|
+               if @metadata_information.has_key?(lang) -%>
+        <resolver:DisplayName xml:lang="<%= lang %>"><%= val['dispName'] %></resolver:DisplayName>
+<%-            end 
+            end
+            value['langs'].sort.each do |lang, val|
+               if @metadata_information.has_key?(lang) -%>
+        <resolver:DisplayDescription xml:lang="<%= lang %>"><%= val['dispDescr'] %></resolver:DisplayDescription>
+<%-            end 
+            end -%>
+<%-   if value['saml1ScopedString'] -%>
+        <resolver:AttributeEncoder xsi:type="enc:SAML1ScopedString" name="<%= value['saml1ScopedString'] %>" scopeType="<%= value['scopeTypeSaml1'] %>"/>
+<%-   end -%>
+<%-   if value['saml2ScopedString'] -%>
+        <resolver:AttributeEncoder xsi:type="enc:SAML2ScopedString" name="<%= value['saml2ScopedString'] %>" friendlyName="<%= value['friendlyName'] %>" scopeType="<%= value['scopeTypeSaml2'] %>" />
+<%-   end
+      if value['saml1string'] -%>
+        <resolver:AttributeEncoder xsi:type="enc:SAML1String" name="<%= value['saml1string'] %>" />
+<%-   end
+      if value['saml2string'] -%>
+        <resolver:AttributeEncoder xsi:type="enc:SAML2String" name="<%= value['saml2string']%>" friendlyName="<%= value['friendlyName'] %>" />
+<%-   end  -%>
+    </resolver:AttributeDefinition>
+
+<%-end -%>
+    <resolver:AttributeDefinition id="transientId" xsi:type="ad:TransientId">
+        <resolver:AttributeEncoder xsi:type="enc:SAML1StringNameIdentifier" nameFormat="urn:mace:shibboleth:1.0:nameIdentifier" /> 
+        <resolver:AttributeEncoder xsi:type="enc:SAML2StringNameID" nameFormat="urn:oasis:names:tc:SAML:2.0:nameid-format:transient" />
+    </resolver:AttributeDefinition>
+
+    <resolver:AttributeDefinition id="eduPersonTargetedID" xsi:type="ad:SAML2NameID" nameIdFormat="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent" sourceAttributeID="persistentId">
+        <resolver:Dependency ref="myStoredID" />
+        <resolver:AttributeEncoder xsi:type="enc:SAML1XMLObject" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.10" /> 
+        <resolver:AttributeEncoder xsi:type="enc:SAML2XMLObject" name="urn:oid:1.3.6.1.4.1.5923.1.1.1.10" friendlyName="eduPersonTargetedID" />
+    </resolver:AttributeDefinition>
+
+    <!-- ========================================== -->
+    <!--      Data Connectors                       -->
+    <!-- ========================================== -->
+
+    <!-- Example Static Connector -->
+    <!--
+    <resolver:DataConnector id="staticAttributes" xsi:type="dc:Static">
+        <dc:Attribute id="eduPersonAffiliation">
+            <dc:Value>member</dc:Value>
+        </dc:Attribute>
+        <dc:Attribute id="eduPersonEntitlement">
+            <dc:Value>urn:example.org:entitlement:entitlement1</dc:Value>
+            <dc:Value>urn:mace:dir:entitlement:common-lib-terms</dc:Value>
+        </dc:Attribute>
+    </resolver:DataConnector>
+    -->
+    
+    <!-- Example Relational Database Connector -->
+    <resolver:DataConnector id="myStoredID"
+                            xsi:type="dc:StoredId"
+                            sourceAttributeID="uid"
+                            generatedAttributeID="persistentId"
+                            salt="q9Kk/8_#0mQv:\bsui(V:\fL;eP9Cq<%= @idpfqdn %>">
+        <resolver:Dependency ref="myLDAP" />
+        <dc:ApplicationManagedConnection jdbcDriver="com.mysql.jdbc.Driver"
+                                         jdbcURL="jdbc:mysql://localhost:3306/userdb"
+                                         jdbcUserName="root" 
+                                         jdbcPassword="<%= @rootldappw %>" />
+    </resolver:DataConnector>
+
+    <!-- Example LDAP Connector -->
+    <resolver:DataConnector id="myLDAP" xsi:type="dc:LDAPDirectory"
+<% if @ldap_use_tls_var==true -%>
+        ldapURL="ldap://<%= @ldap_host_var %>"
+        useStartTLS = "true"
+<% elsif @ldap_use_ssl_var==true -%>
+        ldapURL="ldaps://<%= @ldap_host_var %>"
+<% else -%>
+        ldapURL="ldap://<%= @ldap_host_var %>"
+<% end -%>
+        baseDN="<%= @basedn %>">
+        <dc:FilterTemplate>
+            <![CDATA[
+                (uid=$requestContext.principalName)
+            ]]>
+        </dc:FilterTemplate>
+    </resolver:DataConnector>
+
+    <resolver:DataConnector id="ppLDAP" xsi:type="dc:LDAPDirectory"
+<% if @ldap_use_tls_var==true -%>
+        ldapURL="ldap://<%= @ldap_host_var %>"
+        useStartTLS = "true"
+<% elsif @ldap_use_ssl_var==true -%>
+        ldapURL="ldaps://<%= @ldap_host_var %>"
+<% else -%>
+        ldapURL="ldap://<%= @ldap_host_var %>"
+<% end -%>
+        baseDN="<%= @basedn %>"
+        principal="<%= @rootdn %>,<%= @basedn %>"
+        principalCredential="<%= @rootldappw %>">
+        <dc:FilterTemplate>
+            <![CDATA[
+                (uid=$requestContext.principalName)
+            ]]>
+        </dc:FilterTemplate>
+        <dc:ReturnAttributes>pwdChangedTime</dc:ReturnAttributes>
+    </resolver:DataConnector>
+
+    <!-- Computed targeted ID connector -->
+    <!--
+    <resolver:DataConnector xsi:type="dc:ComputedId"
+                            id="computedID"
+                            generatedAttributeID="computedID"
+                            sourceAttributeID="uid"
+                            salt=" PUT YOUR RANDOM ALFANUMERIC STRING HERE">
+        <resolver:Dependency ref="myLDAP" />
+    </resolver:DataConnector> 
+    -->
+
+    <!-- ========================================== -->
+    <!--      Principal Connectors                  -->
+    <!-- ========================================== -->
+    <resolver:PrincipalConnector xsi:type="pc:Transient" id="shibTransient" nameIDFormat="urn:mace:shibboleth:1.0:nameIdentifier"/>
+    <resolver:PrincipalConnector xsi:type="pc:Transient" id="saml1Unspec" nameIDFormat="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"/>
+    <resolver:PrincipalConnector xsi:type="pc:Transient" id="saml2Transient" nameIDFormat="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"/>
+
+</resolver:AttributeResolver>

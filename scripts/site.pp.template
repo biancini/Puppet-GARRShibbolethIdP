@@ -1,0 +1,66 @@
+node '{{ vals['idpfqdn'] }}' {
+
+  idpfirewall::firewall { "{{ vals[''] }}{hostname}-firewall":
+    iptables_enable_network => undef,
+  }
+
+  $hostfqdn                = '{{ vals['idpfqdn'] }}'
+  $keystorepassword        = '{{ vals['keystorepassword'] }}'
+  $mailto                  = '{{ vals['mailto'] }}'
+  $nagiosserver            = '{{ vals['nagiosserver'] }}'
+
+  shib2common::instance { "${hostname}-common":
+    install_apache          => true,
+    install_tomcat          => true,
+    configure_admin         => {{ vals['configure_admin'] }},
+    tomcat_admin_password   => '{{ vals['tomcat_admin_password'] }}',
+    tomcat_manager_password => '{{ vals['tomcat_manager_password'] }}',
+    hostfqdn                => $hostfqdn,
+    keystorepassword        => $keystorepassword,
+    mailto                  => $mailto,
+    nagiosserver            => $nagiosserver,
+  }
+
+  shib2idp::instance { "${hostname}-idp":
+    metadata_information => {
+      {% for curlang in vals['mdui_langs'] %}
+      '{{ curlang }}' => {
+        'orgDisplayName'           => '{{ vals['orgDisplayName_%s' % curlang] }}',
+        'communityDesc'            => '{{ vals['communityDesc_%s' % curlang] }}',
+        'orgUrl'                   => '{{ vals['orgUrl_%s' % curlang] }}',
+        'privacyPage'              => '{{ vals['privacyPage_%s' % curlang] }}',
+        'nameOrg'                  => '{{ vals['nameOrg_%s' % curlang] }}',
+        'idpInfoUrl'               => '{{ vals['idpInfoUrl_%s' % curlang] }}',
+        'url_LogoOrg-32x32'        => '{{ vals['url_LogoOrg_32x32_%s' % curlang] }}',
+        'url_LogoOrg-160x120'      => '{{ vals['url_LogoOrg_160x120_%s' % curlang] }}',
+      },
+      {% endfor %}
+      'technicalEmail'             => '{{ vals['technicalEmail'] }}',
+      'technicalIDPadminGivenName' => '',
+      'technicalIDPadminSurName'   => '',
+      'technicalIDPadminTelephone' => '',
+      'registrationInstant'        => '{{ vals['registrationInstant'] }}',
+    },
+    shibbolethversion            => {{ vals['shibbolethversion'] }},
+    install_uapprove             => {{ vals['install_uapprove'] }},
+    idpfqdn                      => $hostfqdn,
+    keystorepassword             => $keystorepassword,
+    mailto                       => $mailto,
+    install_ldap                 => {{ vals['install_ldap'] }},
+    domain_name                  => '{{ vals['domain_name'] }}',
+    basedn                       => '{{ vals['basedn'] }}',
+    rootdn                       => '{{ vals['rootdn'] }}',
+    rootpw                       => '{{ vals['rootpw'] }}',
+    rootldappw                   => '{{ vals['rootldappw'] }}',
+    ldap_host                    => {{ vals['ldap_host'] }},
+    ldap_use_ssl                 => {{ vals['ldap_use_ssl'] }},
+    ldap_use_tls                 => {{ vals['ldap_use_tls'] }},
+    logserver                    => '{{ vals['logserver'] }}',
+    collectdserver               => '{{ vals['collectdserver'] }}',
+    nagiosserver                 => $nagiosserver,
+    sambadomain                  => '{{ vals['sambadomain'] }}',
+    test_federation              => {{ vals['test_federation'] }},
+    custom_styles                => {{ vals['custom_styles'] }},
+    first_install                => {{ vals['first_install'] }},
+  }
+}

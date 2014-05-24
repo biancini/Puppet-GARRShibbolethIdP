@@ -1,0 +1,4 @@
+access to <%= @name %>
+<% access.sort.each do |who, access| -%><% if who != "*" -%>    by <%= who %> <%= access %>
+<% end -%><% end -%><% if access.has_key? "*" -%>    by * <%= access["*"] %>
+<% end -%>

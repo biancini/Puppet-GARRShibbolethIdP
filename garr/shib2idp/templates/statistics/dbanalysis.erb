@@ -1,0 +1,101 @@
+#!/usr/bin/python
+
+# Copyright 2010 University Corporation for Advanced Internet Development, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+"""Parse Shibboleth 2.x Identity Provider audit logfile and generate simple stats.
+   Audit log file format: https://wiki.shibboleth.net/confluence/display/SHIB2/IdPLogging"""
+   
+import sys
+import fileinput
+import os
+import MySQLdb
+import random
+from optparse import OptionParser
+from operator import itemgetter
+from datetime import datetime, date
+
+def parseFiles(files):
+    """Build datastructures from lines."""
+    lines = []
+    if sys.version_info < (2, 5):
+        for line in fileinput.input(files):
+            if not line.find('Shibboleth-Audit') == -1:
+                line = line[line.find('Shibboleth-Audit') + len('Shibboleth-Audit') + 1:]
+            lines.append(line.rstrip().split("|"))
+    else:
+        for line in fileinput.input(files, openhook=fileinput.hook_compressed):
+            if not line.find('Shibboleth-Audit') == -1:
+                line = line[line.find('Shibboleth-Audit') + len('Shibboleth-Audit') + 1:]
+            lines.append(line.rstrip().split("|"))
+
+    dball = {}
+
+    idp = ''
+    for event in lines:
+        try:
+            strdatetime,reqBind,reqId,rp,msgProfile,idp,respBind,respId,user,authnMeth,relAttribs,nameId,assertIds,EOL = event
+        except ValueError:
+            print """ERROR: Unsupported log file format or using compressed log files with Python < 2.5.%sSee the documentation in the Shibboleth wiki.""" % os.linesep
+            sys.exit(-1)
+
+        if idp == '': idp = nameId
+        curdata = str(datetime.strptime(strdatetime, '%Y%m%dT%H%M%SZ').date())
+        if not curdata in dball:
+            dball[curdata] = {}
+        if not rp in dball[curdata]:
+            dball[curdata][rp] = {}
+        if not user == '':
+            if user in dball[curdata][rp]:
+                dball[curdata][rp][user] += 1
+            else:
+                dball[curdata][rp][user] = 1
+
+    database = MySQLdb.connect(host="localhost", # your host, usually localhost
+                               user="<%= @dbuser %>", # your username
+                               passwd="<%= @dbpasswd %>", # your password
+                               db="<%= @dbname %>") # name of the data base
+
+    cursor = database.cursor()
+    cursor.execute("SELECT MAX(data) FROM logins")
+    (lastdata,) = cursor.fetchone()
+
+    count = 0
+    for data, a in dball.items():
+       if datetime.strptime(data, "%Y-%m-%d").date() <= date.today():
+          if lastdata is None or datetime.strptime(data, "%Y-%m-%d").date() > lastdata:
+             for sp, b in a.items():
+                for utente, numlogins in b.items():
+                   #print "INSERT INTO `logins` VALUES (%s %s, %s, %s, %s);" % (idp, data, sp, utente, numlogins)
+                   cursor.execute("INSERT INTO `logins` VALUES (%s, %s, %s, %s, %s)", (idp, data, sp, utente, numlogins))
+                   count = count + 1
+
+    database.close()
+    print "Inserted %d elements in the login database." % count
+
+def main():
+    """Parse command line options and arguments and their contents."""
+    parser = OptionParser()
+    usage = "usage: %prog [files ...]"
+    (options, args) = parser.parse_args()
+    if len(args) == 0:
+        print "Missing filename(s). Specify '-' as filename to read from STDIN.\n"
+        parser.print_help()
+        sys.exit(-1)
+
+    parseFiles(args)
+
+if __name__ == "__main__":
+    main()

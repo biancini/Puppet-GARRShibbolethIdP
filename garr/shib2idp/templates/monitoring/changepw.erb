@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd">
+<?php
+session_start();
+
+# Make sure their browser correctly reports language. If not, skip this.
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	$lang = preg_split ('/[;,]+/',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+}
+
+$lang = $lang[0];
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="auto" lang="auto" dir="ltr">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Change Password</title>
+        <link rel="shortcut icon" href="../phpldapadmin/images/default/favicon.ico" type="image/vnd.microsoft.icon">
+        <link type="text/css" rel="stylesheet" href="../phpldapadmin/css/default/garr.css">
+        <script type="text/javascript" src="../phpldapadmin/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="../phpldapadmin/js/livevalidation_standalone.compressed.js"></script>
+        <meta name="peoplebase" value="ou=people,<%= @basedn %>"/>
+</head>
+<body>
+        <script language="javascript">
+		var userLang = '<?= $lang ?>';
+		
+		if (userLang == "") {
+		   userLang = navigator.language || navigator.userLanguage;
+		}
+        
+        var lblMandatory = 'Mandatory field. Please specify a value';
+        var lblInvalidFormat = 'Invalid format';
+        var lblMinimum8 = 'At least 8 characters requires';
+        var lblMaximum20 = 'At maximum 20 characters allowed';
+        var lblMatching = 'The two passwords specified are not equal. Try again';
+        
+        if (userLang == "it-IT") {
+        	lblMandatory = 'Campo obbligatorio. Inserire un valore';
+	        lblInvalidFormat = 'Formato non valido';
+	        lblMinimum8 = 'Necessari almeno otto caratteri';
+	        lblMaximum20 = 'Consentiti al massimo venti caratteri';
+	        lblMatching = 'Le password inserite non corrispondono. Riprovare';
+        }
+        
+        $(document).ready(function() {
+                // Live validation script starts
+                var username = new LiveValidation('username', {onlyOnBlur: false, validMessage: "OK" });
+                username.add(Validate.Presence, {failureMessage: lblMandatory} );
+                username.add(Validate.Format, { pattern: /^[a-zA-Z0-9_\-\.]{5,30}$/, failureMessage: lblInvalidFormat } );
+
+                <?php
+                if (isset($_GET['admin']) == "true") {
+                ?>
+                        var adminpw = new LiveValidation('adminpw', {onlyOnBlur: false, validMessage: "OK" });
+                        adminpw.add(Validate.Presence, {failureMessage: lblMandatory} );
+                <?php
+                } else {
+                ?>
+                        var oldpassword = new LiveValidation('oldpassword', {onlyOnBlur: false, validMessage: "OK" });
+                        oldpassword.add(Validate.Presence, {failureMessage: lblMandatory} );
+                <?php
+                }
+                ?>
+
+                var newpassword1 = new LiveValidation('newpassword1', {onlyOnBlur: false, validMessage: "OK" } );
+                newpassword1.add(Validate.Presence, {failureMessage: lblMandatory} );
+                newpassword1.add(Validate.Length, { minimum: 8, maximum: 20, tooShortMessage: lblMinimum8, tooLongMessage: lblMaximum20} );
+
+                var newpassword2 = new LiveValidation('newpassword2', {onlyOnBlur: false, validMessage: "OK" } );
+                newpassword2.add( Validate.Confirmation, { match: 'newpassword1', failureMessage: lblMatching});
+        });
+        </script>
+
+        <table class="page" border="0" width="100%">
+        <tbody>
+                <tr class="pagehead">
+                        <td colspan="3"><div id="ajHEAD">
+                                <table width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td align="left"><a href="changepw.php" target="_self"><img src="../phpldapadmin/images/default/logo-small.png" alt="Logo" class="logo"></a></td>
+                                                <td class="imagetop">&nbsp;</td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </div></td>
+                </tr>
+                <tr class="control">
+                        <td colspan="3"><div id="ajCONTROL">
+                                <table class="control" width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td><a href="changepw.php" title="Inizio"><script language="javascript">
+                                                if (userLang == "it-IT") { 
+										        	document.write ("Inizio");
+										        }
+										        else { 
+										        	document.write ("Start");
+										        }
+         										</script></a></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </div></td>
+                </tr>
+                <tr>
+                        <td class="tree"><div id="ajSID_1" style="display: block"><table class="tree" border="0"><tbody><tr class="server"><td class="icon"><img src="../phpldapadmin/images/default/server.png" alt="Server"></td>
+                        <td class="name">My LDAP Server</td>
+                        </td></tr></table></td>
+                        <td class="spacer"></td>
+                        <td class="body" width="80%"><div id="ajBODY">
+                                <table class="body">
+                                <tbody>
+                                        <tr>
+                                                <td><center>
+        <?php
+        if (isset($_SESSION['pw_message'])) {
+                print "<table calss=\"sysmg\"><tbody>";
+                print "<tr><td class=\"icon\" rowspan=\"2\"><img src=\"../phpldapadmin/images/default/info-big.png\" alt=\"info\"></td>";
+                
+                print "<script language='javascript'>";       
+				print "if (userLang == 'it-IT') {";
+                print "document.write('<td class=\"head\">Cambio Password</td></tr>');";
+                print "document.write('<tr><td class=\"body\">Password cambiata! DN: <b>" . $_SESSION['pw_message'] . "</b> ha la password cambiata.</td</tr>');";
+                print "}";
+                print "else {";
+                print "document.write('<td class=\"head\">Password Change</td></tr>');";
+                print "document.write('<tr><td class=\"body\">Password changed! DN: <b>" . $_SESSION['pw_message'] . "</b> has a new password.</td</tr>');";
+                print "}";
+                print "</script>";
+                
+                print "</tbody></table>";
+                unset($_SESSION['pw_message']);
+        }
+        ?>
+        <h3 class="title"><script language="javascript">       
+		    if (userLang == "it-IT") {
+	        	document.write("Cambia Password");
+	        } else {
+	        	document.write("Change Password");
+	        }
+		</script></h3>
+		
+        <h3 class="subtitle">
+        	<script language="javascript">       
+			    if (userLang == "it-IT") {
+                	document.write("Server: <b>My LDAP Server</b>&nbsp;&nbsp;&nbsp;Contenitore: <b>ou=people,<%= @basedn %></b></h3>");
+                	document.write("<center><h4>Identity Provider: Cambio password</h4></center>");
+                } else {
+                	document.write("Server: <b>My LDAP Server</b>&nbsp;&nbsp;&nbsp;Distinguished Name: <b>ou=people,<%= @basedn %></b></h3>");
+                	document.write("<center><h4>Identity Provider: Password change</h4></center>");
+                }
+			</script>
+			
+                <form action="action_pw.php" method="post" enctype="multipart/form-data" name="password_form" id="password_form">
+                <?php
+                if (isset($_GET['admin']) == "true") {
+                ?>
+                <input id="action" name="action" value="admin" type="hidden"/>
+                <?php
+                } else {
+                ?>
+                <input id="action" name="action" value="user" type="hidden"/>
+                <?php
+                }
+                ?>
+                <input id="base" name="base" value="<%= @basedn %>" type="hidden"/>
+
+                <table class="entry" cellspacing="0" align="center" border="0">
+                <tbody>
+                        <tr>
+                                <td class="title"><script language="javascript">       
+								    if (userLang == "it-IT") {
+								    	document.write("Nome Utente");
+								    } else {
+								    	document.write("User name");
+								    }
+								</script> *</a></td>
+                        </tr>
+                        <tr><td>
+                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td class="icon" width="25"><img src="../phpldapadmin/images/default/ldap-uid.png" alt="Icon" align="top">&nbsp;</td>
+                                                <td valign="top"><input type="text" class="value" name="username" id="username" value=""></td>
+                                                <td valign="top" align="right"></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </td></tr>
+                </tbody>
+                </table>
+
+                <?php
+                if (isset($_GET['admin']) == "true") {
+                ?>
+                <table class="entry" cellspacing="0" align="center" border="0">
+                <tbody>
+                        <tr>
+                                <td class="title"><script language="javascript">       
+								    if (userLang == "it-IT") {
+					                	document.write("Password amministratore");
+					                } else {
+					                	document.write("Administrator's password");
+					                }
+								</script> *</a></td>
+                        </tr>
+                        <tr><td>
+                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td class="icon" width="25"><img src="../phpldapadmin/images/default/lock.png" alt="Icon" align="top">&nbsp;</td>
+                                                <td valign="top">
+                                                        <input type="password" class="value" name="adminpw" id="adminpw" value=""><br/>
+                                                        <div align="right"><a href="changepw.php"><script language="javascript">       
+														    if (userLang == "it-IT") {
+											                	document.write("Reset da utente");
+											                } else {
+											                	document.write("Reset as normal user");
+											                }
+														</script></a></div>
+                                                </td>
+                                                <td valign="top" align="right"></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </td></tr>
+                </tbody>
+                </table>
+                <?php
+                } else {
+                ?>
+                <table class="entry" cellspacing="0" align="center" border="0">
+                <tbody>
+                        <tr>
+                                <td class="title"><script language="javascript">       
+								    if (userLang == "it-IT") {
+								    	document.write("Vecchia password");
+								    } else {
+								    	document.write("Old password");
+								    }
+								</script> *</a></td>
+                        </tr>
+                        <tr><td>
+                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td class="icon" width="25"><img src="../phpldapadmin/images/default/lock.png" alt="Icon" align="top">&nbsp;</td>
+                                                <td valign="top">
+                                                        <input type="password" class="value" name="oldpassword" id="oldpassword" value=""><br/>
+                                                        <div align="right"><a href="changepw.php?admin=true"><script language="javascript">       
+														    if (userLang == "it-IT") {
+											                	document.write("Reset da amministratore");
+											                } else {
+											                	document.write("Reset as admin user");
+											                }
+														</script></a></div>
+                                                </td>
+                                                <td valign="top" align="right"></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </td></tr>
+                </tbody>
+                </table>
+                <?php
+                }
+                ?>
+
+                <table class="entry" cellspacing="0" align="center" border="0">
+                <tbody>
+                        <tr>
+                                <td class="title"><script language="javascript">       
+								    if (userLang == "it-IT") {
+					                	document.write("Nuova password");
+					                } else {
+					                	document.write("New password");
+					                }
+								</script> *</a></td>
+                        </tr>
+                        <tr><td>
+                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+                                        <tr>
+                                                <td class="icon" width="25"><img src="../phpldapadmin/images/default/lock.png" alt="Icon" align="top">&nbsp;</td>
+                                                <td valign="top">
+                                                        <input type="password" class="value" name="newpassword1" id="newpassword1" value=""><br/>
+                                                        <input type="password" class="value" name="newpassword2" id="newpassword2" value="">
+                                                </td>
+                                                <td valign="top" align="right"></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </td></tr>
+                </tbody>
+                </table>
+                <table class="entry" cellspacing="0" align="center" border="0">
+                <tbody>
+                        <tr><td>
+                                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+	                                <script language="javascript">       
+									    if (userLang == "it-IT") {
+						                	document.write('<tr><td>&nbsp;</td><td><input type="submit" id="button" value="Cambia password"></td></tr>');
+						                } else {
+						                	document.write('<tr><td>&nbsp;</td><td><input type="submit" id="button" value="Change password"></td></tr>');
+						                }
+									</script>
+                                </tbody>
+                                </table>
+                        </td></tr>
+                </tbody>
+                </table>
+
+                </form>
+
+                                                </center></td>
+                                        </tr>
+                                </tbody>
+                                </table>
+                        </div></td>
+                </tr>
+                <tr class="foot"><td><small>&nbsp;</small></td><td colspan="4"><div id="ajFOOT">1.2.0.5</div><a href="https://sourceforge.net/projects/phpldapadmin"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=61828&type=8" border="0" alt="SourceForge.net Logo"></a></td></tr>
+        </tbody>
+        </table>
+</body>
+</html>

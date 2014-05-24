@@ -1,0 +1,12 @@
+#!/bin/sh
+LDAPBK=ldap-$( date +%y%m%d-%H%M ).ldif
+BACKUPDIR=/opt/ldap-backups
+
+if [ ! -d $BACKUPDIR ]; then
+  mkdir $BACKUPDIR
+fi
+
+/usr/sbin/slapcat -v -b "<%= @basedn %>" -l $BACKUPDIR/$LDAPBK
+gzip -9 $BACKUPDIR/$LDAPBK
+
+find $BACKUPDIR -type f -mtime +30 -exec rm {} \;

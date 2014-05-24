@@ -1,0 +1,18 @@
+[submodule "puppetlabs/mysql"]
+	path = puppetlabs/mysql
+	url = https://github.com/puppetlabs/puppetlabs-mysql
+[submodule "garr-common"]
+	path = garr-common
+	url = https://github.com/biancini/Puppet-GARRCommon
+[submodule "puppetlabs/apache"]
+	path = puppetlabs/apache
+	url = https://github.com/puppetlabs/puppetlabs-apache
+[submodule "puppetlabs/concat"]
+	path = puppetlabs/concat
+	url = https://github.com/puppetlabs/puppetlabs-concat
+[submodule "puppetlabs/firewall"]
+	path = puppetlabs/firewall
+	url = https://github.com/puppetlabs/puppetlabs-firewall
+[submodule "puppetlabs/stdlib"]
+	path = puppetlabs/stdlib
+	url = https://github.com/puppetlabs/puppetlabs-stdlib

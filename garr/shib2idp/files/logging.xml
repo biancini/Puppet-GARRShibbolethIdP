@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <!--
+        Loggers define indicate which packages/categories are logged, at which level, and to which appender.
+        Levels: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+    -->
+    <!-- Logs IdP, but not OpenSAML, messages -->
+    <logger name="edu.internet2.middleware.shibboleth" level="WARN"/>
+
+    <!-- Logs OpenSAML, but not IdP, messages -->
+    <logger name="org.opensaml" level="WARN"/>
+    
+    <!-- Logs LDAP related messages -->
+    <logger name="edu.vt.middleware.ldap" level="WARN"/>
+
+    <!-- aggiunto per testing -->
+    <logger name="edu.internet2.middleware.shibboleth.common.attribute" />
+
+    <!-- Logs inbound and outbound protocols messages at WARN level -->
+    <!--
+    <logger name="PROTOCOL_MESSAGE" level="WARN" />
+    -->
+    
+    <!-- 
+        Normally you should not edit below this point.  These default configurations are sufficient for 
+        almost every system.
+    -->
+
+    <!-- 
+        Logging appenders define where and how logging messages are logged.
+     -->
+    <appender name="SYSLOG_ACCESS" class="ch.qos.logback.classic.net.SyslogAppender">
+        <param name="Threshold" value="INFO" />
+        <param name="Facility" value="LOCAL5" />
+        <param name="FacilityPrinting" value="true"/>
+        <param name="SyslogHost" value="localhost" />
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSSZ} %-5r %-5p [%c] (%t:%x) %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="IDP_ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/shibboleth-idp/logs/idp-access.log</File>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/shibboleth-idp/logs/idp-access-%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SYSLOG_AUDIT" class="ch.qos.logback.classic.net.SyslogAppender">
+        <param name="Threshold" value="INFO" />
+        <param name="Facility" value="LOCAL3" />
+        <param name="FacilityPrinting" value="true"/>
+        <param name="SyslogHost" value="localhost" />
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSSZ} %-5r %-5p [%c] (%t:%x) %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="IDP_AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/shibboleth-idp/logs/idp-audit.log</File>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/shibboleth-idp/logs/idp-audit-%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SYSLOG_PROCESS" class="ch.qos.logback.classic.net.SyslogAppender">
+        <param name="Threshold" value="INFO" />
+        <param name="Facility" value="LOCAL2" />
+        <param name="FacilityPrinting" value="true"/>
+        <param name="SyslogHost" value="localhost" />
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSSZ} %-5r %-5p [%c] (%t:%x) %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="IDP_PROCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/shibboleth-idp/logs/idp-process.log</File>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/shibboleth-idp/logs/idp-process-%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <Pattern>%date{HH:mm:ss.SSS} - %level [%logger:%line] - %msg%n</Pattern>
+        </encoder>
+    </appender>
+  
+    <logger name="Shibboleth-Access" level="ALL">
+        <!-- appender-ref ref="IDP_ACCESS"/ -->
+        <appender-ref ref="SYSLOG_ACCESS"/>
+    </logger>
+    
+    <logger name="Shibboleth-Audit" level="ALL">
+        <!-- appender-ref ref="IDP_AUDIT" / -->
+        <appender-ref ref="SYSLOG_AUDIT"/>
+    </logger>
+        
+    <logger name="org.springframework" level="OFF"/>
+    
+    <logger name="org.apache.catalina" level="ERROR"/>
+
+    <root level="ERROR">
+        <!-- appender-ref ref="IDP_PROCESS"/ -->
+        <appender-ref ref="SYSLOG_PROCESS"/>
+    </root>
+
+</configuration>

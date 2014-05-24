@@ -1,0 +1,600 @@
+<%%@ taglib uri="urn:mace:shibboleth:2.0:idp:ui" prefix="idpui" %>
+<%%@ page import="edu.internet2.middleware.shibboleth.idp.util.HttpServletHelper" %>
+<%%@ page import="org.opensaml.util.storage.StorageService" %>
+<%%@ page import="edu.internet2.middleware.shibboleth.idp.authn.LoginContext" %>
+<%%@ page import="edu.internet2.middleware.shibboleth.idp.authn.LoginHandler" %>
+<%%@ page import="edu.internet2.middleware.shibboleth.common.relyingparty.RelyingPartyConfigurationManager" %>
+<%%@ page import="org.opensaml.saml2.metadata.EntityDescriptor" %>
+<%%@ page import="org.opensaml.saml2.metadata.ContactPerson" %>
+<%%@ page import="org.opensaml.saml2.metadata.ContactPersonTypeEnumeration" %>
+<%%@ page import="java.util.List" %>
+<%%@ page import="org.opensaml.saml2.metadata.RequestedAttribute" %>
+
+<%%
+   StorageService storageService = null;
+   LoginContext loginContext = null;
+   RelyingPartyConfigurationManager rpConfigMngr = null;
+   EntityDescriptor metadata = null;
+   
+   try {
+      storageService = HttpServletHelper.getStorageService(application);
+      loginContext = HttpServletHelper.getLoginContext(storageService,application, request);
+      rpConfigMngr = HttpServletHelper.getRelyingPartyConfigurationManager(application);
+      metadata = HttpServletHelper.getRelyingPartyMetadata(loginContext.getRelyingPartyId(), rpConfigMngr);   
+   }
+   catch (Exception e) {
+      // Do nothing
+   }
+%>
+
+<%%@ page contentType="text/html; charset=UTF-8" %>
+
+<%
+if @metadata_information.include?("it")
+  metadata_information_it = @metadata_information['it']
+else
+  metadata_information_it = @metadata_information['en']
+end
+%>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <script language="javascript">
+         function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            var results = regex.exec(location.search);
+            return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+         }
+
+         var userLang = getParameterByName('lang');
+
+         if (userLang == "") {
+            userLang = navigator.language || navigator.userLanguage;
+         }
+
+         if (userLang == "it-IT") { 
+            document.write ("<title><%= metadata_information_it['orgDisplayName'] %> </title>");
+            document.write ('<link href="<%= metadata_information_it['url_LogoOrg-32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
+         }
+         else { 
+            document.write ("<title><%= @metadata_information['en']['orgDisplayName'] %> </title>");
+            document.write ('<link href="<%= @metadata_information['en']['url_LogoOrg-32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
+         }
+     </script>
+     <link rel="stylesheet" type="text/css" href="<%%= request.getContextPath()%>/login.css"/>
+   </head>
+
+   <body id="homepage">
+     <div id="containerHead"> <!-- DIV contenitore Testata -->
+         <div id="divLogoIdem"> <!-- DIV contenitore Logo IDEM --> 
+            <a href="https://www.idem.garr.it" target="_blank"> 
+               <img id="imgLogoIdem" src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="Logo IDEM"/>
+            </a> 
+         </div> <!-- DIV Riquadro Logo IDEM -->
+
+         <div id="divMenu"> <!-- DIV Riquadro per la colonna centrale contenente il Menu dei link utili -->
+            <div id="divIdemLogin"> <!-- DIV Riquadro Titolo e Descrizione Ente -->
+               <div id="idpDisplayName"> <!-- DIV con il DisplayName -->
+                  <script>
+                    if (userLang == "it-IT") document.write("<%= metadata_information_it['orgDisplayName'] %>");
+                    else document.write("<%= @metadata_information['en']['orgDisplayName'] %>");
+                  </script>   
+               </div>
+               <br/>
+               <br/>
+               <div id="idpDescription">
+                  <script>
+                    if (userLang == "it-IT") document.write("<%= metadata_information_it['communityDesc'] %>");
+                    else document.write("<%= @metadata_information['en']['communityDesc'] %>");
+                  </script>
+               </div>
+            </div> <!-- DIV Riquadro per Titolo Pagina di Login -->
+
+            <div id="usefulLink"> <!-- # Riquadro dei link utili - Sovrascritto il "padding" dei bottoni per fixarli con la dimensione dei DIV -->
+               <div id="infoLink">
+                  <script language="javascript">
+                  var langHref = "<%= @metadata_information['en']['idpInfoUrl'] %>";
+                  var langText = "Information";
+                  
+                  if (userLang == "it-IT") {
+                     langHref = "<%= metadata_information_it['idpInfoUrl'] %>";
+                     langText = "Informazioni";
+                  }
+
+                  document.write('<a href="' + langHref + '"');
+                  document.write('class="utilityButton" ');
+                  document.write('style="padding:6px 25px;\"');
+                  document.write('target="_blank">' + langText + '</a>');
+                  </script> 
+               </div> <!-- Bottone Info -->
+
+               <div id="privacyLink">
+                  <script language="javascript">
+                  var langHref = "<%= @metadata_information['en']['privacyPage'] %>";
+                  var langText = "Privacy";
+                  
+                  if (userLang == "it-IT"){
+                     langHref = "<%= metadata_information_it['privacyPage'] %>";
+                     langText = "Privacy";
+                  }
+                  
+                  document.write('<a href="' + langHref + '"');
+                  document.write('class="utilityButton" ');
+                  document.write('style="padding:6px 43px;"');
+                  document.write('target="_blank">' + langText + '</a>');
+                  </script>
+               </div> <!-- Bottone Privacy -->
+           </div> <!-- DIV Useful Links -->
+         </div> <!-- DIV Menu -->
+
+         <div id="divLogoEnte">
+           <script language="javascript">
+           var langLink = "<%= @metadata_information['en']['orgUrl'] %>";
+           var langImg = "<%= @metadata_information['en']['url_LogoOrg-160x120']%>";
+           var langAlt = "Entity Logo";
+           
+           if (userLang == "it-IT"){
+              langLink = "<%= metadata_information_it['orgUrl'] %>";
+           	  langImg = "<%= metadata_information_it['url_LogoOrg-160x120']%>";
+           	  langAlt = "Logo Ente";
+           }
+           
+           document.write('<a href="' + langLink +'" target="_blank">');
+           document.write('<img src="' + langImg +'" id="imgLogoEnte" alt="' + langAlt +'"/>'); 
+           document.write('</a>');
+           </script>
+
+         </div> <!-- DIV Riquadro Logo Ente -->
+
+    </div> <!-- DIV Contenitore Testata -->
+
+    <hr/>
+   
+    <div id="divUnderHeader">
+     <p>
+       <script language="javascript">
+       if (userLang == "it-IT") {
+           document.write("L&rsquo; <%= metadata_information_it['orgDisplayName'] %>, <%= metadata_information_it['orgDescription'] %>partecipa ad <strong>IDEM</strong> ");
+           document.write("<a href='https://www.idem.garr.it' target='_blank'><img src='<%%= request.getContextPath()%>/images/IDEM_logo.png' height='35px' alt='Logo IDEM'/></a> ");
+           document.write("( <strong>IDE</strong>ntity <strong>M</strong>anagement federato per l&rsquo;accesso ai servizi) per la realizzazione dell&rsquo;Infrastruttura di Autenticazione e Autorizzazione federata della rete GARR.<br/>");
+           document.write("L&rsquo; <%= metadata_information_it['orgDisplayName'] %> rilascia credenziali d&rsquo;accesso per questo sistema di autenticazione (Identity Provider) ai propri dipendenti e ai ricercatori affiliati.<br/>");
+           document.write("Per richiedere le credenziali per questo Identity Provider, per informazioni o assistenza, inviare una mail a <a href='<%= @metadata_information['technicalEmail'] %>'>Supporto Tecnico</a>.");
+       }
+       else {
+           document.write("The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %>now is a part of <strong>IDEM</strong> ");
+           document.write("<a href='https://www.idem.garr.it' target='_blank'><img src='<%%= request.getContextPath()%>/images/IDEM_logo.png' height='35px' alt='Logo IDEM'/></a> ");
+           document.write("(<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>");
+           document.write("The <%= @metadata_information['en']['orgDisplayName'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.<br/>");
+           document.write("To ask the credentials for this Identity Provider, getting information o assistance, send an e-mail to <a href='<%= @metadata_information['technicalEmail'] %>'>Technical Support</a>.");
+       }
+      </script>
+     </p>
+    </div>
+    
+    <br />
+
+    <div class="loginbox"> <!-- Riquadro del Login -->
+      <div class="leftpane"> <!-- Riquadro di sinistra -->
+        <div class="content"> <!-- Contenuto riquadro di sinistra -->
+            <p>
+               <script language="javascript">
+                  if (userLang == "it-IT") {
+                  	document.write("Il servizio (Service Provider / SP) visualizzato a destra vuole identificarLa attraverso questo Identity Provider da Lei scelto. ");
+                  	document.write("Completi i campi sottostanti ed effettua il Login per accedere al servizio richiesto.");
+                  }
+                  else {
+                  	document.write("The service (Service Provider / SP) on the right wants indentify yourself through the Identity Provider of your Organization. ");
+                  	document.write("Fill down the fields and push on the Login Button to access to the Service described on the right.");
+                  }
+               </script>
+            </p>
+            <%%
+               // Viene richiesto se il login e' fallito e viene segnalato errore di autenticazione
+               if (request.getAttribute(LoginHandler.AUTHENTICATION_EXCEPTION_KEY) != null) { 
+                  Throwable ex = (Throwable)request.getAttribute(LoginHandler.AUTHENTICATION_EXCEPTION_KEY); 
+                  if (ex.getMessage().contains("PASSWORD_EXPIRED")) {
+                     %>
+                     <p>
+                        <font color="red">
+                           <script language="javascript">
+                              if (userLang == "it-IT") document.write("Password Scaduta. <a href='/pw/changepw.php'>Cambiala</a>.");
+                              else document.write ("Password Expired. <a href='/pw/changepw.php'>Change it</a>.");
+                           </script>
+                        </font>
+                     </p>
+                   <%%
+                   } else if (ex.getMessage().contains("CHANGE_AFTER_RESET")) {
+                      %>
+                      <p>
+                         <font color="red">
+                            <script language="javascript">
+                               if (userLang == "it-IT") document.write("Password non valida. <a href='/pw/changepw.php'>Cambiala</a>.");
+                               else document.write ("Invalid password. <a href='/pw/changepw.php'>Change it</a>.");
+                            </script>
+                         </font>
+                      </p>
+                      <%%
+                   } else if (ex.getMessage().contains("ACCOUNT_LOCKED")){
+                      %>
+                      <p>
+                         <font color="red">
+                            <script language="javascript">
+                               if (userLang == "it-IT") document.write("Account temporaneamente bloccato.");
+                               else document.write ("Account temporarily Locked.");
+                            </script>
+                         </font>
+                      </p>
+                      <%%
+                   } else {
+                      %>
+                      <p>
+                         <font color="red">
+                            <script language="javascript">
+                               if (userLang == "it-IT") document.write("Credenziali non riconosciute. Riprova.");
+                               else document.write ("Wrong Username or Password. Try Again.");
+                            </script>
+                         </font>
+                      </p>
+                      <%%
+                   }
+               }
+            
+               if(request.getAttribute("actionUrl") != null) {
+                  %>
+                  <form action="<%%=request.getAttribute("actionUrl")%>" method="post">
+                  <%%
+               } else {
+                  %>
+                  <form action="j_security_check" method="post">
+                  <%%
+               }
+            %>
+
+            <table>
+               <tr>
+                  <td width="40%">
+                     <label for="username">Username:</label>
+                  </td>
+                  
+                  <td>
+                     <input name="j_username" type="text" id="username" autocapitalize="off" />
+                  </td>
+               </tr>
+               
+               <tr>
+                  <td>
+                     <label for="password">Password:</label>
+                  </td> 
+                  
+                  <td>
+                     <input name="j_password" type="password" id="password" />
+                  </td>
+               </tr>
+
+               <tr>
+                  <td></td>
+                  
+                  <td>
+                     <% if @install_uapprove==true -%>
+                     <input id="uApprove.consent-revocation" type="checkbox" name="uApprove.consent-revocation" value="true"/>
+               <label for="uApprove.consent-revocation">
+               <script language="javascript">
+                       if (userLang == "it-IT") document.write("Ripulisci il mio consenso al rilascio attributi");
+                       else document.write("Clear my attribute release consent");
+                     </script>
+               </label><br/>
+                     <% end -%>
+                     <button type="submit" value="Login" >
+                        <script language="javascript">
+                           if (userLang == "it-IT") document.write("Accedi");
+                           else document.write("Login");
+                        </script>
+                     </button>
+                  </td>
+               </tr>
+
+<% if @install_ldap_var==true -%>
+               <tr>
+                  <td id="retrieveOrChangePass" colspan="2"> 
+                     <a href="/pw/changepw.php">
+                        <script language="javascript">
+                           if ( userLang == "it-IT") document.write("Cambia Password");
+                           else document.write("Change Password");
+                        </script>
+                     </a>
+                  </td>
+               </tr>
+<% end -%>
+
+            </table>
+                <p id="notaBeneIdP">
+                  <script language="javascript">
+                     if (userLang == "it-IT") document.write("NB: le Sue credenziali, che inserir&agrave; in questa schermata, non verranno mai inviate alla risorsa (SP) per la quale Lei ha richiesto l&rsquo;accesso, &egrave; tuttavia possibile che la specifica risorsa richieda altre informazioni personali su di Lei, necessarie per offrirLe il servizio che ha richiesto.<br/>Tali informazioni possono comprendere: il Suo Nome, il Suo Cognome, il Suo indirizzo di posta elettronica, il Suo numero di telefono, il Suo Codice Fiscale.");
+                     else document.write("NB: Your credentials, than you will insert into this login box, will never be send to the resource (SP) which you requested the access,it is possible that the specific resource requests other personal informations on you as: your Name, your Surname, your Address, your E-Mail address, your Telephone Number, your Fiscal Code.");
+
+                     <% if @install_uapprove==true -%>
+                     if (userLang == "it-IT") document.write("<br/>L&rsquo;elenco completo dei dati che questo IDP trasmetter&agrave; all&rsquo;SP a cui si sta per accedere, Le verr&agrave; mostrato nelle prossime schermate.<br/>Lei ha la facolt&agrave; di decidere di non inviare tali informazioni all'SP, rinunciando all'accesso al sevizio.");
+                     else document.write("<br/>The complete list of attribute that this IdP can send to an SP will be shown you in the next few pages.<br/>You can choose to prevent the release of your attributes to a SP, but doing so will not be able to access the service content.");
+                     <% end -%>
+                  </script>  
+               </p>
+
+               </form>
+         </div> <!-- Contenuto riquadro di Sinistra-->
+      </div> <!-- Riquadro di Sinistra -->
+
+<!-- Riquadro di Login -->
+
+      <div class="rightpane">
+         <div class="content">
+            <div id="spName"> <idpui:serviceName/> </div> 
+
+            <br/>
+
+            <div align="center">
+               <idpui:serviceLogo  minWidth="60" minHeight="60" maxWidth="350" maxHeight="147" cssId="splogo">
+                  <idpui:serviceLogo  minWidth="60" minHeight="60" maxWidth="350" cssId="clippedsplogoY">
+                     <idpui:serviceLogo  minWidth="60" minHeight="60" cssId="clippedsplogoX"/>
+                  </idpui:serviceLogo>
+               </idpui:serviceLogo>
+            </div>
+
+            <br/>
+
+            <table >
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Descrizione: ');
+                        else document.write('Description: ');
+                     </script>
+                  </td>
+                  <td>
+                     <div id="spDescription">
+                        <script language="javascript">
+                           if (userLang == "it-IT") document.write('<idpui:serviceDescription>Sconosciuta</idpui:serviceDescription>');
+                           else document.write('<idpui:serviceDescription>Unknown</idpui:serviceDescription>');
+                        </script>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Organizzazione: ');
+                        else document.write('Organization: ');
+                     </script>
+                  </td>
+                  <td>
+                     <div id="orgDescription">
+                        <script language="javascript">
+                        if (userLang == "it-IT") {
+                           if ('<idpui:organizationDisplayName />') { 
+                              document.write('<idpui:organizationDisplayName />');
+                           }
+                           else if ('<idpui:organizationName />') { 
+                              document.write('<idpui:organizationName />');
+                           }
+                           else {
+                              document.write('Sconosciuta');
+                           }
+                        }
+                        else {
+                           if ('<idpui:organizationDisplayName />') { 
+                              document.write('<idpui:organizationDisplayName />');
+                           }
+                           else if ('<idpui:organizationName />') { 
+                              document.write('<idpui:organizationName />');
+                           }
+                           else {
+                              document.write('Unknown');
+                           }
+                        }
+                        </script>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Contatti: ');
+                        else document.write('Contacts: ');
+                     </script>
+                  </td>
+                  <td>
+                     <div id="contactName">
+                     <script language="javascript">
+                        <%%
+                           String contactLinks = "";
+                           try {
+                              for (ContactPerson contact : metadata.getContactPersons()) {
+                                 if (ContactPersonTypeEnumeration.TECHNICAL.equals(contact.getType())) {
+                                    if (!"".equals(contactLinks)) {
+                                       contactLinks += ", ";
+                                    }
+                                    contactLinks += "<a href=\"" + contact.getEmailAddresses().get(0).getAddress() + "\">";
+                                    contactLinks += contact.getGivenName().getName() + " " + contact.getSurName().getName();
+                                    contactLinks += "</a>";
+                                 }
+                              }
+                           } catch (NullPointerException e){
+                              contactLinks = "";
+                           }
+                        %>
+                        var langNoContacts = "No Contact provided";
+
+                        if (userLang == "it-IT") {
+                           langNoContacts = "Nessun Contatto fornito";
+                        }
+
+                        if ('<%%= contactLinks %>' == '') document.write(langNoContacts);
+                        else document.write('<%%= contactLinks %>');
+                     </script>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Politica della Privacy: ');
+                        else document.write('Privacy Policy: ');
+                     </script>
+                  </td>
+                  <td>
+                     <div id="spPrivacy">
+                     <script language="javascript">
+                        if (userLang == "it-IT") {
+                           document.write('<idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="Privacy">Sconosciuta</idpui:servicePrivacyURL>');
+                        }
+                        else {
+                           document.write('<idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="Privacy">Unknown</idpui:servicePrivacyURL>');
+                        }
+                     </script>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Sito per Informazioni: ');
+                        else document.write('Information website: ');
+                     </script>
+                  </td>
+                  <td>
+                  <div id="spInformation">   
+                     <script language="javascript">
+                        if (userLang == "it-IT") {
+                           document.write('<idpui:serviceInformationURL cssId="spInfoURL" linkText="Informazioni">Sconosciuto</idpui:serviceInformationURL>');
+                        }
+                        else {
+                           document.write('<idpui:serviceInformationURL cssId="spInfoURL" linkText="Informations">Unknown</idpui:serviceInformationURL>');
+                        }
+                     </script>
+                  </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Attributi Richiesti: ');
+                        else document.write('Requested Attribute: ');
+                     </script>
+                  </td>
+                  <td>
+                      <div id="reqAttr">
+                      <script language="javascript">
+                        var langPreLink = "<%= @metadata_information['en']['idpInfoUrl'] %>#";
+                        var langNoAttrs = "No Attributes required";
+
+                        if (userLang == "it-IT") {
+                           langPreLink = "<%= metadata_information_it['idpInfoUrl'] %>#";
+                           langNoAttrs = "Nessun Attributo richiesto";
+                        }
+
+                        <%%
+                           String requestedAttributes = "";
+                           try {
+                              List<RequestedAttribute> itrReqAttr = metadata.getSPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol").getDefaultAttributeConsumingService().getRequestAttributes();
+                              for (RequestedAttribute reqAttr : itrReqAttr) {
+                                 if (reqAttr.isRequired()) {
+                                    if (!"".equals(requestedAttributes)) {
+                                       requestedAttributes += ", ";
+                                    }
+                              
+                                    if ("".equals(reqAttr.getFriendlyName())) {
+                                       requestedAttributes += reqAttr.getName();
+                                    }
+                                    else {
+                                       requestedAttributes += "<a href=\"' + langPreLink + '" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
+                                    }
+                                 }
+                              }
+                           } catch (NullPointerException e) {
+                                 requestedAttributes = "";
+                           }
+                     
+                           if ("".equals(requestedAttributes)) {
+                              %>
+                              document.write(langNoAttrs);
+                              <%%
+                           } else {
+                              %>
+                              document.write('<%%= requestedAttributes %>');
+                              <%%
+                           }
+                       %>
+                     </script>
+                  </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td id="spInfo">
+                     <script language="javascript">
+                        if (userLang == "it-IT") document.write('Attributi Opzionali: ');
+                        else document.write('Optional Attributes: ');
+                      </script>
+                  </td>
+                  <td>
+                      <div id="desAttr">
+                      <script language="javascript">
+                        var langPreLink = "<%= @metadata_information['en']['idpInfoUrl'] %>#";
+                        var langNoAttrs = "No optional Attribute";
+
+                        if (userLang == "it-IT") {
+                           langPreLink = "<%= metadata_information_it['idpInfoUrl'] %>#";
+                           langNoAttrs = "Nessun Attributo opzionale";
+                        }
+
+                        <%%
+                           String desiredAttributes = "";
+                           try {
+                              List<RequestedAttribute> itrReqAttr = metadata.getSPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol").getDefaultAttributeConsumingService().getRequestAttributes();
+                              for (RequestedAttribute reqAttr : itrReqAttr) {
+                                 if (!reqAttr.isRequired()) {
+                                    if (!"".equals(desiredAttributes)) {
+                                       desiredAttributes += ", ";
+                                    }
+
+                                    if ("".equals(reqAttr.getFriendlyName())) {
+                                       desiredAttributes += reqAttr.getName();
+                                    }
+                                    else {
+                                       desiredAttributes += "<a href=\"' + langPreLink + '" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
+                                    }
+                                 }
+                              }
+                           } catch (NullPointerException e) {
+                                 desiredAttributes = "";
+                           }
+                           if ("".equals(desiredAttributes)) {
+                              %>
+                              document.write(langNoAttrs);
+                              <%%
+                           } else {
+                              %>
+                              document.write('<%%= desiredAttributes %>');
+                              <%%
+                           }
+                       %>
+                     </script>
+                  </div>
+                  </td>
+               </tr>
+            </table>
+         </div> <!-- Contenuto Pannello di destra -->
+      </div> <!-- Pannello di Destra -->
+
+      <div id="flags">
+         <div id="itaFlag"> 
+            <a href="<%%= request.getContextPath()%>/Authn/UserPassword?lang=it-IT"><img height="32px" src="<%%= request.getContextPath()%>/images/itaFlag.png"></a>
+         </div> 
+         
+         <div id="engFlag"> 
+            <a href="<%%= request.getContextPath()%>/Authn/UserPassword?lang=en-US"><img height="32px" src="<%%= request.getContextPath()%>/images/engFlag.png"></a>
+         </div>
+      </div>
+   </div>
+ </body>
+</html>

@@ -1,0 +1,20 @@
+Puppet Shibboleth Recipes
+Copyright 2014 Consortium GARR
+
+This product includes software developed at
+Consortium GARR (http://www.garr.it/).
+
+Portions of this software is derived from the puppetlabs
+open recipes avaialble under Apahce 2.0 License from
+   https://github.com/puppetlabs/
+
+This software contains code derived from the RSA Data Security
+Inc. MD5 Message-Digest Algorithm, including various
+modifications by Spyglass Inc., Carnegie Mellon University, and
+Bell Communications Research, Inc (Bellcore).
+
+Regular expression support is provided by the PCRE library package,
+which is open source software, written by Philip Hazel, and copyright
+by the University of Cambridge, England. The original software is
+available from
+   ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd <%= @cert_directory %>
+
+EXPIRYDATE=$(openssl x509 -noout -in <%= @idpfqdn %>.pem -dates | grep notAfter | sed s/notAfter=//g)
+EXPIRYDATE=$(date --date="$EXPIRYDATE")
+TODAY=$(date --date="$EXPIRYDATE")
+
+WARNDATE=$(date -d "+1 month")
+
+#echo $WARNDATE
+#echo $EXPIRYDATE
+
+DIFF1=$(ruby -rdate -e "puts (Date.parse('$EXPIRYDATE') - Date.parse('$TODAY') <= 0)")
+DIFF2=$(ruby -rdate -e "puts (Date.parse('$EXPIRYDATE') - Date.parse('$WARNDATE') <= 0)")
+
+if [ "$DIFF1" == "true" ]
+then
+  # Send message, the certificate is about to expire
+  TEXT="Il certificato per il server <%= @idpfqdn %> e' scaduto."
+  TEXT="$TEXT\nLa data di scadenza del certificato attualmente in vigore e' $EXPIRYDATE."
+  TEXT="$TEXT\n\n"
+  TEXT="$TEXT\nE' necessario provvedere alla richiesta di un rinnovo per il certificato."
+  
+  echo -e "CRITICAL - $TEXT"
+  exit 2
+elif [ "$DIFF2" == "true" ]
+then
+  # Send message, the certificate is about to expire
+  TEXT="Il certificato per il server <%= @idpfqdn %> sta scadendo."
+  TEXT="$TEXT\nLa data di scadenza del certificato attualmente in vigore e' $EXPIRYDATE."
+  TEXT="$TEXT\n\n"
+  TEXT="$TEXT\nPrima di quella data e' necessario provvedere alla richiesta di un rinnovo per il certificato."
+  
+  echo -e "WARNING - $TEXT"
+  exit 1
+else
+  echo "OK"
+  exit 0
+fi

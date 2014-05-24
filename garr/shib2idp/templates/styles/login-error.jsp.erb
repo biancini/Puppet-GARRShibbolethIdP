@@ -1,0 +1,29 @@
+<%%@page import="edu.internet2.middleware.shibboleth.common.profile.AbstractErrorHandler"%>
+
+<%%
+  Throwable error = (Throwable) request.getAttribute(AbstractErrorHandler.ERROR_KEY);
+%>
+
+<html>
+
+<body>
+	<div style="position:absolute; right: 0px"><img src="https://puppetclient.example.com/idp/images/logoEnte-160x120_it.png" /></div>
+	<h3>ERRORE</h3>
+	
+	<table width="100%" cellspacing="0" cellpadding="5" border="0">
+	<tr>
+	<td><img src="<%%= getServletContext().getContextPath() %>/images/error.png" /></td>
+	<td>
+		<%%
+		if (error != null) {
+		    org.owasp.esapi.Encoder esapiEncoder = org.owasp.esapi.ESAPI.encoder();
+		%>
+		Errore: <%%= esapiEncoder.encodeForHTML(error.getMessage()) %>
+		<%% } %>
+		<p>Per supporto nella risoluzione del problema contattare: <a href="<%=metadata_information["technicalEmail"]%>"><%=metadata_information["technicalEmail"].gsub("mailto:","")%></a>.</p>
+	</td>
+	</tr>
+	</table>
+</body>
+
+</html>

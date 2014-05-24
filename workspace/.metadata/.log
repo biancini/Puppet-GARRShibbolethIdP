@@ -1,0 +1,72 @@
+!SESSION 2014-05-24 11:14:30.218 -----------------------------------------------
+eclipse.buildId=R201402150632
+java.version=1.7.0_55
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -data /home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/workspace -os linux -ws gtk -arch x86_64
+
+!ENTRY org.apache.log4j 2 0 2014-05-24 11:14:33.921
+!MESSAGE org.eclipse.xtext.ui.shared.internal.Activator  - Disabling JDT use. : org/eclipse/jdt/core/JavaCore
+
+
+!ENTRY org.apache.log4j 2 0 2014-05-24 11:14:34.263
+!MESSAGE org.eclipse.xtext.ui.shared.internal.Activator  - Disabling JDT use. : org/eclipse/jdt/core/JavaCore
+
+!SESSION 2014-05-24 11:19:34.097 -----------------------------------------------
+eclipse.buildId=R201402150632
+java.version=1.7.0_55
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -data /home/andrea/Documents/uni/research/cs/cloud/puppet/Puppet-GARRShibbolethIdP/workspace -os linux -ws gtk -arch x86_64
+
+!ENTRY org.apache.log4j 2 0 2014-05-24 11:19:38.696
+!MESSAGE org.eclipse.xtext.ui.shared.internal.Activator  - Disabling JDT use. : org/eclipse/jdt/core/JavaCore
+
+
+!ENTRY org.apache.log4j 2 0 2014-05-24 11:19:38.963
+!MESSAGE org.eclipse.xtext.ui.shared.internal.Activator  - Disabling JDT use. : org/eclipse/jdt/core/JavaCore
+
+
+!ENTRY org.eclipse.ui.ide 4 4 2014-05-24 11:23:16.689
+!MESSAGE Problems occurred refreshing the selected resources.
+!SUBENTRY 1 org.eclipse.core.resources 4 567 2014-05-24 11:23:16.689
+!MESSAGE The project description file (.project) for 'puppetlabs-firewall' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY org.eclipse.ui.ide 4 4 2014-05-24 11:23:17.109
+!MESSAGE Problems occurred refreshing the selected resources.
+!SUBENTRY 1 org.eclipse.core.resources 4 567 2014-05-24 11:23:17.109
+!MESSAGE The project description file (.project) for 'puppetlabs-mysql' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY org.eclipse.ui.ide 4 4 2014-05-24 11:23:17.724
+!MESSAGE Problems occurred refreshing the selected resources.
+!SUBENTRY 1 org.eclipse.core.resources 4 567 2014-05-24 11:23:17.724
+!MESSAGE The project description file (.project) for 'puppetlabs-apache' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY org.eclipse.egit.ui 4 0 2014-05-24 11:23:20.595
+!MESSAGE Failed to refresh projects from index changes
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Errors occurred while refreshing resources with the local file system.
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refreshResource(FileSystemResourceManager.java:923)
+	at org.eclipse.core.internal.localstore.FileSystemResourceManager.refresh(FileSystemResourceManager.java:904)
+	at org.eclipse.core.internal.resources.Resource.refreshLocal(Resource.java:1699)
+	at org.eclipse.egit.ui.Activator$ResourceRefreshJob.run(Activator.java:356)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
+Contains: The project description file (.project) for 'puppetlabs-concat' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+!SUBENTRY 1 org.eclipse.core.resources 4 271 2014-05-24 11:23:20.596
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+!SUBENTRY 2 org.eclipse.core.resources 4 567 2014-05-24 11:23:20.596
+!MESSAGE The project description file (.project) for 'puppetlabs-concat' is missing.  This file contains important information about the project.  The project will not function properly until this file is restored.
+
+!ENTRY org.eclipse.egit.ui 4 0 2014-05-24 11:23:20.608
+!MESSAGE Errors occurred while refreshing resources with the local file system.
+
+!ENTRY org.eclipse.core.resources 2 2 2014-05-24 11:26:39.765
+!MESSAGE Save operation warnings.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2014-05-24 11:26:39.765
+!MESSAGE The project description file (.project) for 'puppetlabs-apache' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2014-05-24 11:26:39.765
+!MESSAGE The project description file (.project) for 'puppetlabs-concat' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2014-05-24 11:26:39.765
+!MESSAGE The project description file (.project) for 'puppetlabs-firewall' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2014-05-24 11:26:39.765
+!MESSAGE The project description file (.project) for 'puppetlabs-mysql' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.

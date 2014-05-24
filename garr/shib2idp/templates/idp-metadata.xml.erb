@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+                     xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+                     xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" 
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                     xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                     entityID="https://<%= @idpfqdn %>/idp/shibboleth">
+
+    <md:Extensions>
+        <mdrpi:RegistrationInfo xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" 
+                                registrationAuthority="http://www.idem.garr.it/" 
+                                registrationInstant="<%= @metadata_information['registrationInstant'] %>">
+            <mdrpi:RegistrationPolicy xml:lang="en">
+                https://www.idem.garr.it/idem-metadata-registration-practice-statement
+            </mdrpi:RegistrationPolicy>
+        </mdrpi:RegistrationInfo>
+    </md:Extensions>
+
+    <md:IDPSSODescriptor protocolSupportEnumeration="urn:mace:shibboleth:1.0 
+                                                     urn:oasis:names:tc:SAML:1.1:protocol
+                                                     urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions>
+            <shibmd:Scope regexp="false"><%= @domain_name %></shibmd:Scope>
+
+            <mdui:UIInfo>
+<% 
+   @metadata_information.each do |lang, v|
+   if v.is_a?(Hash)
+      v.each do |field, value|
+         case field 
+            when "orgDisplayName" -%>
+               <mdui:DisplayName xml:lang="<%= lang %>"><%= value %></mdui:DisplayName>
+<%          when "communityDesc" -%>
+               <mdui:Description xml:lang="<%= lang %>"><%= value %></mdui:Description>
+<%          when "idpInfoUrl" -%>
+               <mdui:InformationURL xml:lang="<%= lang %>"><%= value %></mdui:InformationURL>
+<%          when "privacyPage" -%>
+               <mdui:PrivacyStatementURL xml:lang="<%= lang %>"><%= value %></mdui:PrivacyStatementURL>
+<%          when "url_LogoOrg-32x32" -%>
+               <mdui:Logo xml:lang="<%= lang %>" width="16" height="16"><%= value %></mdui:Logo>
+<%          when "url_LogoOrg-160x120" -%>
+               <mdui:Logo xml:lang="<%= lang %>" width="80" height="60"><%= value %></mdui:Logo>   
+<%       end 
+      end 
+   end 
+end -%>
+            </mdui:UIInfo> 
+        </md:Extensions>
+
+        <md:KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+$IDP_CERTIFICATE
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        
+        <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" 
+                                      Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML1/SOAP/ArtifactResolution" 
+                                      index="1"/>
+
+        <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" 
+                                      Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML2/SOAP/ArtifactResolution" 
+                                      index="2"/>
+
+        <md:NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+
+        <md:SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" 
+                                Location="https://<%= @idpfqdn %>/idp/profile/Shibboleth/SSO"/>
+
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" 
+                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/POST/SSO"/>
+
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" 
+                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" 
+                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/Redirect/SSO"/>
+    </md:IDPSSODescriptor>
+
+    <md:AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol
+                                                                 urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <md:Extensions>
+            <shibmd:Scope regexp="false"><%= @domain_name%></shibmd:Scope>
+        </md:Extensions>
+
+        <md:KeyDescriptor>
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+$IDP_CERTIFICATE
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+
+        <md:AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" 
+                             Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+
+        <md:AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" 
+                             Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+
+        <md:NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+
+    </md:AttributeAuthorityDescriptor>
+
+   <md:Organization>
+<% @metadata_information.each do |lang, v|
+   if v.is_a?(Hash)
+      v.each do |field, value|
+         case field 
+            when "nameOrg" -%>
+      <md:OrganizationName xml:lang="<%= lang %>"><%= value %></md:OrganizationName>
+<%          when "orgDisplayName" -%>
+      <md:OrganizationDisplayName xml:lang="<%= lang %>"><%= value %></md:OrganizationDisplayName>
+<%          when "orgUrl" -%>
+      <md:OrganizationURL xml:lang="<%= lang %>"><%= value %></md:OrganizationURL>
+<%          end 
+         end 
+     end 
+  end -%>
+   </md:Organization>
+
+    <md:ContactPerson contactType="technical">
+<% if @metadata_information['technicalIDPadminGivenName'] != '' -%>
+        <md:GivenName><%= @metadata_information['technicalIDPadminGivenName'] %></md:GivenName>
+<% end -%>
+<% if @metadata_information['technicalIDPadminSurName'] != '' -%>
+        <md:SurName><%= @metadata_information['technicalIDPadminSurName'] %></md:SurName>
+<% end -%>
+        <md:EmailAddress><%= @metadata_information['technicalEmail'] %></md:EmailAddress>
+<% if @metadata_information['technicalIDPadminTelephone'] != '' -%>
+        <md:TelephoneNumber><%= @metadata_information['technicalTelephone'] %></md:TelephoneNumber>
+<% end -%>
+    </md:ContactPerson>
+
+</md:EntityDescriptor>

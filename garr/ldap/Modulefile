@@ -1,0 +1,10 @@
+name 'garr-ldap'
+version '0.0.1'
+
+author 'Andrea Biancini <andrea.biancini@garr.it>, Marco Malavolti <marco.malavolti@garr.it>'
+license 'Apache 2.0'
+project_page ''
+source ''
+summary 'A puppet module to install LDAP server'
+description ''
+dependency 'puppetlabs/stdlib', '>=3.1.1'

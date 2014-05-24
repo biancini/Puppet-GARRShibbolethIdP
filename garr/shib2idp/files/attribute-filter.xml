@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+     File di configurazione per il rilascio di ePTId e ePSA a tutti e per il rilascio dei soli attributi REQUIRED agli SP di Test di IDEM -->
+
+<AttributeFilterPolicyGroup id="ShibbolethFilterPolicy" xmlns="urn:mace:shibboleth:2.0:afp"
+                            xmlns:basic="urn:mace:shibboleth:2.0:afp:mf:basic" 
+                            xmlns:saml="urn:mace:shibboleth:2.0:afp:mf:saml"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns:afp="urn:mace:shibboleth:2.0:afp"
+                            xsi:schemaLocation="urn:mace:shibboleth:2.0:afp classpath:/schema/shibboleth-2.0-afp.xsd
+                                                urn:mace:shibboleth:2.0:afp:mf:basic classpath:/schema/shibboleth-2.0-afp-mf-basic.xsd
+                                                urn:mace:shibboleth:2.0:afp:mf:saml classpath:/schema/shibboleth-2.0-afp-mf-saml.xsd">
+    
+    <!--  Release the transient ID to anyone -->
+    <AttributeFilterPolicy id="releaseTransientIdToAnyone">
+        <PolicyRequirementRule xsi:type="basic:ANY" />
+        
+        <AttributeRule attributeID="transientId">
+            <PermitValueRule xsi:type="basic:ANY" />
+        </AttributeRule>
+        
+    </AttributeFilterPolicy>
+    
+    
+    <!--  Release ePTId and ePSA to anyone -->
+    
+    <AttributeFilterPolicy id="attributesToAnyone">
+        <PolicyRequirementRule xsi:type="basic:ANY" />
+        
+        <AttributeRule attributeID="eduPersonTargetedID">
+            <PermitValueRule xsi:type="basic:ANY" />
+        </AttributeRule>
+        
+        <AttributeRule attributeID="eduPersonScopedAffiliation">
+            <PermitValueRule xsi:type="basic:ANY" />
+        </AttributeRule>
+        
+    </AttributeFilterPolicy>
+    
+    <!-- IDEM SP 2.4 di Test -->
+    <AttributeFilterPolicy id="IDEMsp24-test">
+        <PolicyRequirementRule xsi:type="basic:AttributeRequesterString" 
+        value="https://sp24-test.garr.it/shibboleth" />
+        
+        <afp:AttributeRule attributeID="uid"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="surname"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="givenName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="commonName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="displayName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacDateOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacYearOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPlaceOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalUniqueID"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalPosition"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalTitle"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacUserPresenceID"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacHomeOrganization"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacHomeOrganizationType"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacMotherTongue"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="street"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="houseIdentifier"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="locality"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="preferredLanguage"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="postalCode"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="stateProvince"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="countryName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="friendlyCountryName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="email"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="telephoneNumber"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="facsimileTelephoneNumber"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="mobile"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="organizationalUnit"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="organizationName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonOrgDN"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonOrgUnitDN"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonPrincipalName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonEntitlement"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="title"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+     </AttributeFilterPolicy>
+
+    <!-- IDEM SP di Test -->
+    <AttributeFilterPolicy id="IDEMsp-test">
+        <PolicyRequirementRule xsi:type="basic:AttributeRequesterString" 
+        value="https://sp-test.garr.it/shibboleth" />
+
+        <afp:AttributeRule attributeID="uid"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="surname"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="givenName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="commonName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="displayName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacDateOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacYearOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPlaceOfBirth"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalUniqueID"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalPosition"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacPersonalTitle"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacUserPresenceID"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacHomeOrganization"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacHomeOrganizationType"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="schacMotherTongue"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="street"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="houseIdentifier"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="locality"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="preferredLanguage"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="postalCode"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="stateProvince"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="countryName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="friendlyCountryName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="email"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="telephoneNumber"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="facsimileTelephoneNumber"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="mobile"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="organizationalUnit"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="organizationName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonOrgDN"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonOrgUnitDN"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonPrincipalName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonEntitlement"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="title"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+     </AttributeFilterPolicy>
+
+    <!-- UNIMO SPEMP di Test -->
+    <AttributeFilterPolicy id="IDEMspemb-test">
+        <PolicyRequirementRule xsi:type="basic:AttributeRequesterString" 
+        value="https://spemb.lab.unimo.it/shibboleth" />
+
+        <afp:AttributeRule attributeID="email"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="title"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="eduPersonPrincipalName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+        <afp:AttributeRule attributeID="surname"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
+     </AttributeFilterPolicy>
+
+</AttributeFilterPolicyGroup>

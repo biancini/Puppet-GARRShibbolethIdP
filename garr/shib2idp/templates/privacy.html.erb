@@ -1,0 +1,7 @@
+<%=
+  begin
+    scope.function_template(["shib2idp/privacy.#{@hostname}.html.erb"])
+  rescue
+    scope.function_template(["shib2idp/privacy.default.html.erb"])
+  end
+-%>
