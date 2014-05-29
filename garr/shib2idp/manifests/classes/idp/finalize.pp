@@ -233,12 +233,9 @@ class shib2idp::idp::finalize (
       target  => '/usr/share/java/mysql-connector-java.jar',
       require => [Shibboleth_install['execute_install'], Class['mysql::bindings::java']];
   }
-
-  mysql::db { 'userdb':
-    user     => 'root',
-    password => $rootpw,
-    host     => 'localhost',
-    grant    => ['ALL'],
+  
+  mysql_database { 'userdb':
+    ensure  => 'present',
   }
 
   execute_mysql {
@@ -261,7 +258,7 @@ class shib2idp::idp::finalize (
                                   'KEY localEntity (localEntity(16), peerEntity(16), localId),',
                                   'KEY localEntity_2 (localEntity(16), peerEntity(16), localId, deactivationDate)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql::Db['userdb']];
+      require           => [Package['libmysql-ruby'], MySql_Database['userdb']];
   }
   
   include "shib2idp::idp::attributes"
