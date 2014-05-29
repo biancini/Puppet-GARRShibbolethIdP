@@ -41,11 +41,11 @@ generate_cert(){
 
 generate_default_files(){
   cp ${MODULESDIR}/shib2idp/files/tou/example-tou.html.txt config-files/${IDP_HOSTNAME}-tou.html
-  cp ${MODULESDIR}/shib2idp/files/stili/sample-logo-32x32_en.png config-files/${IDP_HOSTNAME}-logo-32x32_en.png
-  cp ${MODULESDIR}/shib2idp/files/stili/sample-logo-32x32_it.png config-files/${IDP_HOSTNAME}-logo-32x32_it.png
-  cp ${MODULESDIR}/shib2idp/files/stili/sample-logo-160x120_en.png config-files/${IDP_HOSTNAME}-logo-160x120_en.png
-  cp ${MODULESDIR}/shib2idp/files/stili/sample-logo-160x120_it.png config-files/${IDP_HOSTNAME}-logo-160x120_it.png
-  cp ${MODULESDIR}/shib2idp/files/stili/sample-login.css config-files/${IDP_HOSTNAME}-login.css
+  cp ${MODULESDIR}/shib2idp/files/styles/sample-logo-32x32_en.png config-files/${IDP_HOSTNAME}-logo-32x32_en.png
+  cp ${MODULESDIR}/shib2idp/files/styles/sample-logo-32x32_it.png config-files/${IDP_HOSTNAME}-logo-32x32_it.png
+  cp ${MODULESDIR}/shib2idp/files/styles/sample-logo-160x120_en.png config-files/${IDP_HOSTNAME}-logo-160x120_en.png
+  cp ${MODULESDIR}/shib2idp/files/styles/sample-logo-160x120_it.png config-files/${IDP_HOSTNAME}-logo-160x120_it.png
+  cp ${MODULESDIR}/shib2idp/files/styles/sample-login.css config-files/${IDP_HOSTNAME}-login.css
 }
 
 read -p "Insert the Hostname for the IdP to be installed [eg: puppetclient]: " IDP_HOSTNAME
@@ -123,17 +123,17 @@ then
   mv "${IDP_HOSTNAME}-cert-server.pem" "${MODULESDIR}/shib2common/files/certs"
   mv "${IDP_HOSTNAME}-tou.html" "${MODULESDIR}/shib2idp/files/tou"
 
-  mv "${IDP_HOSTNAME}-login.css" "${MODULESDIR}/shib2idp/files/stili"
+  mv "${IDP_HOSTNAME}-login.css" "${MODULESDIR}/shib2idp/files/styles"
 
-  mv "${IDP_HOSTNAME}-logo-32x32_en.png" "${MODULESDIR}/shib2idp/files/stili"
-  mv "${IDP_HOSTNAME}-logo-32x32_it.png" "${MODULESDIR}/shib2idp/files/stili"
-  mv "${IDP_HOSTNAME}-logo-160x120_en.png" "${MODULESDIR}/shib2idp/files/stili"
-  mv "${IDP_HOSTNAME}-logo-160x120_it.png" "${MODULESDIR}/shib2idp/files/stili"
+  mv "${IDP_HOSTNAME}-logo-32x32_en.png" "${MODULESDIR}/shib2idp/files/styles"
+  mv "${IDP_HOSTNAME}-logo-32x32_it.png" "${MODULESDIR}/shib2idp/files/styles"
+  mv "${IDP_HOSTNAME}-logo-160x120_en.png" "${MODULESDIR}/shib2idp/files/styles"
+  mv "${IDP_HOSTNAME}-logo-160x120_it.png" "${MODULESDIR}/shib2idp/files/styles"
 
   if [ ! -z "${MODULESDIR_TEST}" ]; then
       cp $MODULESDIR/shib2common/files/certs/$IDP_HOSTNAME-* $MODULESDIR_TEST/shib2common/files/certs
       cp $MODULESDIR/shib2idp/files/tou/$IDP_HOSTNAME-tou.html $MODULESDIR_TEST/shib2idp/files/tou
-      cp $MODULESDIR/shib2idp/files/stili/$IDP_HOSTNAME-log* $MODULESDIR_TEST/shib2idp/files/styles
+      cp $MODULESDIR/shib2idp/files/styles/$IDP_HOSTNAME-log* $MODULESDIR_TEST/shib2idp/files/styles
   fi
 
   #echo "Restarting puppet master on $PUPPET_SERVER..."
