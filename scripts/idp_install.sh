@@ -23,18 +23,18 @@ apt-get install git
 # clone repository from Git
 cd /opt
 git clone https://github.com/ConsortiumGARR/Puppet-GARRShibbolethIdP
-cd Puppet-GarrShibbolethIdP
+cd Puppet-GARRShibbolethIdP
 git submodule init
 git submodule update
 
 # install modules in puppet
 cd /etc/puppet/modules
-for i in /opt/Puppet-GarrShibbolethIdP/puppetlabs/*; do ln -s $i; done
-for i in /opt/Puppet-GarrShibbolethIdP/garr-common/garr/*; do ln -s $i; done
-for i in /opt/Puppet-GarrShibbolethIdP/garr/*; do ln -s $i; done
+for i in /opt/Puppet-GARRShibbolethIdP/puppetlabs/*; do ln -s $i; done
+for i in /opt/Puppet-GARRShibbolethIdP/garr-common/garr/*; do ln -s $i; done
+for i in /opt/Puppet-GARRShibbolethIdP/garr/*; do ln -s $i; done
 
 # execute scripts for initializing puppet master
-cd /opt/Puppet-GarrShibbolethIdP/scripts
+cd /opt/Puppet-GARRShibbolethIdP/scripts
 ./prepare_puppetmaster.sh
 ./generate_sitepp.py
 
