@@ -30,15 +30,15 @@ class shib2idp::idp::uapprove (
   case $uapprove_version {
    '2.4.1': { 
             download_file { "/usr/local/src/uApprove-${uapprove_version}":
-               #url     => "https://forge.switch.ch/redmine/attachments/download/646/uApprove-${uapprove_version}.zip",
-               url     => "http://${::pupmaster}/downloads/uApprove-${uapprove_version}.zip",
+               url     => "https://forge.switch.ch/redmine/attachments/download/646/uApprove-${uapprove_version}.zip",
+               #url     => "http://${::pupmaster}/downloads/uApprove-${uapprove_version}.zip",
                extract => 'zip',
             }
    }
    '2.5.0': {
             download_file { "/usr/local/src/uApprove-${uapprove_version}":
-               #url     => "https://forge.switch.ch/redmine/attachments/download/1623/uApprove-${uapprove_version}.zip",
-               url     => "http://${::pupmaster}/downloads/uApprove-${uapprove_version}.zip",
+               url     => "https://forge.switch.ch/redmine/attachments/download/1623/uApprove-${uapprove_version}.zip",
+               #url     => "http://${::pupmaster}/downloads/uApprove-${uapprove_version}.zip",
                extract => 'zip',            
             }
    }

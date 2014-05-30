@@ -73,8 +73,8 @@ class shib2idp::idp (
   Download_file <| title == "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}" |> ~> Shibboleth_install <| title == 'execute_install' |>
 
   download_file { "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}":
-    #url             => "http://shibboleth.net/downloads/identity-provider/${shibbolethversion}/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
-    url             => "http://${::pupmaster}/downloads/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
+    url             => "http://shibboleth.net/downloads/identity-provider/${shibbolethversion}/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
+    #url             => "http://${::pupmaster}/downloads/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
     extract         => 'zip',
     execute_command => [
       "/usr/bin/find /usr/local/src/shibboleth-identityprovider-${shibbolethversion} -type d -exec /bin/chmod 755 {} \\;",
