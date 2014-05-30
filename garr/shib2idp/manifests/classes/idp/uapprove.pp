@@ -90,9 +90,12 @@ class shib2idp::idp::uapprove (
       require => File["${shibbolethsrc}/src/main/webapp/uApprove"],
       refreshonly => true;
   }
-  
-  mysql_database { 'uApprove':
-    ensure  => 'present',
+
+  mysql::db { 'uApprove':
+    user     => 'uApprove',
+    password => $rootldappw,
+    host     => 'localhost',
+    grant    => ['ALL'],
   }
 
   execute_mysql {
@@ -108,7 +111,7 @@ class shib2idp::idp::uapprove (
                                   'acceptanceDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,',
                                   'PRIMARY KEY (userId, version)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql_Database['uApprove']];
+      require           => [Package['libmysql-ruby'], MySql::Db['uApprove']];
 
     'uapprove-table-AttributeReleaseConsent':
       user              => 'uApprove',
@@ -123,7 +126,7 @@ class shib2idp::idp::uapprove (
                                   'consentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,',
                                   'PRIMARY KEY (userId, relyingPartyId,attributeId)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql_Database['uApprove']];
+      require           => [Package['libmysql-ruby'], MySql::Db['uApprove']];
   }
 
   augeas { 'uapprove-web.xml':
