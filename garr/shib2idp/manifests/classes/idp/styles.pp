@@ -42,7 +42,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/engFlag.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
 
-      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/logoEnte-32x32_it.png':
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/institutionLogo-32x32_it.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -50,7 +50,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/${hostname}-logo-32x32_it.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
        
-      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/logoEnte-160x120_it.png':
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/institutionLogo-160x120_it.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -58,7 +58,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/${hostname}-logo-160x120_it.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
 
-      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/logoEnte-32x32_en.png':
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/institutionLogo-32x32_en.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -66,7 +66,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/${hostname}-logo-32x32_en.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
        
-       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/logoEnte-160x120_en.png':
+       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/institutionLogo-160x120_en.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
