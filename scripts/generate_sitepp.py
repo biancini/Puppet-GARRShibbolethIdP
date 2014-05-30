@@ -204,9 +204,15 @@ config_basedir = "/etc/puppet"
 if os.path.exists("/etc/puppet/environments"):
   config_basedir += "/environments/test"
 
+if not os.path.exists("%s/manifests/nodes" % config_basedir):
+  os.makedirs("%s/manifests/nodes" % config_basedir)
+  
 f1 = open("%s/manifests/nodes/%s.pp" % (config_basedir, sitepp_vals['idpfqdn']), "w")
 f1.write(sitepp)
 f1.close()
+
+if not os.path.exists("%s/manifests/site.pp" % config_basedir):
+  open("%s/manifests/site.pp" % config_basedir, "w").close()
 
 modify_sitepp = True
 for line in open("%s/manifests/site.pp" % config_basedir, "r").readlines():
