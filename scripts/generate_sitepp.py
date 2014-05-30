@@ -107,13 +107,11 @@ for dc in idpDomainName.split('.'):
     basedn += "," + "dc="+dc
   i += 1
 
-
 # Retrieve the baseDN for LDAP from the web site of Institution
+sitepp_vals['domain_name'] = request("Specify the organization internet domain", idpDomainName, example_as_default=(idpDomainName != 'example.com'))
 
 sitepp_vals['mdui_langs'] = request("Insert the languages to be used for MDUI information separated by space", "en it", example_as_default=True)
 sitepp_vals['mdui_langs'] = sitepp_vals['mdui_langs'].split(' ')
-
-sitepp_vals['domain_name'] = request("Specify the organization internet domain", idpDomainName, example_as_default=(idpDomainName != 'example.com'))
 
 for curlang in sitepp_vals['mdui_langs']:
   print ""
@@ -134,6 +132,7 @@ for curlang in sitepp_vals['mdui_langs']:
 
   sitepp_vals['url_LogoOrg_160x120_%s' % curlang] = request("Insert the URL of the image's logo sized 160x120 pixel for language %s" % curlang, "https://%s/idp/images/institutionLogo-160x120_%s.png" % (sitepp_vals['idpfqdn'], curlang), example_as_default=True)
 
+print ""
 sitepp_vals['technicalEmail'] = request("Insert a valid email address to be used for technical inquiries from IDEM federation", "idpcloud-service@garr.it")
 #sitepp_vals['technicalIDPadminGivenName'] = request("Insert Name IdP's Admin (leave empty if unknown)", "Technical", allow_empty=True)
 #sitepp_vals['technicalIDPadminSurName'] = request("Insert Surname IdP's Admin", "Support", example_as_default=True)
