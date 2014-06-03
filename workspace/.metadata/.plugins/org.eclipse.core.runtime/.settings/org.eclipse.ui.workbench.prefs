@@ -1,2 +1,0 @@
-ENABLED_DECORATORS=com.puppetlabs.geppetto.pp.dsl.ui.ppProjectNatureDecorator\:true,com.puppetlabs.geppetto.pp.dsl.ui.errorDecorator\:true,org.eclipse.egit.ui.internal.decorators.GitLightweightDecorator\:true,org.eclipse.team.svn.ui.decorator.SVNLightweightDecorator\:true,org.eclipse.ui.LinkedResourceDecorator\:true,org.eclipse.ui.SymlinkDecorator\:true,org.eclipse.ui.VirtualResourceDecorator\:true,org.eclipse.ui.ContentTypeDecorator\:true,org.eclipse.ui.ResourceFilterDecorator\:false,org.eclipse.xtext.builder.nature.overlay\:true,
-eclipse.preferences.version=1
