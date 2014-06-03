@@ -152,17 +152,19 @@ from the installation parameters, choose ONLY **standard system utilities** and 
 
 * Modify the file /etc/default/puppet by setting `START=yes` and run puppet service with `service puppet start`.
 
+Puppet installation execution
+=============================
+
 Connection the Puppet Agents to Puppet Master
-=============================================
+---------------------------------------------
 
 * After running the puppet service on each Puppet Agent, on the Puppet Master, execute this command to sign all SSH Certificate of the Puppet Agents necessary to establish their connection with Puppet Master:  
 `puppet cert sign --all`
 
 * Now, if you try to run `puppet agent --test` on each Puppet Agent, you can see if the connection is established or not with the Puppet Master.
 
-
 Configuration of the Puppet Master to install an Identity Provider Shibboleth on a Puppet Agent
-===============================================================================================
+-----------------------------------------------------------------------------------------------
 
 1. Execute the script `prepare_puppetmaster.sh`, after have been modified his **PUPPET_USER** and **PUPPET_SERVER** variables, to generate the mandatory configurations files for your Puppet Agent (or Puppet Agents):
   * the public/private keypair for the certificates to be used for HTTPs and for the IdP metadata;  
