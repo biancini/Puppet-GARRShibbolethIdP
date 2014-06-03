@@ -359,8 +359,10 @@ The parameters that can be specified to describe a Shibboleth IdP instance are t
  * `uapprove_version`: This parameter permits to choose which version of uApprove must be installed. The default version installed
    will be the '2.5.0'. The version tested are '2.4.1' and '2.5.0'.
 
-How to build the check_password.so module for OpenLDAP Password Policy from source
-==================================================================================
+check_password.so compilation
+=============================
+In this section the steps to build the check_password.so module for OpenLDAP Password Policy from source
+will be described.
 
 Access to you LDAP machine that you have installed with (debian) packages and following this commands:
 * `cd /tmp ; sudo apt-get install dpkg-dev ; apt-get build-dep slapd ; apt-get source slapd`
