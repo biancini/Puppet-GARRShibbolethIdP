@@ -11,8 +11,8 @@ fi
 
 # install puppet
 cd /tmp
-wget -N https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
-dpkg -i puppetlabs-release-trusty.deb
+wget -N https://apt.puppetlabs.com/puppetlabs-release-precise.deb
+dpkg -i puppetlabs-release-precise.deb
 sudo apt-get update
 apt-get install puppet puppetmaster
 

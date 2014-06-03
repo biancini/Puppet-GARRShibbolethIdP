@@ -1,0 +1,5 @@
+workspace/.metadata/.log
+workspace/.metadata/.plugins/org.eclipse.core.resources/.history/*
+*.snap
+*.prefs
+

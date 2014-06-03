@@ -1,41 +1,40 @@
-Puppet modules to install Shibboleth IdP and SP on linux
-========================================================
+Puppet modules to install Shibboleth IdP on linux
+=================================================
 
-This project contains puppet modules for different pieces of software, in particular it is intended to provide the required installation steps for Internet2 implementations of Shibboleth:
-
- * Shibboleth IdP
- * Shibboleth SP
-
-The module has been developed and tested on Debian Linux systems.
-
+This project contains puppet modules for different pieces of software, in particular it is intended to provide the required installation steps for Internet2 implementations of Shibboleth IdP.
+The module has been developed and tested on Debian (Squeeze and Wheezy) and on Ubuntu (12.04 LTS) Linux systems.
 
 Configuration of the Puppet Master
 ==================================
-The modules developed can be installed on a Puppet Agent running Puppet 3.3.0.
+The modules developed can be installed on a Puppet Agent running Puppet >= 3.3.0.
 
 The steps to have a Puppet Master installed correctly are:
 
-* Install Debian Squeeze (or Wheezy) on the target machine, from the installation parameters, choose ONLY ***standard system utilities*** and ***ssh server*** to minimize the number of packages to be installed on the targed machine.
+* Install Ubuntu 12.04 LTS on the target machine, from the installation parameters, choose ONLY ***standard system utilities*** and ***ssh server*** to minimize the number of packages to be installed on the targed machine.
 
 * Configure the network and the name resolution so that the machine reachable with its FQDN (as returned by `hostname -f`) from the Puppet Agents.
 
-* Install puppet 3.3.0 by executing:
-
+* Install last version of puppet by executing:
   * On Debian Squeeze:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-squeeze.deb`
       * `dpkg -i puppetlabs-release-squeeze.deb`
       * `apt-get update`
-      * `apt-get install puppetmaster ruby`
-      * `apt-get dist-upgrade`  
-<br>
+      * `apt-get install puppet ruby`
+      * `apt-get dist-upgrade`
+
   * On Debian Wheezy:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-wheezy.deb`
       * `dpkg -i puppetlabs-release-wheezy.deb`
       * `apt-get update`
-      * `apt-get install puppetmaster ruby`
+      * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
-<br>
-<br>
+
+  * On Ubuntu 12.04 LTS:
+      * `wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb`
+      * `dpkg -i dpkg -i puppetlabs-release-precise.deb`
+      * `apt-get update`
+      * `apt-get install puppet ruby`
+      * `apt-get dist-upgrade`
 * Change `/etc/puppet/puppet.conf` by adding the following lines after `[master]`:
    ```
    [master]
@@ -46,32 +45,34 @@ The steps to have a Puppet Master installed correctly are:
 
    ```
 
-* Download from Github into you prefer directory the Puppet-Shibboleth code. 
-  In this README we download it into a new **data/** directory:
+* Download from Github into you prefer directory the Puppet-GARRShibbolethIdP code and update submodules.
+  In this README we download it into a new directory under `/opt`:
   ```
-  mkdir data ; cd data ; git clone git clone https://github.com/malavolti/Puppet-Shibboleth.git Puppet-Shibboleth
+  cd /opt
+  git clone https://github.com/ConsortiumGARR/Puppet-GARRShibbolethIdP
+  cd Puppet-GARRShibbolethIdP
+  git submodule init
+  git submodule update
   ```
 
-* Move or Link all modules from **garr** folder of this GitHub project to `/etc/puppet/modules`:
+* Move or Link all modules from the proper folders of this GitHub project to `/etc/puppet/modules`:
   ```
-  cd /etc/puppet/modules ; ln -s /data/Puppet-Shibboleth/garr/* .
+  cd /etc/puppet/modules
+  for i in /opt/Puppet-GARRShibbolethIdP/puppetlabs/*; do ln -s $i; done
+  for i in /opt/Puppet-GARRShibbolethIdP/garr-common/garr/*; do ln -s $i; done
+  for i in /opt/Puppet-GARRShibbolethIdP/garr/*; do ln -s $i; done
   ```
-
-* Install the Apache and MySQL puppetlabs modules with the commands:
-   ```
-   puppet module install puppetlabs/apache
-   puppet module install puppetlabs/mysql
-   puppet module install puppetlabs/firewall
-   ```
 
 * Create a new empty file called `/etc/puppet/manifests/site.pp` and a new directory called `/etc/puppet/manifests/nodes`.
 
-* Moved on "scripts" directory and execute, in this order, the scripts `prepare_puppetmaster.sh` and `generate_sitepp.py` .
+* Move on "scripts" directory and execute, in this order, the scripts `prepare_puppetmaster.sh` and `generate_sitepp.py` .
+
+* Restart puppetmaster daemon with `service puppetmaster restart`.
 
 ### OPTIONAL: Monitoring with Nagios3
 
 * Install Nagios Server and NRPE Plugin:
-    `apt-get install nagios3 nagios-nrpe-plugin`
+  `apt-get install nagios3 nagios-nrpe-plugin`
 
 * Move all CFG files from `monitoring/nagios/config.d/` to `/etc/nagios3/conf.d/`
   ```
@@ -101,50 +102,44 @@ The steps to have a Puppet Master installed correctly are:
 Configuration of the Puppet Agent
 =================================
 
-* Install Debian Squeeze (or Wheezy or Ubuntu 12.04 LTS) on the target machine:
+* Install Ubuntu 12.04 LTS on the target machine:
 from the installation parameters, choose ONLY **standard system utilities** and **ssh server** to minimize the number of packages to be installed on the targed machine.
 
 * Configure the network and the name resolution so that the machine reachable with its FQDN (as returned by `hostname -f`) from the Puppet Master.
 
-* Install puppet 3.3.0 by executing:  
+* Install last version of puppet by executing:
   * On Debian Squeeze:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-squeeze.deb`
       * `dpkg -i puppetlabs-release-squeeze.deb`
       * `apt-get update`
       * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
-<br>
-<br>
+
   * On Debian Wheezy:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-wheezy.deb`
       * `dpkg -i puppetlabs-release-wheezy.deb`
       * `apt-get update`
       * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
-<br>
-<br>
+
   * On Ubuntu 12.04 LTS:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb`
       * `dpkg -i dpkg -i puppetlabs-release-precise.deb`
       * `apt-get update`
       * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
-<br>
-<br>
+
 * Install Augeas 0.10.0:  
   * On Debian Squeeze:
       * Add `deb http://backports.debian.org/debian-backports squeeze-backports main` to `/etc/apt/source.list` file.
       * Run `apt-get update` and then `apt-get -t squeeze-backports install augeas-lenses augeas-tools libaugeas0`
-<br>
-<br>
+
   * On Debian Wheezy:
       * Nothing because will be installed by Puppet.
-<br>
-<br>
+
   * On Ubuntu 12.04 LTS:
       * Run `apt-get install augeas-tools`.
-<br>
-<br>
+
 * Change `/etc/puppet/puppet.conf` by adding the following lines at the end of file:
    ```
    [agent]
@@ -157,12 +152,11 @@ from the installation parameters, choose ONLY **standard system utilities** and 
 
 * Modify the file /etc/default/puppet by setting `START=yes` and run puppet service with `service puppet start`.
 
-
 Connection the Puppet Agents to Puppet Master
 =============================================
 
 * After running the puppet service on each Puppet Agent, on the Puppet Master, execute this command to sign all SSH Certificate of the Puppet Agents necessary to establish their connection with Puppet Master:  
-  `puppet cert sign --all`
+`puppet cert sign --all`
 
 * Now, if you try to run `puppet agent --test` on each Puppet Agent, you can see if the connection is established or not with the Puppet Master.
 
@@ -182,7 +176,6 @@ Configuration of the Puppet Master to install an Identity Provider Shibboleth on
 2. Execute the script `generate_sitepp.py` to generate the mandatory `site.pp` file for your Puppet Agent.  
 This file permits the configuration of the IdP instance as for the example `site.pp` provided.
 
-
 Tests
 =====
 The modules have been developed for Debian (version Squeeze, Wheezy and Ubuntu 12:04 LTS) and have been tested on an environment using the Debian Squeeze, the Debian Wheezy and the Ubuntu 12.04 LTS versions of Linux.
@@ -196,69 +189,82 @@ Examples
 Shibboleth IdP
 --------------
 To create a machine with the Internet2 implementation of a Shibboleth IdP the following actions
-are requested. Below an example configuration that should be put into the site.pp file on the Puppet Master:
+are requested. An example of ``site.pp`` is provided in the homonymous file in this repository.
+Below an example configuration that should be put into the site.pp file on the Puppet Master:
 
 ```
-
 node '<YOUR_IDP_FQDN>' {
-
   idpfirewall::firewall { "${hostname}-firewall":
-    iptables_enable_network => '<YOUR.NETWORK.IP.ADDRESS>',
+      iptables_enable_network => undef,
+  }
+
+  $hostfqdn                = '<YOUR.PRIVATE.NETWORK.IP.ADDRESS>'
+  $keystorepassword        = 'puppetpassword'
+  $mailto                  = 'admin.idp@mib.garr.it'
+  $nagiosserver            = '10.0.0.165'
+
+  shib2common::instance { "${hostname}-common":
+    install_apache          => true,
+    install_tomcat          => true,
+    configure_admin         => true,
+    tomcat_admin_password   => 'adminpassword',
+    tomcat_manager_password => 'managerpassword',
+    hostfqdn                => $hostfqdn,
+    keystorepassword        => $keystorepassword,
+    mailto                  => $mailto,
+    nagiosserver            => $nagiosserver,
   }
 
   shib2idp::instance { "${hostname}-idp":
-    metadata_information => {
-       'en' => {
-          'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
-          'communityDesc'          => 'GARR Research &amp; Development',
-          'orgUrl'                 => 'http://www.garr.it/',
-          'privacyPage'            => 'http://www.garr.it/',
-          'nameOrg'                => 'Consortium GARR',
-          'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
-          'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_en.png',
-          'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_en.png',
-       }, 
-      
-       'it' => {
-          'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
-          'communityDesc'          => 'GARR Research &amp; Development',
-          'orgUrl'                 => 'http://www.garr.it/',
-          'privacyPage'            => 'http://www.garr.it/',
-          'nameOrg'                => 'Consortium GARR',
-          'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
-          'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_it.png',
-          'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_it.png',
-       },
-      'technicalEmail'             => 'mailto:support@<YOUR_IDP_FQDN>',
-      'technicalIDPadminGivenName' => 'System',
-      'technicalIDPadminSurName'   => 'Support',
-      'technicalIDPadminTelephone' => '+39 3481234567',
+    metadata_information    => {
+      'en'                => {
+        'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
+        'communityDesc'          => 'GARR Research&amp;Development',
+        'orgUrl'                 => 'http://www.garr.it/',
+        'privacyPage'            => 'http://www.garr.it/',
+        'nameOrg'                => 'Consortium GARR',
+        'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
+        'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_en.png',
+        'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_en.png',
+      },
+      'it'                => {
+        'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
+        'communityDesc'          => 'GARR Research&amp;Development',
+        'orgUrl'                 => 'http://www.garr.it/',
+        'privacyPage'            => 'http://www.garr.it/',
+        'nameOrg'                => 'Consortium GARR',
+        'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
+        'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_it.png',
+        'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_it.png',
+      },
+      'technicalEmail'             => 'mailto:support@garr.it',
+      'technicalIDPadminGivenName' => 'GivenName',
+      'technicalIDPadminSurName'   => 'SurName',
+      'technicalIDPadminTelephone' => '0200000000',
       'registrationInstant'        => '2013-06-27T12:00:00Z',
     },
-    configure_admin              => true,
-    tomcat_admin_password        => 'adminpassword',
-    tomcat_manager_password      => 'managerpassword',
+    idpfqdn                      => $hostfqdn,
+    keystorepassword             => $keystorepassword,
+    mailto                       => $mailto,
     shibbolethversion            => '2.4.0',
     install_uapprove             => true,
-    idpfqdn                      => '<YOUR_IDP_FQDN>',
-    keystorepassword             => 'puppetpassword',
-    mailto                       => 'support@email.it',
     install_ldap                 => true,
-    domain_name                  => 'example.com',
-    basedn                       => 'dc=example,dc=com',
+    domain_name                  => 'mib.garr.it',
+    basedn                       => 'dc=mib,dc=garr,dc=it',
     rootdn                       => 'cn=admin',
     rootpw                       => 'ldappassword',
     rootldappw                   => 'ldappassword',
     ldap_host                    => undef,
     ldap_use_ssl                 => undef,
     ldap_use_tls                 => undef,
-    logserver                    => undef,
-    nagiosserver                 => undef,
-    collectdserver               => undef,
-    sambadomain                  => 'WORKGROUP',
+    logserver                    => '10.0.0.165',
+    nagiosserver                 => $nagiosserver,
+    collectdserver               => '10.0.0.165',
+    sambadomain                  => 'IDP-IN-THE-CLOUD',
     test_federation              => true,
     custom_styles                => true,
     first_install                => true,
+    phpldap_easy_insert          => true,
     uapprove_version             => '2.5.0',
   }
 }
@@ -276,69 +282,82 @@ Port 22, in particular, can be configured to be open only on certain networks, s
 the $iptables_enable_network param to this class.
 
 The iptables class has the following parameters:
- * **$iptables_enable_network** => The network on which ssh should be accessible.
+ * `$iptables_enable_network` => The network on which ssh should be accessible.
    If set to '192.168.0.0/24', for example, the ssh port will be accessible only by hosts
    with IP ranging from 192.168.0.1 to 192.168.0.254.
    If not set (or set to '') ssh port will be accessible by every network and every host.
 
-After that the example provided installs and configures the Shibboleth IdP on the Puppet agent machine.
-At first it installs the prerequisites needed to the IdP to be installed.
-Then downloads and installs the IdP Package from Internet2 Shibbolet.
+Then the example provided install the common module developed by GARR for all Puppet projects related to Shibboleth.
+In this module the parameter that can be specified are:
 
-The parameters that can be specified to describe a Shibboleth IdP instance are the following:
- * **$configure_admin** => This param permits to specify if the Tomcat administration interface has to be
+ * `install_apache`: a flag indicating whether to intall Apache httpd web server. Has to be true for Shibboleth IdP.
+ * `install_tomcat`: a flag indicating whether to intall Tomcat applicationserver. Has to be true for Shibboleth IdP.
+ * `configure_admin`: this param permits to specify if the Tomcat administration interface has to be
    installed on the Tomcat instance or not. If set to true the administration interface is installed and will be
    accessible on the port 8080 of the Puppet agent machine.
- * **$tomcat_admin_password** => If the Tomcat administration interface is going to be installed this parameter
+ * `tomcat_admin_password`: If the Tomcat administration interface is going to be installed this parameter
    permits to specify the password for the 'admin' user used by tomcat to access the administration interface. 
- * **$tomcat_manager_password** => If the Tomcat administration interface is going to be installed this parameter
+ * `tomcat_manager_password`: If the Tomcat administration interface is going to be installed this parameter
    permits to specify the password for the 'manager' user used by tomcat to access the administration interface.
- * **$shibbolethversion** => This parameter permits to specify the version of Shibboleth IdP to be downloaded
-   from the Internet2 repositories. By default the 2.3.3 version will be downloaded.
- * **$install_uapprove** => This parameter permits to specify if uApprove has to be installed on this IdP
- * **$idpfqdn** => This parameters must contain the fully qualified domain name of the IdP. This name must be
+ * `hostfqdn`: the fully qualified hostname for the IdP to be installed.
+ * `keystorepassword`: this parameter permits to specify the keystore password used to protect the keystore file
+   on the IdP server.
+ * `mailto`: the contact email for a technical referent to be contacted for updates on the status of this IdP.
+ * `nagiosserver`: This parameter permits to specify a Nagios server, if it contains a value different from
+   undef NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
+
+After that, the example provided installs and configures the Shibboleth IdP on the Puppet agent machine.
+At first it installs the prerequisites needed to the IdP to be installed.
+Then downloads and installs the IdP Package from Internet2 Shibboleth.
+
+The parameters that can be specified to describe a Shibboleth IdP instance are the following:
+ * `metadata_information`: information to be put in metadata file into different languages (for instance Italian and English): 
+   - `orgDisplayName`: Unit Organization Name in a user-friendly form.
+   - `communityDesc`: Description for community managed from this IdP.
+   - `orgUrl`: URL where an user can found more information about the Organization that owns this IdP.
+   - `privacyPage`:URL where an user can found the Privacy Page for this IdP.
+   - `nameOrg`: Unit Organization Name.
+   - `idpInfoUrl`: URL where an user can found more information about this entity (IdP).
+   - `url_LogoOrg-32x32`: URL where an user can found the Organization's Logo (32x32 px).
+   - `url_LogoOrg-160x120`: URL where an user can found the Organization's Logo (160x120 px).
+   - `technicalEmail`: An email address of the technical who manage the IdP.
+   - `technicalIDPadminGivenName`: The Technical IDP Admin's name.
+   - `technicalIDPadminSurName`: The Technical IDP Admin's surname.
+   - `technicalIDPadminTelephone`: The Technical IDP Admin's telephone number.
+   - `registrationInstant`: The instant when the entity was registered with the Authority
+ * `shibbolethversion`: This parameter permits to specify the version of Shibboleth IdP to be downloaded
+   from the Internet2 repositories. By default the 2.4.0 version will be downloaded.
+ * `install_uapprove`: This parameter permits to specify if uApprove has to be installed on this IdP
+ * `idpfqdn`: This parameters must contain the fully qualified domain name of the IdP. This name must be
    the exact name used by client users to access the machine over the Internet. This FQDN, in fact, will be used
    to determine the CN of the certificate used for HTTPS. If the name is not identical with the server name specified
    by the client, the client's browser will raise a security exception. 
- * **$keystorepassword** => This parameter permits to specify the keystore password used to protect the keystore file
+ * `keystorepassword`: This parameter permits to specify the keystore password used to protect the keystore file
    on the IdP server.
- * **$mailto** => The email address to be notified when the certificate used for HTTPS is about to expire.
+ * `mailto`: The email address to be notified when the certificate used for HTTPS is about to expire.
    If no email address is specified, no mail warning will be sent.
- * **$install_ldap** => This parameter permits to specify if an OpenLDAP server must be installed on the IdP machine or not.
- * **$domain_name** => This parameter permits to specify the domain name for the LDAP user database.
- * **$basedn** => This parameters must contain the base DN of the LDAP server. 
- * **$rootdn** => This parameters must contain the CN for the user with root access to the LDAP server.
- * **$rootpw** => This parameters must contain the password of the user with root access.
- * **$rootldappw** => This parameters must contain the password of the user with root access to the LDAP server.
- * **$ldap_host** => This parameter must contain the LDAP host the IdP will connect to (may be left undef if
+ * `install_ldap`: This parameter permits to specify if an OpenLDAP server must be installed on the IdP machine or not.
+ * `domain_name`: This parameter permits to specify the domain name for the LDAP user database.
+ * `basedn`: This parameters must contain the base DN of the LDAP server. 
+ * `rootdn`: This parameters must contain the CN for the user with root access to the LDAP server.
+ * `rootpw`: This parameters must contain the password of the user with root access.
+ * `rootldappw`: This parameters must contain the password of the user with root access to the LDAP server.
+ * `ldap_host`: This parameter must contain the LDAP host the IdP will connect to (may be left undef if
    install_ldap is set to true).
- * **$ldap_use_ssl** => This parameter must contain true of the LDAP connection must use SSL
+ * `ldap_use_ssl`: This parameter must contain true of the LDAP connection must use SSL
    (may be left undef if install_ldap is set to true).
- * **$ldap_use_tls** => This parameter must contain true of the LDAP connection must use TLS
+ * `ldap_use_tls`: This parameter must contain true of the LDAP connection must use TLS
    (may be left undef if install_ldap is set to true).
- * **$logserver** => This parameter permits to specify if the logs should be sent to a centralized log server.
+ * `logserver`: This parameter permits to specify if the logs should be sent to a centralized log server.
    In case this variable is not undef, rsyslog will be configured to send the logs to the specified server.
- * **$nagiosserver** => This parameter permits to specify a Nagios server, if it contains a value different from
-   undef NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
- * **$sambadomain** => This parameter permits to specify the Samba domain name to be configured while installing Nagios.
- * **$metadata_information** => Information to be put in metadata file into English and Italian language: 
-   - *$orgDisplayName* -> Unit Organization Name in a user-friendly form.
-   - *$communityDesc* -> Description for community managed from this IdP.
-   - *$orgUrl* -> URL where an user can found more information about the Organization that owns this IdP.
-   - *$privacyPage* -> URL where an user can found the Privacy Page for this IdP.
-   - *$nameOrg* -> Unit Organization Name.
-   - *$idpInfoUrl* -> URL where an user can found more information about this entity (IdP).
-   - *$url_LogoOrg-32x32* -> URL where an user can found the Organization's Logo (32x32 px).
-   - *$url_LogoOrg-160x120* ->URL where an user can found the Organization's Logo (160x120 px).
-   - *$technicalEmail* -> An email address of the technical who manage the IdP.
-   - *$technicalIDPadminGivenName* -> The Technical IDP Admin's name.
-   - *$technicalIDPadminSurName* -> The Technical IDP Admin's surname.
-   - *$technicalIDPadminTelephone* -> The Technical IDP Admin's telephone number.
-   - *$registrationInstant* -> The instant when the entity was registered with the Authority
- * **test_federation** => This parameter permits to specify if the IDP must be inserted into Test Federation (true) or into Production Federation (false).
- * **custom_styles** => This parameter permits to specify if the custom style of IdP Login Web Page must be installed (true) or not (false).
- * **first_install** => This parameter permits to specify if it is the first installation of IdP (true) or only an update (false).
- * **uapprove_version** => This parameter permits to choose which version of uApprove must be installed. The version tested are '2.4.1" and "2.5.0".
+ * `sambadomain`: This parameter permits to specify the Samba domain name to be configured while installing Nagios.
+ * `test_federation`: This parameter permits to specify if the IDP must be inserted into Test Federation (true) or into Production Federation (false).
+ * `custom_styles`: This parameter permits to specify if the custom style of IdP Login Web Page must be installed (true) or not (false).
+ * `first_install`: This parameter permits to specify if it is the first installation of IdP (true) or only an update (false).
+ * `phpldap_easy_insert`: this parameter permits to specify whether the phpldapadmin interface provided for user management must be
+   the complete one or the simplified version (true in this case implies that the simplified user management form will be installed).
+ * `uapprove_version`: This parameter permits to choose which version of uApprove must be installed. The default version installed
+   will be the '2.5.0'. The version tested are '2.4.1' and '2.5.0'.
 
 How to build the check_password.so module for OpenLDAP Password Policy from source
 ==================================================================================
@@ -350,10 +369,3 @@ Access to you LDAP machine that you have installed with (debian) packages and fo
 * `gcc -fPIC -c -I../../../include -I.. check_password.c`
 * `gcc -shared -o /usr/lib/ldap/check_password.so check_password.o`
 * `service slapd restart`
-
-Shibboleth SP
--------------
-Create a machine with the Internet2 implementation of a Shibboleth SP:
-```
-```
-Example to be described.
