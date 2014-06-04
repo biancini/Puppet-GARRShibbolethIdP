@@ -47,7 +47,7 @@ class shib2idp::management::nagios (
       "sudo":
         ensure => installed;
         
-      ["python-mechanize", "python-ldap"]:
+      "python-mechanize":
         ensure => installed;
     }
 
