@@ -106,10 +106,10 @@ class shib2idp::management::statistics (
       require => File[$stats_installdir],
     }
   } else {
-    file { 'idem-metadata-sha256.xml':
-      path    => "${stats_installdir}/idem-metadata-sha256.xml",
+    file { 'edugain2idem-metadata-sha256.xml':
+      path    => "${stats_installdir}/edugain2idem-metadata-sha256.xml",
       ensure  => link,
-      target  => "/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml",
+      target  => "/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml",
       require => File[$stats_installdir],
     }
   }

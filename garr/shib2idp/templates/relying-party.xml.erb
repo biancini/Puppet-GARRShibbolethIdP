@@ -109,8 +109,8 @@
 <% else -%>
          <metadata:MetadataProvider id="URLMD-IDEM-Federation"
                                     xsi:type="metadata:FileBackedHTTPMetadataProvider"
-                                    metadataURL="http://www.garr.it/idem-metadata/idem-metadata-sha256.xml"
-                                    backingFile="/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml">
+                                    metadataURL="http://www.garr.it/idem-metadata/edugain2idem-metadata-sha256.xml"
+                                    backingFile="/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml">
 <% end -%>
             <metadata:MetadataFilter xsi:type="metadata:ChainingFilter">
                     <metadata:MetadataFilter xsi:type="metadata:SignatureValidation" trustEngineRef="shibboleth.MetadataTrustEngine" requireSignedMetadata="true" />
