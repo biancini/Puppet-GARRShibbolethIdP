@@ -188,7 +188,7 @@ define shib2idp::instance (
     }
   
     file { 'metadata-federation.xml':
-      path  => '/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml',
+      path  => '/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml',
       ensure  => absent,
       owner   => $curtomcat,
       group   => $curtomcat,
@@ -198,17 +198,17 @@ define shib2idp::instance (
   else{
     File['metadata-federation.xml']~>Exec['shib2-tomcat-restart']
 
-    download_file{ '/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml':
-      url   => "http://www.garr.it/idem-metadata/idem-metadata-sha256.xml",
+    download_file{ '/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml':
+      url   => "http://www.garr.it/idem-metadata/edugain2idem-metadata-sha256.xml",
     }
 
     file { 'metadata-federation.xml':
-      path  => '/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml',
+      path  => '/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml',
       ensure  => present,
       owner   => $curtomcat,
       group   => $curtomcat,
       mode    => '0644',
-      require => Download_file['/opt/shibboleth-idp/metadata/idem-metadata-sha256.xml'],
+      require => Download_file['/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml'],
     }
 
     file { 'metadata-test-federation.xml':

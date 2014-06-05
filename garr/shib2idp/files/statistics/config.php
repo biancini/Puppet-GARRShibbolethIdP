@@ -35,7 +35,7 @@ $backupIDPConfigFile = 'IDProvider.conf.php';
 
 // Use $metadataFile as source federation's metadata.
 //$metadataFile = '/etc/shibboleth/metadata.switchaai.xml';
-$metadataFile = '/root/loganalysis/idem-metadata-sha256.xml';
+$metadataFile = '/root/loganalysis/edugain2idem-metadata-sha256.xml';
 
 // File to store the parsed IdP list
 // Will be updated automatically if the metadataFile modification time
