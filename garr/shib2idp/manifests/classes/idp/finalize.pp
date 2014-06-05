@@ -261,6 +261,7 @@ class shib2idp::idp::finalize (
       require           => [Package['libmysql-ruby'], MySql_Database['userdb']];
   }
   
+  $scope = $domain_name
   include "shib2idp::idp::attributes"
   
   file { 

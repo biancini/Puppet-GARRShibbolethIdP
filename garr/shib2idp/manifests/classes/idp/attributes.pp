@@ -1,4 +1,4 @@
-class shib2idp::idp::attributes {
+class shib2idp::idp::attributes() {
    $attribute_definition = {
       'surname' => {
          'langs' => {
@@ -431,7 +431,7 @@ class shib2idp::idp::attributes {
          },
          'id'                => "eduPersonScopedAffiliation",
          'type'              => "ad:Scoped",
-         'scope'             => "dmz-int.unimo.it",
+         'scope'             => $shib2idp::idp::finalize::scope,
          'dependency'        => "myLDAP",
          'sourceAttributeID' => "eduPersonAffiliation",
          'saml1ScopedString' => "urn:mace:dir:attribute-def:eduPersonScopedAffiliation",
@@ -453,7 +453,7 @@ class shib2idp::idp::attributes {
          },
          'id'                => "eduPersonPrincipalName",
          'type'              => "ad:Scoped",
-         'scope'             => "dmz-int.unimo.it",
+         'scope'             => $shib2idp::idp::finalize::scope,
          'dependency'        => "myLDAP",
          'sourceAttributeID' => "uid",
          'saml1ScopedString' => "urn:mace:dir:attribute-def:eduPersonPrincipalName",
@@ -562,7 +562,7 @@ class shib2idp::idp::attributes {
          },
          'id'                => "eduPersonPrincipalNameREFEDs",
          'type'              => "ad:Scoped",
-         'scope'             => "dmz-int.unimo.it",
+         'scope'             => $shib2idp::idp::finalize::scope,
          'dependency'        => "myLDAP",
          'sourceAttributeID' => "uid",
          'saml2ScopedString' => "urn:mace:dir:attribute-def:eduPersonPrincipalName",
