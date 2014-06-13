@@ -28,7 +28,7 @@ session_start();
 	function setDate(button, userid) {
 		button.disabled = true;
 
-		var dateVals = $('#date_' + userid).val().split("/");
+		var dateVals = $('#date_' + userid.replace(".", "_")).val().split("/");
 		if (dateVals.length != 3) {
 			alert("La data inserita non è valida.");
 		}
@@ -84,7 +84,7 @@ session_start();
                         dataType: "json"
                 });
 
-				$('#date_' + userid).val('');
+				$('#date_' + userid.replace(".", "_")).val('');
                 button.disabled = false;
         }
 
@@ -250,13 +250,13 @@ session_start();
                                                 ?>
 						<script>
 						$(function() {
-							$("#date_<?= $user['id'] ?>").datepicker({dateFormat: "dd/mm/yy"});
+							$("#date_<?= str_replace(".", "_", $user['id']) ?>").datepicker({dateFormat: "dd/mm/yy"});
 						});
 						</script>
                                                 <tr height="20">
                                                         <td class="icon" width="5"><img src="../phpldapadmin/images/default/ldap-uid.png" alt="Icon" align="top">&nbsp;</td>
                                                         <td valign="top" width="250"><?= $user["name"] ?></td>
-                                                        <td valign="top" width="220">Data fine validit&agrave;: <input id="date_<?= $user['id'] ?>" type="text" value="<?= $user["expiryDate"] ?>" style="width: 70px" /></td>
+                                                        <td valign="top" width="220">Data fine validit&agrave;: <input id="date_<?= str_replace(".", "_", $user['id']) ?>" type="text" value="<?= $user["expiryDate"] ?>" style="width: 70px" /></td>
                                                         <td valign="top">
 								<input type="button" value="<?= $user["text2"] ?>" onclick="javascript:dateclick(this, '<?= $user["id"] ?>')" />
 								<input type="button" value="<?= $user["text1"] ?>" onclick="javascript:lockclick(this, '<?= $user["id"] ?>')" />
