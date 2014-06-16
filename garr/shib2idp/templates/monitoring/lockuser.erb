@@ -120,6 +120,8 @@ session_start();
 			},
 			dataType: "json"
 		});
+		
+		$('#row_' + userid.replace(".", "_")).addClass('locked');
 		button.disabled = false;
 	}
 
@@ -147,6 +149,7 @@ session_start();
                         dataType: "json"
                 });
 
+				$('#row_' + userid.replace(".", "_")).removeClass('locked');
                 button.disabled = false;
         }
         // -->
