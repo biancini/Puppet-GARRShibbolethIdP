@@ -253,7 +253,7 @@ session_start();
 							$("#date_<?= str_replace(".", "_", $user['id']) ?>").datepicker({dateFormat: "dd/mm/yy"});
 						});
 						</script>
-                                                <tr height="20">
+                                                <tr height="20" class="<?php if ($user['locked']) { ?>locked<?php } ?>">
                                                         <td class="icon" width="5"><img src="../phpldapadmin/images/default/ldap-uid.png" alt="Icon" align="top">&nbsp;</td>
                                                         <td valign="top" width="250"><?= $user["name"] ?></td>
                                                         <td valign="top" width="220">Data fine validit&agrave;: <input id="date_<?= str_replace(".", "_", $user['id']) ?>" type="text" value="<?= $user["expiryDate"] ?>" style="width: 70px" /></td>

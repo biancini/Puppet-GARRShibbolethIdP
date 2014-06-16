@@ -78,3 +78,7 @@ span.LV_valid {
         font-size: 7pt;
         width:300px;
 }
+
+.locked {
+        background-color: #E3170D;
+}
