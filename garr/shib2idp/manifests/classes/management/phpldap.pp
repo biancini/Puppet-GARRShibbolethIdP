@@ -363,6 +363,15 @@ class shib2idp::management::phpldap (
       mode    => '0644',
       content => template("shib2idp/monitoring/action_lock.erb"),
       require => [Package['phpldapadmin'], File['pwdir']];
+      
+    'management_index':
+      path    => '/var/www/index.html',
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("shib2idp/monitoring/mgmt_index.erb"),
+      require => [Package['phpldapadmin'], File['pwdir']];
   }
   
   exec {
