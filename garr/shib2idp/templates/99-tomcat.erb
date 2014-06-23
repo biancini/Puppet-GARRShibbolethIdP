@@ -13,5 +13,5 @@ $ModLoad imtcp
 $InputTCPServerRun 514
 
 <% if !@logserver.nil? -%>
-*.* @@<%= @logserver %>:514
+*.* @<%= @logserver %>:514
 <% end -%>
