@@ -247,6 +247,15 @@ class shib2idp::management::phpldap (
       content => template("shib2idp/monitoring/messages_it.po.erb"),
       require => Package['phpldapadmin'],
       notify  => Exec['generate-locale-ita'];
+      
+    'management_index':
+      path    => '/var/www/index.html',
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("shib2idp/monitoring/mgmt_index.erb"),
+      require => [Package['phpldapadmin'], File['pwdir']];
   }
   
   exec { 'generate-locale-ita':
@@ -362,15 +371,6 @@ class shib2idp::management::phpldap (
       group   => 'root',
       mode    => '0644',
       content => template("shib2idp/monitoring/action_lock.erb"),
-      require => [Package['phpldapadmin'], File['pwdir']];
-      
-    'management_index':
-      path    => '/var/www/index.html',
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      content => template("shib2idp/monitoring/mgmt_index.erb"),
       require => [Package['phpldapadmin'], File['pwdir']];
   }
   
