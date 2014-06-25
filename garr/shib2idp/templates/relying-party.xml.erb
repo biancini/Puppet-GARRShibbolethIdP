@@ -117,13 +117,6 @@
             </metadata:MetadataFilter>
          </metadata:MetadataProvider>
 
-        <!-- Additional metadata (if any) -->
-<% @additional_metadata.sort.each do |id, filename| -%>
-        <metadata:MetadataProvider id="<%= @id %>" xsi:type="metadata:ResourceBackedMetadataProvider">
-             <metadata:MetadataResource xsi:type="resource:FilesystemResource" file="/opt/shibboleth-idp/metadata/<%= @id %>-metadata.xml" />
-        </metadata:MetadataProvider>    
-<% end -%>
-         
     </metadata:MetadataProvider>
 
     <!-- ========================================== -->

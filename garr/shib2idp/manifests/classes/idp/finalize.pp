@@ -18,7 +18,6 @@
 # +ldap_use_tls+:: This parameter must contain true of the LDAP connection must use TLS (may be left undef if install_ldap is set to true).
 # +idpfqdn+:: This parameter must contain the fully qualified domain name of the IdP. This name must be the exact name used by client users to access the machine over the Internet. This FQDN, in fact, will be used to determine the CN of the certificate used for HTTPS. If the name is not identical with the server name specified by the client, the client's browser will raise a security exception.
 # +test_federation+:: = This parameter must contain 'true' to retrieve the test federation's metadata.
-# +additional_metadata+:: = {}.
 #
 # Actions:
 #
@@ -41,7 +40,6 @@ class shib2idp::idp::finalize (
   $nagiosserver = undef,
   $idpfqdn      = 'idp.example.org',
   $test_federation = true,
-  $additional_metadata = {},
 ) {
 
   $test_federation_var = $test_federation

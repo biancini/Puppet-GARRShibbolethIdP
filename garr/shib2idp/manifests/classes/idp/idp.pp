@@ -63,7 +63,6 @@ class shib2idp::idp (
   $nagiosserver      = undef,
   $test_federation   = undef,
   $custom_styles     = undef,
-  $additional_metadata = undef,
   $first_install     = true,
   $uapprove_version  = '2.5.0',
 ) {
@@ -221,7 +220,6 @@ class shib2idp::idp (
     idpfqdn              => $idpfqdn,
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
-    additional_metadata  => $additional_metadata,
   }
 
 }
