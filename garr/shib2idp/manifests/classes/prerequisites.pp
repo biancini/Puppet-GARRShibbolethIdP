@@ -22,15 +22,6 @@ class shib2idp::prerequisites (
   $idpfqdn    = 'idp.example.org', 
   $mailto     = '',
 ) {
-  
-  # Install packages for Augeas, used by Puppet to configure IdP
-
-  class { 'shib2idp::augeas':
-    #augeas_version      => '0.10.0-1~bpo60+3',
-    #augeas_ruby_version => '0.3.0-1.1',
-    augeas_version      => 'present',
-    augeas_ruby_version => 'present',
-  }
 
   # Install java (this operation also performs apt-get updated needed by further packages)
   include shib2common::java::package
