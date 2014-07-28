@@ -31,7 +31,7 @@ The steps to have a Puppet Master installed correctly are:
 
   * On Ubuntu 12.04 LTS:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb`
-      * `dpkg -i dpkg -i puppetlabs-release-precise.deb`
+      * `dpkg -i puppetlabs-release-precise.deb`
       * `apt-get update`
       * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
