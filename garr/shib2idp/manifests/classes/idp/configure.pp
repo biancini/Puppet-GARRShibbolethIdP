@@ -79,6 +79,13 @@ class shib2idp::idp::configure (
         "set JAVA_HOME ${shib2idp::prerequisites::java_home}",],
       onlyif  => "get JAVA_HOME != '${shib2idp::prerequisites::java_home}'",
       require => Class['tomcat'];
+
+    "tomcat_javaopts":
+      context => "/files/etc/default/${curtomcat}",
+      changes => [
+        "set JAVA_OPTS '${shib2idp::prerequisites::java_opts}'",],
+      onlyif  => "get JAVA_OPTS != '${shib2idp::prerequisites::java_opts}'",
+      require => Class['tomcat'];
       
     "catalinaproperties_endorsed":
       context => "/files/etc/${curtomcat}/catalina.properties",
