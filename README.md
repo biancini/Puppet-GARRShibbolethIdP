@@ -19,21 +19,21 @@ The steps to have a Puppet Master installed correctly are:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-squeeze.deb`
       * `dpkg -i puppetlabs-release-squeeze.deb`
       * `apt-get update`
-      * `apt-get install puppet ruby`
+      * `apt-get install puppetmaster ruby`
       * `apt-get dist-upgrade`
 
   * On Debian Wheezy:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-wheezy.deb`
       * `dpkg -i puppetlabs-release-wheezy.deb`
       * `apt-get update`
-      * `apt-get install puppet ruby`
+      * `apt-get install puppetmaster ruby`
       * `apt-get dist-upgrade`
 
   * On Ubuntu 12.04 LTS:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb`
-      * `dpkg -i dpkg -i puppetlabs-release-precise.deb`
+      * `dpkg -i puppetlabs-release-precise.deb`
       * `apt-get update`
-      * `apt-get install puppet ruby`
+      * `apt-get install puppetmaster ruby`
       * `apt-get dist-upgrade`
 * Change `/etc/puppet/puppet.conf` by adding the following lines after `[master]`:
    ```
@@ -124,7 +124,7 @@ from the installation parameters, choose ONLY **standard system utilities** and 
 
   * On Ubuntu 12.04 LTS:
       * `wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb`
-      * `dpkg -i dpkg -i puppetlabs-release-precise.deb`
+      * `dpkg -i puppetlabs-release-precise.deb`
       * `apt-get update`
       * `apt-get install puppet ruby`
       * `apt-get dist-upgrade`
