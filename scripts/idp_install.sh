@@ -42,4 +42,4 @@ cd /opt/Puppet-GARRShibbolethIdP/scripts
 service puppetmaster restart
 
 # run puppet installation
-puppet agent --server `hostname -f` --hostname `hostname -f` --pluginsync --test
+puppet agent --server `hostname -f` --certname `hostname -f` --pluginsync --test
