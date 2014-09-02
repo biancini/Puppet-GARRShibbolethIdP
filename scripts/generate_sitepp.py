@@ -201,7 +201,7 @@ sitepp = open('site.pp.template', 'r').read()
 sitepp = Template(sitepp).render(vals=sitepp_vals)
 
 config_basedir = "/etc/puppet"
-if os.path.exists("/etc/puppet/environments"):
+if os.path.exists("/etc/puppet/environments/production"):
   config_basedir += "/environments/test"
 
 if not os.path.exists("%s/manifests/nodes" % config_basedir):

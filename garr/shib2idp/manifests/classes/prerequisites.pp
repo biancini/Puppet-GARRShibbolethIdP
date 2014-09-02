@@ -28,7 +28,7 @@ class shib2idp::prerequisites (
   # include shib2common::java::download
   $java_home = $shib2common::java::params::java_home
 
-  package { ['libmysql-ruby', 'libldap-ruby1.8', 'gettext', 'python-ldap']: 
+  package { ['ruby-mysql', 'libldap-ruby1.8', 'gettext', 'python-ldap']: 
     ensure => installed,
   }
 
