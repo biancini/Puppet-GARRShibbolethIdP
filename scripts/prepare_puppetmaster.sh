@@ -5,7 +5,7 @@
 
 MODULESDIR="/etc/puppet/modules"
 
-if [ -d "/etc/puppet/environments" ]
+if [ -d "/etc/puppet/environments/production" ]
 then
 	MODULESDIR="/etc/puppet/environments/production/modules"
 	MODULESDIR_TEST="/etc/puppet/environments/test/modules"

@@ -46,7 +46,7 @@ class shib2idp::management::statistics (
                                   'logins int(11) DEFAULT NULL,',
                                   'PRIMARY KEY (idp,data,sp,user)',
                                   ') ENGINE=MyISAM DEFAULT CHARSET=latin1'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql::Db[$dbname]];
+      require           => [Package['ruby-mysql'], MySql::Db[$dbname]];
 
     "${dbname}-table-sps":
       user              => $dbuser,
@@ -58,7 +58,7 @@ class shib2idp::management::statistics (
                                   'name varchar(255) DEFAULT NULL,',
                                   'PRIMARY KEY (sp)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql::Db[$dbname]];
+      require           => [Package['ruby-mysql'], MySql::Db[$dbname]];
   }
 
   define process_file ($filename = $title, $dirpath, $content = undef, $srcpath = undef) {

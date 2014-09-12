@@ -111,7 +111,7 @@ class shib2idp::idp::uapprove (
                                   'acceptanceDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,',
                                   'PRIMARY KEY (userId, version)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql::Db['uApprove']];
+      require           => [Package['ruby-mysql'], MySql::Db['uApprove']];
 
     'uapprove-table-AttributeReleaseConsent':
       user              => 'uApprove',
@@ -126,7 +126,7 @@ class shib2idp::idp::uapprove (
                                   'consentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,',
                                   'PRIMARY KEY (userId, relyingPartyId,attributeId)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql::Db['uApprove']];
+      require           => [Package['ruby-mysql'], MySql::Db['uApprove']];
   }
 
   augeas { 'uapprove-web.xml':

@@ -256,7 +256,7 @@ class shib2idp::idp::finalize (
                                   'KEY localEntity (localEntity(16), peerEntity(16), localId),',
                                   'KEY localEntity_2 (localEntity(16), peerEntity(16), localId, deactivationDate)',
                                   ')'], ' ')],
-      require           => [Package['libmysql-ruby'], MySql_Database['userdb']];
+      require           => [Package['ruby-mysql'], MySql_Database['userdb']];
   }
   
   $scope = $domain_name
