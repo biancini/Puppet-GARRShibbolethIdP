@@ -46,7 +46,7 @@ ShibUserPassAuth {
 <% if @ldap_use_ssl_var==true -%>
       host = "ldaps://<%= @ldap_host_var %>"
       ssl = "true"
-<% elseif @ldap_use_tls_var==true -%>
+<% elsif @ldap_use_tls_var==true -%>
       host = "ldap://<%= @ldap_host_var %>"
       tls = "true"
 <% else -%>
@@ -61,7 +61,7 @@ ShibUserPassAuth {
 <% if @ldap_use_ssl_var==true -%>
       ldapUrl="ldaps://<%= @ldap_host_var %>"
       useSSL="true"
-<% elseif @ldap_use_tls_var==true -%>
+<% elsif @ldap_use_tls_var==true -%>
       ldapUrl="ldap://<%= @ldap_host_var %>"
       useStartTLS="true"
 <% else -%>

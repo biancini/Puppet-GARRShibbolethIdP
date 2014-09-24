@@ -261,16 +261,18 @@ class shib2idp::idp::finalize (
   
   $scope = $domain_name
   include "shib2idp::idp::attributes"
-  
-  file { 
-    '/etc/cron.daily/ldap-backup':
+  if ($install_ldap) {
+    file { '/etc/cron.daily/ldap-backup':
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0755',
       content => template("shib2idp/monitoring/backup_ldap.erb"),
-      require => Class['ldap::server::service'];
+      require => Class['ldap::server::service'],
+    }
+  }
 
+  file {
     "/etc/cron.daily/mysql-backup":
       ensure  => present,
       owner   => 'root',
