@@ -177,7 +177,7 @@ if sitepp_vals['install_ldap'] == 'true':
   sitepp_vals['ldap_use_ssl'] = "undef"
   sitepp_vals['ldap_use_tls'] = "undef"
 else:
-  sitepp_vals['ldap_host'] = "'%s'" % request("Specify the LDAP host to be contacted by the IdP", "ldapserver."+sitepp_vals['idpDomainName']+":389",example_as_default=True)
+  sitepp_vals['ldap_host'] = "'%s'" % request("Specify the LDAP host to be contacted by the IdP", "ldapserver."+idpDomainName+":389",example_as_default=True)
   sitepp_vals['ldap_use_ssl'] = str(confirm("Use SSL to connect to LDAP host?", allow_empty=True, default=True)).lower()
   sitepp_vals['ldap_use_tls'] = str(confirm("Use TLS to connect to LDAP host?", allow_empty=True)).lower()
 
