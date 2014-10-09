@@ -163,7 +163,7 @@
       "version_requirement": "\u003e\u003d1.0.0"
     },
     {
-      "name": "garr/garrcommon",
+      "name": "garr/shib2common",
       "version_requirement": "0.1.0"
     }
   ],
