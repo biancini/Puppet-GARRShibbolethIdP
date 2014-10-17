@@ -165,7 +165,7 @@
             <%% if ("true".equals(request.getParameter("spinfo"))) { %>
              <idpui:serviceLogo minWidth="40" minHeight="40">default</idpui:serviceLogo><br/>
              <idpui:serviceDescription>${spdescr}</idpui:serviceDescription><br />
-             <a href="javascript:setParam('spinfo', 'false');">${goback}</a>
+             <a href="javascript:setParam('spinfo', 'false');"><span class="item-marker">&lsaquo;</span> ${goback}</a>
             <%% } else { %>
               <c:choose>
               <c:when test="${language == 'it'}">
@@ -244,7 +244,7 @@
                           requestedAttributes += reqAttr.getName();
                         }
                         else {
-                          requestedAttributes += "<a href=\"' + langPreLink + '" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
+                          requestedAttributes += "<a href=\"' + langPreLink + '#" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
                         }
                       }
                     }
@@ -287,7 +287,7 @@
                            desiredAttributes += reqAttr.getName();
                          }
                          else {
-                           desiredAttributes += "<a href=\"' + langPreLink + '" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
+                           desiredAttributes += "<a href=\"' + langPreLink + '#" + reqAttr.getFriendlyName() + "\">" + reqAttr.getFriendlyName() + "</a>";
                          }
                        }
                      }
@@ -386,7 +386,7 @@
                     <p>
                       <idpui:serviceLogo minWidth="40" minHeight="40">${spdescr}</idpui:serviceLogo><br/>
                       <idpui:serviceDescription>${spdescr}</idpui:serviceDescription><br />
-                      <a href="javascript:setParam('spinfo', 'true');">${moreinfo}</a>
+                      <a href="javascript:setParam('spinfo', 'true');"><span class="item-marker">&rsaquo;</span> ${moreinfo}</a>
                     </p>
 
           </div>
