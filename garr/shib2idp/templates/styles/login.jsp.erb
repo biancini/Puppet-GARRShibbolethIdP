@@ -1,4 +1,6 @@
 <%%@ taglib uri="urn:mace:shibboleth:2.0:idp:ui" prefix="idpui" %>
+<%%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%%@ page import="edu.internet2.middleware.shibboleth.idp.util.HttpServletHelper" %>
 <%%@ page import="org.opensaml.util.storage.StorageService" %>
 <%%@ page import="edu.internet2.middleware.shibboleth.idp.authn.LoginContext" %>
@@ -7,8 +9,9 @@
 <%%@ page import="org.opensaml.saml2.metadata.EntityDescriptor" %>
 <%%@ page import="org.opensaml.saml2.metadata.ContactPerson" %>
 <%%@ page import="org.opensaml.saml2.metadata.ContactPersonTypeEnumeration" %>
-<%%@ page import="java.util.List" %>
 <%%@ page import="org.opensaml.saml2.metadata.RequestedAttribute" %>
+<%%@ page import="java.util.List" %>
+<%%@ page import="java.util.Locale"%>
 <%%
    StorageService storageService = null;
    LoginContext loginContext = null;
@@ -27,12 +30,23 @@
 %>
 <!DOCTYPE html>
 
+  <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale.language}" scope="session" />
+  <fmt:setLocale value="${language}" />
+
   <%%@ taglib uri="urn:mace:shibboleth:2.0:idp:ui" prefix="idpui" %>
-  <html>
+  <html lang="${language}">
     <head>
       <meta charset="utf-8" />
-      <title><%= metadata_information['en']['orgDisplayName'] %></title>
-      <link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
+      <c:choose>
+      <c:when test="${language == 'it'}">
+        <title><%= metadata_information['it']['orgDisplayName'] %></title>
+        <link href="<%= @metadata_information['it']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
+      </c:when>
+      <c:otherwise>
+        <title><%= metadata_information['en']['orgDisplayName'] %></title>
+        <link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
+      </c:otherwise>
+      </c:choose>
       <link rel="stylesheet" type="text/css" href="<%%= request.getContextPath()%>/login.css"/>
       <script language="javascript">
            function setParam(name, value) {
@@ -71,44 +85,105 @@
               var results = regex.exec(location.search);
               return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
            }
-
-           var userLang = getParameterByName('lang');
-
-           if (userLang == "") {
-              userLang = navigator.language || navigator.userLanguage;
-           }
-
-           <% if @metadata_information.include?("it") %>
-           if (userLang == "it-IT") {
-              document.title("<%= metadata_information['it']['orgDisplayName'] %>");
-              //document.write ('<link href="< metadata_information['it']['url_LogoOrg_32x32'] >" rel="shortcut icon" type="image/x-icon" />');
-
-              document.getElementById('logolink').href = '<%= metadata_information['it']['idpInfoUrl'] %>';
-              document.getElementById('logoimg').src = '<%= metadata_information['it']['url_LogoOrg_160x120'] %>';
-              document.getElementById('logoimg').alt = '<%= metadata_information['it']['orgDisplayName'] %>';
-           }
-           <% end %>
       </script>
     </head>
+
+    <c:choose>
+      <c:when test="${language == 'it'}">
+        <c:set var="goback" value="Torna alla pagina di login" />
+        <c:set var="description" value="Descrizione" />
+        <c:set var="organization" value="Organizzazione" />
+        <c:set var="contacts" value="Contatti" />
+        <c:set var="nocontacts" value="Nessun contatto fornito" />
+        <c:set var="privacy" value="Privacy Policy" />
+        <c:set var="noprivacy" value="Nessuna politica di privacy specificata" />
+        <c:set var="infopage" value="Sito di informazioni" />
+        <c:set var="noinfopage" value="Nessun sito di informationi specificato" />
+        <c:set var="optionalattrs" value="Attributi opzionali" />
+        <c:set var="nooptionalattrs" value="Nessun attributo opzionale" />
+        <c:set var="requestedattrs" value="Attributi Richiesti" />
+        <c:set var="norequestedattrs" value="Nessun attributo richiesto" />
+        <c:set var="unknown" value="Sconosciuto" />
+        <c:set var="pwdexpired" value="Password scadura" />
+        <c:set var="invalidpwd" value="Password non valida" />
+        <c:set var="changepwd" value="Cambiala" />
+        <c:set var="locked" value="Account temporaneamente bloccato" />
+        <c:set var="wrong" value="Nome utente o password errati. Prova ancora" />
+        <c:set var="loginto" value="Accedi a" />
+        <c:set var="username" value="Nome utente" />
+        <c:set var="password" value="Password" />
+        <c:set var="clearconsent" value="Ripulisci il consenso al rilascio dati" />
+        <c:set var="login" value="Login" />
+        <c:set var="spdescr" value="Descrizione del SP" />
+        <c:set var="moreinfo" value="Informazioni aggiuntive sul SP" />
+        <c:set var="forgot" value="Dimenticata la password?" />
+        <c:set var="help" value="Serve aiuto?" />
+        <c:set var="info" value="Pagina di informazioni" />
+        <c:set var="idem" value="Federazione IDEM" />
+        <c:set var="ideminfo" value="Informazioni su IDEM" />
+        <c:set var="footer" value="L'<%= @metadata_information['it']['orgDisplayName'] %>, <%= @metadata_information['it']['orgDescription'] %> partecipa ad <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement federato per l'accesso ai servizi) per la realizzazione dell'Infrastruttura di Autenticazione e Autorizzazione federata della rete GARR.<br/>L'<%= @metadata_information['it']['orgDisplayName'] %> rilascia credenziali d'accesso per questo sistema di autenticazione (Identity Provider) ai propri dipendenti e ai ricercatori affiliati." />
+      </c:when>
+      <c:otherwise>
+        <c:set var="goback" value="Go back to login page" />
+        <c:set var="description" value="Description" />
+        <c:set var="organization" value="Organization" />
+        <c:set var="contacts" value="Contacts" />
+        <c:set var="nocontacts" value="No contacts provided" />
+        <c:set var="privacy" value="Privacy Policy" />
+        <c:set var="noprivacy" value="No privacy policy specified" />
+        <c:set var="infopage" value="Information website" />
+        <c:set var="noinfopage" value="No information website provided" />
+        <c:set var="optionalattrs" value="Optional Attributes" />
+        <c:set var="nooptionalattrs" value="No optional attribute" />
+        <c:set var="requestedattrs" value="Requested Attributes" />
+        <c:set var="norequestedattrs" value="No attributes required" />
+        <c:set var="unknown" value="Unknown" />
+        <c:set var="pwdexpired" value="Password Expired" />
+        <c:set var="invalidpwd" value="Invalid password" />
+        <c:set var="changepwd" value="Change it" />
+        <c:set var="locked" value="Account temporarily locked" />
+        <c:set var="wrong" value="Wrong Username or Password. Try Again" />
+        <c:set var="loginto" value="Log in to" />
+        <c:set var="username" value="Username" />
+        <c:set var="password" value="Password" />
+        <c:set var="clearconsent" value="Clear attribute release consent" />
+        <c:set var="login" value="Login" />
+        <c:set var="spdescr" value="SP description" />
+        <c:set var="moreinfo" value="More information about the service" />
+        <c:set var="forgot" value="Forgot your password?" />
+        <c:set var="help" value="Need Help?" />
+        <c:set var="info" value="Information page" />
+        <c:set var="idem" value="IDEM Federation" />
+        <c:set var="ideminfo" value="Information about IDEM" />
+        <c:set var="footer" value="The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %>now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDisplayName'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers." />
+      </c:otherwise>
+    </c:choose>
 
     <body><div class="wrapper">
         <div class="container">
           <header>
             <%% if ("true".equals(request.getParameter("spinfo"))) { %>
              <idpui:serviceLogo minWidth="40" minHeight="40">default</idpui:serviceLogo><br/>
-             <idpui:serviceDescription>SP description</idpui:serviceDescription><br />
-             <a href="javascript:setParam('spinfo', 'false');">Go back to login page</a>
+             <idpui:serviceDescription>${spdescr}</idpui:serviceDescription><br />
+             <a href="javascript:setParam('spinfo', 'false');">${goback}</a>
             <%% } else { %>
-              <a id="logolink" class="logo" href="<%= metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['en']['orgDisplayName']%>"/></a><br/><%= metadata_information['en']['orgDisplayName']%>
+              <c:choose>
+              <c:when test="${language == 'it'}">
+                <a id="logolink" class="logo" href="<%= metadata_information['it']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['it']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['it']['orgDisplayName']%>"/></a><br/><%= metadata_information['it']['orgDisplayName']%>
+              </c:when>
+              <c:otherwise>
+                <a id="logolink" class="logo" href="<%= metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['en']['orgDisplayName']%>"/></a><br/><%= metadata_information['en']['orgDisplayName']%>
+              </c:otherwise>
+              </c:choose>
             <%% } %>
           </header>
       
           <div class="content">
             <%% if ("true".equals(request.getParameter("spinfo"))) { %>
               <ul>
-              <li><span class="item-marker">&rsaquo;</span> <b>Description:</b><br/>
-              <idpui:serviceDescription>Unknown</idpui:serviceDescription></li>
-              <li><span class="item-marker">&rsaquo;</span> <b>Organization:</b><br/>
+              <li><span class="item-marker">&rsaquo;</span> <b>${description}:</b><br/>
+              <idpui:serviceDescription>${unknown}</idpui:serviceDescription></li>
+              <li><span class="item-marker">&rsaquo;</span> <b>${organization}:</b><br/>
               <script language="javascript">
                 if ('<idpui:organizationDisplayName />') { 
                   document.write('<idpui:organizationDisplayName />');
@@ -117,10 +192,10 @@
                   document.write('<idpui:organizationName />');
                 }
                 else {
-                  document.write('Unknown');
+                  document.write('${unknown}');
                 }
               </script></li>
-              <li><span class="item-marker">&rsaquo;</span> <b>Contacts:</b><br/>
+              <li><span class="item-marker">&rsaquo;</span> <b>${contacts}:</b><br/>
               <script language="javascript">
               <%%
                  String contactLinks = "";
@@ -139,16 +214,21 @@
                    contactLinks = "";
                  }
                  %>
-                 var langNoContacts = "No Contact provided";
+                 var langNoContacts = "${nocontacts}";
                  if ('<%%= contactLinks %>' == '') document.write(langNoContacts);
                  else document.write('<%%= contactLinks %>');
               </script></li>
-              <li><span class="item-marker">&rsaquo;</span> <b><idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="Privacy Policy">No Privacy Policy specified</idpui:servicePrivacyURL></b></li>
-              <li><span class="item-marker">&rsaquo;</span> <b><idpui:serviceInformationURL cssId="spInfoURL" linkText="Information website">No Information website provided</idpui:serviceInformationURL></b></li>
-              <li><span class="item-marker">&rsaquo;</span> <b>Requested Attributes:</b><br/>
+              <li><span class="item-marker">&rsaquo;</span> <b><idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="${privacy}">${noprivacy}</idpui:servicePrivacyURL></b></li>
+              <li><span class="item-marker">&rsaquo;</span> <b><idpui:serviceInformationURL cssId="spInfoURL" linkText="${infopage}">${noinfopage}</idpui:serviceInformationURL></b></li>
+              <li><span class="item-marker">&rsaquo;</span> <b>${requestedattrs}:</b><br/>
               <script language="javascript">
-                var langPreLink = "<%= @metadata_information['en']['idpInfoUrl'] %>#";
-                var langNoAttrs = "No Attributes required";
+                var langPreLinkA = {
+                  <% @metadata_information.each do |@l, @mi| %>
+                  "<%= @l %>": "<%= @mi['idpInfoUrl'] %>",
+                  <% end %>
+                };
+		var langPreLink = ("${language}" in langPreLinkA) ? langPreLinkA["${language}"] : langPreLinkA["en"];
+                var langNoAttrs = "${norequestedattrs}";
 
                 <%%
                   String requestedAttributes = "";
@@ -183,10 +263,15 @@
                   }
                 %>
               </script></li>
-              <li><span class="item-marker">&rsaquo;</span> <b>Optional Attributes:</b><br/>
+              <li><span class="item-marker">&rsaquo;</span> <b>${optionalattrs}:</b><br/>
               <script language="javascript">
-                 var langPreLink = "<%= @metadata_information['en']['idpInfoUrl'] %>#";
-                 var langNoAttrs = "No optional Attribute";
+                 var langPreLinkA = {
+                   <% @metadata_information.each do |@l, @mi| %>
+                   "<%= @l %>": "<%= @mi['idpInfoUrl'] %>",
+                   <% end %>
+                 };
+		 var langPreLink = ("${language}" in langPreLinkA) ? langPreLinkA["${language}"] : langPreLinkA["en"];
+                 var langNoAttrs = "${nooptionalattrs}";
 
                  <%%
                    String desiredAttributes = "";
@@ -214,18 +299,18 @@
                      document.write(langNoAttrs);
                      <%%
                    } else {
-                      %>
-                      document.write('<%%= desiredAttributes %>');
-                      <%%
+                     %>
+                     document.write('<%%= desiredAttributes %>');
+                     <%%
                    }
                  %>
               </script></li>           
               </ul>
             <%% } else { %>
             <div class="column one">
-              <%% if(request.getAttribute("actionUrl") != null){ %>
-                <form id="login" action="<%%=request.getAttribute("actionUrl")%>" method="post">
-              <%% }else{ %>
+              <%% if (request.getAttribute("actionUrl") != null){ %>
+                <form id="login" action="<%%= request.getAttribute("actionUrl") %>" method="post">
+              <%% } else { %>
                 <form id="login" action="j_security_check" method="post">
               <%% } %>
 
@@ -237,19 +322,19 @@
                     Throwable ex = (Throwable)request.getAttribute(LoginHandler.AUTHENTICATION_EXCEPTION_KEY);
                     if (ex.getMessage().contains("PASSWORD_EXPIRED")) {
                        %>
-                       <p class="form-element form-error">Password Expired. <a href='/pw/changepw.php'>Change it</a>.</p>
+                       <p class="form-element form-error">${pwdexpired}. <a href='/pw/changepw.php'>${changepwd}</a>.</p>
                        <%%
                     } else if (ex.getMessage().contains("CHANGE_AFTER_RESET")) {
                        %>
-                       <p class="form-element form-error">Invalid password. <a href='/pw/changepw.php'>Change it</a>.</p>
+                       <p class="form-element form-error">${invalidpwd}. <a href='/pw/changepw.php'>${changepwd}</a>.</p>
                        <%%
                      } else if (ex.getMessage().contains("ACCOUNT_LOCKED")){
                        %>
-                       <p class="form-element form-error">Account temporarily locked.</p>
+                       <p class="form-element form-error">${locked}.</p>
                        <%%
                      } else {
                        %>
-                       <p class="form-element form-error">Wrong Username or Password. Try Again.</p>
+                       <p class="form-element form-error">${wrong}.</p>
                        <%%
                      }
                   }
@@ -258,28 +343,28 @@
                 <%% } %>
 
                 <legend id="spName">
-                  Log in to <idpui:serviceName/>
+                  ${loginto} <idpui:serviceName/>
                 </legend>
 
                 <section>
-                  <label for="username">Username</label>
+                  <label for="username">${username}</label>
                   <input class="form-element form-field" name="j_username" type="text" value="">
                 </section>
 
                 <section>
-                  <label for="password">Password</label>
+                  <label for="password">${password}</label>
                   <input class="form-element form-field" name="j_password" type="password" value="">
                 </section>
 
                 <% if @install_uapprove==true -%>
                 <section>
                   <input id="uApprove.consent-revocation" type="checkbox" name="uApprove.consent-revocation" value="true"/>
-                  <label style="left: 20px; width: auto" for="uApprove.consent-revocation">Clear attribute release consent</label>
+                  <label style="left: 20px; width: auto" for="uApprove.consent-revocation">${clearconsent}</label>
                 </section>
                 <% end -%>
 
                 <section>
-                  <button class="form-element form-button" type="submit">Login</button>
+                  <button class="form-element form-button" type="submit">${login}</button>
                 </section>
               </form>
               
@@ -299,19 +384,19 @@
                 //    Example:
               %>
                     <p>
-                      <idpui:serviceLogo minWidth="40" minHeight="40">default</idpui:serviceLogo><br/>
-                      <idpui:serviceDescription>SP description</idpui:serviceDescription><br />
-                      <a href="javascript:setParam('spinfo', 'true');">More information about the service</a>
+                      <idpui:serviceLogo minWidth="40" minHeight="40">${spdescr}</idpui:serviceLogo><br/>
+                      <idpui:serviceDescription>${spdescr}</idpui:serviceDescription><br />
+                      <a href="javascript:setParam('spinfo', 'true');">${moreinfo}</a>
                     </p>
 
           </div>
           <div class="column two">
-            <ul class="list list-help"><a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="IDEM Federation" style="width: 100px"/></a>
-              <li class="list-help-item"><a href="/pw/changepw.php"><span class="item-marker">&rsaquo;</span> Forgot your password?</a></li>
-              <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> Need Help?</a></li>
-              <li class="list-help-item"><a href="<%= @metadata_information['en']['idpInfoUrl'] %>"><span class="item-marker">&rsaquo;</span> Information page</a></li>
-              <li class="list-help-item"><a href="<%= @metadata_information['en']['privacyPage'] %>"><span class="item-marker">&rsaquo;</span> Privacy policy</a></li>
-              <li class="list-help-item"><a href="http://www.idem.garr.it"><span class="item-marker">&rsaquo;</span> Information about IDEM</a></li>
+            <ul class="list list-help"><a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="${idem}" style="width: 100px"/></a>
+              <li class="list-help-item"><a href="/pw/changepw.php"><span class="item-marker">&rsaquo;</span> ${forgot}</a></li>
+              <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> ${help}</a></li>
+              <li class="list-help-item"><a href="<%= @metadata_information['en']['idpInfoUrl'] %>"><span class="item-marker">&rsaquo;</span> ${info}</a></li>
+              <li class="list-help-item"><a href="<%= @metadata_information['en']['privacyPage'] %>"><span class="item-marker">&rsaquo;</span> ${privacy}</a></li>
+              <li class="list-help-item"><a href="http://www.idem.garr.it"><span class="item-marker">&rsaquo;</span> ${ideminfo}</a></li>
             </ul>
           </div>
           <%% } %>
@@ -320,8 +405,7 @@
 
       <footer>
         <div class="container container-footer">
-          <p class="footer-text">The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %>now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>
-          The <%= @metadata_information['en']['orgDisplayName'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.</p>
+          <p class="footer-text">${footer}</p>
           </div>
       </footer>
     
