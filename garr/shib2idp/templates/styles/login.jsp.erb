@@ -39,10 +39,18 @@
     <head>
       <meta charset="utf-8" />
       <c:choose>
-      <c:when test="${language == 'it'}">
-        <title><%= metadata_information['it']['orgDisplayName'] %></title>
-        <link href="<%= @metadata_information['it']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
-      </c:when>
+      <%
+      @metadata_information.each do |lang, v|
+        if v.is_a?(Hash) and lang != "en"
+          %>
+          <c:when test="${language == '<%=lang%>'}">
+            <title><%= metadata_information[lang]['orgDisplayName'] %></title>
+            <link href="<%= @metadata_information[lang]['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
+          </c:when>
+          <%
+        end
+      end
+      %>
       <c:otherwise>
         <title><%= metadata_information['en']['orgDisplayName'] %></title>
         <link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
@@ -90,12 +98,26 @@
     </head>
 
     <c:choose>
-      <c:when test="${language == 'it'}">
-        <c:set var="footer" value="L'<%= @metadata_information['it']['orgDisplayName'] %>, <%= @metadata_information['it']['orgDescription'] %> partecipa ad <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement federato per l'accesso ai servizi) per la realizzazione dell'Infrastruttura di Autenticazione e Autorizzazione federata della rete GARR.<br/>L'<%= @metadata_information['it']['orgDisplayName'] %> rilascia credenziali d'accesso per questo sistema di autenticazione (Identity Provider) ai propri dipendenti e ai ricercatori affiliati." />
-      </c:when>
-      <c:otherwise>
-        <c:set var="footer" value="The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %>now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDisplayName'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers." />
-      </c:otherwise>
+    <%
+    @metadata_information.each do |lang, v|
+      if v.is_a?(Hash) and lang != "en"
+        %>
+        <c:when test="${language == '<%=lang%>'}">
+          <fmt:message key="footer" val="footer">
+            <fmt:param value="<%= metadata_information[lang]['orgDisplayName'] %>"/>
+            <fmt:param value="<%= metadata_information[lang]['orgDescription'] %>"/>
+          </fmt:message>
+        </c:when>
+        <%
+      end
+    end
+    %>
+    <c:otherwise>
+      <fmt:message key="footer" val="footer">
+        <fmt:param value="<%= metadata_information['en']['orgDisplayName'] %>"/>
+        <fmt:param value="<%= metadata_information['en']['orgDescription'] %>"/>
+      </fmt:message>
+    </c:otherwise>
     </c:choose>
 
     <body><div class="wrapper">
@@ -107,9 +129,17 @@
              <a href="javascript:setParam('spinfo', 'false');"><span class="item-marker">&lsaquo;</span> <fmt:message key="goback"/></a>
             <%% } else { %>
               <c:choose>
-              <c:when test="${language == 'it'}">
-                <a id="logolink" class="logo" href="<%= metadata_information['it']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['it']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['it']['orgDisplayName']%>"/></a><br/><%= metadata_information['it']['orgDisplayName']%>
-              </c:when>
+              <%
+              @metadata_information.each do |lang, v|
+                if v.is_a?(Hash) and lang != "en"
+                  %>
+                  <c:when test="${language == '<%=lang%>'}">
+                    <a id="logolink" class="logo" href="<%= metadata_information[lang]['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information[lang]['url_LogoOrg_160x120']%>" alt="<%= metadata_information[lang]['orgDisplayName']%>"/></a><br/><%= metadata_information[lang]['orgDisplayName']%>
+                  </c:when>
+                  <%
+                end
+              end
+              %>
               <c:otherwise>
                 <a id="logolink" class="logo" href="<%= metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['en']['orgDisplayName']%>"/></a><br/><%= metadata_information['en']['orgDisplayName']%>
               </c:otherwise>
@@ -157,8 +187,10 @@
                  if ('<%%= contactLinks %>' == '') document.write(langNoContacts);
                  else document.write('<%%= contactLinks %>');
               </script></li>
-              <li><span class="item-marker">&rsaquo;</span> <b><idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="<fmt:message key="privacy"/>"><fmt:message key="noprivacy"/></idpui:servicePrivacyURL></b></li>
-              <li><span class="item-marker">&rsaquo;</span> <b><idpui:serviceInformationURL cssId="spInfoURL" linkText="<fmt:message key="infopage"/>"><fmt:message key="noinfopage"/></idpui:serviceInformationURL></b></li>
+              <fmt:message key="privacy" var="privacy"/>
+              <fmt:message key="infopage" var="infopage"/>
+              <li><span class="item-marker">&rsaquo;</span> <b><idpui:servicePrivacyURL cssId="spPrivacyURL" linkText="${privacy}"><fmt:message key="noprivacy"/></idpui:servicePrivacyURL></b></li>
+              <li><span class="item-marker">&rsaquo;</span> <b><idpui:serviceInformationURL cssId="spInfoURL" linkText="${infopage}"><fmt:message key="noinfopage"/></idpui:serviceInformationURL></b></li>
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="requestedattrs"/>:</b><br/>
               <script language="javascript">
                 var langPreLinkA = {
@@ -333,8 +365,24 @@
             <ul class="list list-help"><a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="${idem}" style="width: 100px"/></a>
               <li class="list-help-item"><a href="/pw/changepw.php"><span class="item-marker">&rsaquo;</span> <fmt:message key="forgot"/></a></li>
               <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="help"/></a></li>
-              <li class="list-help-item"><a href="<%= @metadata_information['en']['idpInfoUrl'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="info"/></a></li>
-              <li class="list-help-item"><a href="<%= @metadata_information['en']['privacyPage'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="privacy"/></a></li>
+              <c:choose>
+              <%
+              @metadata_information.each do |lang, v|
+                if v.is_a?(Hash) and lang != "en"
+                  %>
+                  <c:when test="${language == '<%=lang%>'}">
+                    <li class="list-help-item"><a href="<%= @metadata_information[lang]['idpInfoUrl'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="info"/></a></li>
+                    <li class="list-help-item"><a href="<%= @metadata_information[lang]['privacyPage'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="privacy"/></a></li>
+                  </c:when>
+                  <%
+                end
+              end
+              %>
+              <c:otherwise>
+                <li class="list-help-item"><a href="<%= @metadata_information['en']['idpInfoUrl'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="info"/></a></li>
+                <li class="list-help-item"><a href="<%= @metadata_information['en']['privacyPage'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="privacy"/></a></li>
+              </c:otherwise>
+              </c:choose>
               <li class="list-help-item"><a href="http://www.idem.garr.it"><span class="item-marker">&rsaquo;</span> <fmt:message key="ideminfo"/></a></li>
             </ul>
           </div>

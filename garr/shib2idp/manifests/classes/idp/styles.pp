@@ -15,6 +15,19 @@ class shib2idp::idp::styles(
   $install_uapprove = true,
   $custom_styles = false,
 ){
+  define message_file() {
+    if ($name != "en" and inline_template("<%= name.length %>") == "2") {
+      file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${name}.properties":
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/styles/messages_${name}.properties",
+        require => File['/usr/local/src/shibboleth-identityprovider'],
+      }
+    }
+  }
+
   if ($custom_styles) {
     # Install graphical customization of look&feel
     file {
@@ -155,17 +168,7 @@ class shib2idp::idp::styles(
         require => File['/usr/local/src/shibboleth-identityprovider'];
     }
 
-    $metadata_information.each_pair do |$lang, $value| {
-      if ($lang != "en") {
-        file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${lang}.properties":
-          ensure  => present,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0644',
-          source  => "puppet:///modules/shib2idp/styles/messages_${lang}.properties",
-          require => File['/usr/local/src/shibboleth-identityprovider'],
-        }
-      }
-    }
+    $langs_array = keys($metadata_information)
+    message_file { $langs_array: }
   }   
 }
