@@ -145,6 +145,27 @@ class shib2idp::idp::styles(
         mode    => '0644',
         content => template("shib2idp/styles/login-error.jsp.erb"),
         require => File['/usr/local/src/shibboleth-identityprovider'];
+
+      "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages.properties":
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/styles/messages.properties",
+        require => File['/usr/local/src/shibboleth-identityprovider'];
+    }
+
+    each($metadata_information) |$lang, $vals| {
+      if ($lang != "en") {
+        file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${lang}.properties":
+          ensure  => present,
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          source  => "puppet:///modules/shib2idp/styles/messages_${lang}.properties",
+          require => File['/usr/local/src/shibboleth-identityprovider'],
+        }
+      }
     }
   }   
 }
