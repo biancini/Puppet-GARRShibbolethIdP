@@ -390,12 +390,12 @@
             @metadata_information.each do |lang, v|
               if v.is_a?(Hash) and lang != "en"
               %>
-              <a href="javascript:setParam('language', '<%=lang%>');"><img height="32px" src="<%%= request.getContextPath()%>/images/<%=lang%>Flag.png"></a>
+              <a href="javascript:setParam('language', '<%=lang%>');"><img height="16px" src="<%%= request.getContextPath()%>/images/<%=lang%>Flag.png"></a>
               <%
               end
             end
             %>
-            <a href="javascript:setParam('language', 'en');"><img height="32px" src="<%%= request.getContextPath()%>/images/enFlag.png"></a>
+            <a href="javascript:setParam('language', 'en');"><img height="16px" src="<%%= request.getContextPath()%>/images/enFlag.png"></a>
             </p>
           </div>
           <%% } %>
