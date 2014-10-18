@@ -155,7 +155,7 @@ class shib2idp::idp::styles(
         require => File['/usr/local/src/shibboleth-identityprovider'];
     }
 
-    $metadata_information.each_pair do |$lang, $vals| {
+    $metadata_information.keys.each do |$lang| {
       if ($lang != "en") {
         file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${lang}.properties":
           ensure  => present,
