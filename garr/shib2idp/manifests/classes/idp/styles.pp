@@ -39,7 +39,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/IDEM_logo.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
 
-      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/itaFlag.png':
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/itFlag.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -47,7 +47,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/itaFlag.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];       
 
-       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/engFlag.png':
+       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/enFlag.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
