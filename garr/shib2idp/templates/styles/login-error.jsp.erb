@@ -20,7 +20,7 @@
 		%>
 		Errore: <%%= esapiEncoder.encodeForHTML(error.getMessage()) %>
 		<%% } %>
-		<p>Per supporto nella risoluzione del problema contattare: <a href="<%=metadata_information["technicalEmail"]%>"><%=metadata_information["technicalEmail"].gsub("mailto:","")%></a>.</p>
+		<p>Per supporto nella risoluzione del problema contattare: <a href="<%=metadata_information["technicalIDPadminEmail"]%>"><%=metadata_information["technicalIDPadminEmail"].gsub("mailto:","")%></a>.</p>
 	</td>
 	</tr>
 	</table>

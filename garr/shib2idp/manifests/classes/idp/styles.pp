@@ -15,6 +15,19 @@ class shib2idp::idp::styles(
   $install_uapprove = true,
   $custom_styles = false,
 ){
+  define message_file() {
+    if ($name != "en" and inline_template("<%= name.length %>") == "2") {
+      file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${name}.properties":
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/styles/messages_${name}.properties",
+        require => File['/usr/local/src/shibboleth-identityprovider'],
+      }
+    }
+  }
+
   if ($custom_styles) {
     # Install graphical customization of look&feel
     file {
@@ -26,7 +39,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/IDEM_logo.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];
 
-      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/itaFlag.png':
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/itFlag.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -34,7 +47,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/itaFlag.png",
         require => File['/usr/local/src/shibboleth-identityprovider'];       
 
-       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/engFlag.png':
+       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/enFlag.png':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -145,6 +158,17 @@ class shib2idp::idp::styles(
         mode    => '0644',
         content => template("shib2idp/styles/login-error.jsp.erb"),
         require => File['/usr/local/src/shibboleth-identityprovider'];
+
+      "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages.properties":
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/styles/messages.properties",
+        require => File['/usr/local/src/shibboleth-identityprovider'];
     }
+
+    $langs_array = keys($metadata_information)
+    message_file { $langs_array: }
   }   
 }
