@@ -7,11 +7,6 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>com.aptana.ide.core.unifiedBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>com.puppetlabs.geppetto.pp.dsl.ui.modulefileBuilder</name>
 			<arguments>
 			</arguments>
