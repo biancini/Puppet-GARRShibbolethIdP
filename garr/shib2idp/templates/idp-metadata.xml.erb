@@ -36,9 +36,9 @@
                <mdui:InformationURL xml:lang="<%= lang %>"><%= value %></mdui:InformationURL>
 <%          when "privacyPage" -%>
                <mdui:PrivacyStatementURL xml:lang="<%= lang %>"><%= value %></mdui:PrivacyStatementURL>
-<%          when "url_LogoOrg-32x32" -%>
+<%          when "url_LogoOrg_32x32" -%>
                <mdui:Logo xml:lang="<%= lang %>" width="16" height="16"><%= value %></mdui:Logo>
-<%          when "url_LogoOrg-160x120" -%>
+<%          when "url_LogoOrg_160x120" -%>
                <mdui:Logo xml:lang="<%= lang %>" width="80" height="60"><%= value %></mdui:Logo>   
 <%       end 
       end 
@@ -133,7 +133,7 @@ $IDP_CERTIFICATE
 <% if @metadata_information['technicalIDPadminSurName'] != '' -%>
         <md:SurName><%= @metadata_information['technicalIDPadminSurName'] %></md:SurName>
 <% end -%>
-        <md:EmailAddress><%= @metadata_information['technicalEmail'] %></md:EmailAddress>
+        <md:EmailAddress><%= @metadata_information['technicalIDPadminEmail'] %></md:EmailAddress>
 <% if @metadata_information['technicalIDPadminTelephone'] != '' -%>
         <md:TelephoneNumber><%= @metadata_information['technicalTelephone'] %></md:TelephoneNumber>
 <% end -%>

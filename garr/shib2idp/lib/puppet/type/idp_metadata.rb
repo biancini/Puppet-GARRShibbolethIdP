@@ -12,8 +12,8 @@
 #          'privacyPage' => 'http://www.garr.it/',
 #          'nameOrg' => 'Consortium GARR',
 #          'idpInfoUrl' => 'https://puppetclient.example.com/idp/info.html',
-#          'url_LogoOrg-32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_en.png',
-#          'url_LogoOrg-160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_en.png',
+#          'url_LogoOrg_32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_en.png',
+#          'url_LogoOrg_160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_en.png',
 #        },
 #        'it' => {
 #          'orgDisplayName' => 'Test IdP for IdP in the cloud project',
@@ -22,10 +22,10 @@
 #          'privacyPage' => 'http://www.garr.it/',
 #          'nameOrg' => 'Consortium GARR',
 #          'idpInfoUrl' => 'https://puppetclient.example.com/idp/info.html',
-#          'url_LogoOrg-32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_it.png',
-#          'url_LogoOrg-160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_it.png',
+#          'url_LogoOrg_32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_it.png',
+#          'url_LogoOrg_160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_it.png',
 #        },
-#        'technicalEmail' => 'support@pupperclient.example.com',
+#        'technicalIDPadminEmail' => 'support@pupperclient.example.com',
 #      },
 #      certfilename => '/opt/shibboleth-idp/credentials/idp.crt',
 #   }
@@ -50,8 +50,8 @@ module Puppet
 						'communityDesc' => 'not null',
 						'idpInfoUrl' => 'valid url',
 						'privacyPage' => 'valid url',
-						'url_LogoOrg-32x32' => 'valid url',
-						'url_LogoOrg-160x120' => 'valid url',
+						'url_LogoOrg_32x32' => 'valid url',
+						'url_LogoOrg_160x120' => 'valid url',
 						'orgUrl' => 'valid url',
 					},
 					'it' => {
@@ -59,11 +59,11 @@ module Puppet
 						'communityDesc' => 'not null',
 						'idpInfoUrl' => 'valid url',
 						'privacyPage' => 'valid url',
-						'url_LogoOrg-32x32' => 'valid url',
-						'url_LogoOrg-160x120' => 'valid url',
+						'url_LogoOrg_32x32' => 'valid url',
+						'url_LogoOrg_160x120' => 'valid url',
 						'orgUrl' => 'valid url',
 					},
-					'technicalEmail' => 'valid email',
+					'technicalIDPadminEmail' => 'valid email',
 				}
 				# Check if the ':metadata' is a valid hash 	
 				if !metadatavalue.is_a?(Hash)
@@ -75,7 +75,7 @@ module Puppet
 					if value.is_a?(Hash)
 						fail("metadata does not contain elements for language #{key}.") unless metadatavalue.has_key?(key)
 						# Here we know that 'value' is a valid hash and his root is 'metadata[key]'.
-						# For the example defined previously the 'key' values are 'it', 'en' or 'technicalEmail'
+						# For the example defined previously the 'key' values are 'it', 'en' or 'technicalIDPadminEmail'
 						curmetadata = metadatavalue[key]
 						# Example values of 'attribute' and 'check':
 						# attribute 'nameOrg' has the check 'Consortium GARR' 
@@ -153,10 +153,10 @@ module Puppet
 					  "//mdui:Description" => [resource[:metadata]['en']['communityDesc'], resource[:metadata]['it']['communityDesc']],
 					  "//mdui:InformationURL" => [resource[:metadata]['en']['idpInfoUrl'], resource[:metadata]['it']['idpInfoUrl']],
 					  "//mdui:PrivacyStatementURL" => [resource[:metadata]['en']['privacyPage'], resource[:metadata]['it']['privacyPage']],
-					  "//mdui:Logo" => [resource[:metadata]['en']['url_LogoOrg-32x32'], resource[:metadata]['it']['url_LogoOrg-32x32'], resource[:metadata]['en']['url_LogoOrg-160x120'], resource[:metadata]['it']['url_LogoOrg-160x120']],
+					  "//mdui:Logo" => [resource[:metadata]['en']['url_LogoOrg_32x32'], resource[:metadata]['it']['url_LogoOrg_32x32'], resource[:metadata]['en']['url_LogoOrg_160x120'], resource[:metadata]['it']['url_LogoOrg_160x120']],
 					  "//OrganizationDisplayName" => [resource[:metadata]['en']['orgDisplayName'], resource[:metadata]['it']['orgDisplayName']],
 					  "//OrganizationURL" => [resource[:metadata]['en']['orgUrl'], resource[:metadata]['it']['orgUrl']],
-					  "//EmailAddress" => [resource[:metadata]['technicalEmail']],
+					  "//EmailAddress" => [resource[:metadata]['technicalIDPadminEmail']],
 					}
 
 					rules.each do |key, value|

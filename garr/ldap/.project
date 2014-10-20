@@ -3,14 +3,9 @@
 	<name>garr-ldap</name>
 	<comment></comment>
 	<projects>
-		<project>puppetlabs-stdlib</project>
+		<project>stdlib</project>
 	</projects>
 	<buildSpec>
-		<buildCommand>
-			<name>com.aptana.ide.core.unifiedBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 		<buildCommand>
 			<name>com.puppetlabs.geppetto.pp.dsl.ui.modulefileBuilder</name>
 			<arguments>

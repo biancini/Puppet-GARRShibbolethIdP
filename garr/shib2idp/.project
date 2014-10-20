@@ -3,14 +3,14 @@
 	<name>garr-shib2idp</name>
 	<comment></comment>
 	<projects>
+		<project>apache</project>
+		<project>concat</project>
 		<project>garr-idpfirewall</project>
-		<project>garr-ldap</project>
 		<project>garr-shib2common</project>
+		<project>garr-ldap</project>
 		<project>garr-tomcat</project>
-		<project>puppetlabs-apache</project>
-		<project>puppetlabs-concat</project>
-		<project>puppetlabs-mysql</project>
-		<project>puppetlabs-stdlib</project>
+		<project>mysql</project>
+		<project>stdlib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
