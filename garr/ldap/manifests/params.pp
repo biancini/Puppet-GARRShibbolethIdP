@@ -52,10 +52,14 @@ class ldap::params {
 	      }
 	      raring: {
           $openldap_packages = ['slapd', 'ldap-utils', 'libperl5.14']
-        }
+         }
 	      wheezy: {
 	        $openldap_packages = ['libltdl7', 'libodbc1', 'libperl5.14', 'libslp1', 'slapd', 'ldap-utils']
 	      }
+ 	      trusty: {
+	        $openldap_packages = ['libltdl7', 'libodbc1', 'libperl5.18', 'libslp1', 'slapd', 'ldap-utils']
+	      }
+
         default: {
           $openldap_packages = ['slapd', 'ldap-utils', 'libperl5.10']
         }

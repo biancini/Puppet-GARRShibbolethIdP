@@ -182,20 +182,40 @@ class shib2idp::idp::finalize (
 
     Exec['shib2-slapd-restart'] -> Execute_ldap['ldapadd-ppolicies-ou'] -> Execute_ldap['ldapadd-ppolicies-entity'] 
 
-    execute_ldap { 'ldapadd-ppolicies-ou':
-      rootdn      => "${rootdn},${basedn}",
-      rootpw      => $rootldappw,
-      ldif_search => "ou=policies,${basedn}",
-      ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
-      require     => [Class['ldap::server::service'], Package['libldap-ruby1.8']],
-    }
+    if $rubyversion == "1.8.7" {
+      execute_ldap { 'ldapadd-ppolicies-ou':
+         rootdn      => "${rootdn},${basedn}",
+         rootpw      => $rootldappw,
+         ldif_search => "ou=policies,${basedn}",
+         ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+         require     => [Class['ldap::server::service'], Package['libldap-ruby1.8']],
+      }
 
-    execute_ldap { 'ldapadd-ppolicies-entity':
-      rootdn      => "${rootdn},${basedn}",
-      rootpw      => $rootldappw,
-      ldif_search => "cn=default,ou=policies,${basedn}",
-      ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
-      require     => [Class['ldap::server::service'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
+      execute_ldap { 'ldapadd-ppolicies-entity':
+         rootdn      => "${rootdn},${basedn}",
+         rootpw      => $rootldappw,
+         ldif_search => "cn=default,ou=policies,${basedn}",
+         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+         require     => [Class['ldap::server::service'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
+      }
+    }
+    # Ruby on Ubuntu 14.04 == 1.9.3
+    else{
+      execute_ldap { 'ldapadd-ppolicies-ou':
+         rootdn      => "${rootdn},${basedn}",
+         rootpw      => $rootldappw,
+         ldif_search => "ou=policies,${basedn}",
+         ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+         require     => [Class['ldap::server::service'], Package['ruby-ldap']],
+      }
+
+      execute_ldap { 'ldapadd-ppolicies-entity':
+         rootdn      => "${rootdn},${basedn}",
+         rootpw      => $rootldappw,
+         ldif_search => "cn=default,ou=policies,${basedn}",
+         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+         require     => [Class['ldap::server::service'], Package['ruby-ldap'], File['/usr/lib/ldap/check_password.so']],
+      }
     }
 
     $ldap_host_var      = '127.0.0.1:389'

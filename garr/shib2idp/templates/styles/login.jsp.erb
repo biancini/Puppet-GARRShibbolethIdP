@@ -44,7 +44,7 @@
         if v.is_a?(Hash) and lang != "en"
           %>
           <c:when test="${language == '<%=lang%>'}">
-            <title><%= metadata_information[lang]['orgDisplayName'] %></title>
+            <title><%= @metadata_information[lang]['orgDisplayName'] %></title>
             <link href="<%= @metadata_information[lang]['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
           </c:when>
           <%
@@ -52,7 +52,7 @@
       end
       %>
       <c:otherwise>
-        <title><%= metadata_information['en']['orgDisplayName'] %></title>
+        <title><%= @metadata_information['en']['orgDisplayName'] %></title>
         <link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
       </c:otherwise>
       </c:choose>
@@ -104,8 +104,8 @@
         %>
         <c:when test="${language == '<%=lang%>'}">
           <fmt:message key="footer" var="footer">
-            <fmt:param value="<%= metadata_information[lang]['orgDisplayName'] %>"/>
-            <fmt:param value="<%= metadata_information[lang]['orgDescription'] %>"/>
+            <fmt:param value="<%= @metadata_information[lang]['orgDisplayName'] %>"/>
+            <fmt:param value="<%= @metadata_information[lang]['orgDescription'] %>"/>
           </fmt:message>
         </c:when>
         <%
@@ -114,8 +114,8 @@
     %>
     <c:otherwise>
       <fmt:message key="footer" var="footer">
-        <fmt:param value="<%= metadata_information['en']['orgDisplayName'] %>"/>
-        <fmt:param value="<%= metadata_information['en']['orgDescription'] %>"/>
+        <fmt:param value="<%= @metadata_information['en']['orgDisplayName'] %>"/>
+        <fmt:param value="<%= @metadata_information['en']['orgDescription'] %>"/>
       </fmt:message>
     </c:otherwise>
     </c:choose>
@@ -134,14 +134,14 @@
                 if v.is_a?(Hash) and lang != "en"
                   %>
                   <c:when test="${language == '<%=lang%>'}">
-                    <a id="logolink" class="logo" href="<%= metadata_information[lang]['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information[lang]['url_LogoOrg_160x120']%>" alt="<%= metadata_information[lang]['orgDisplayName']%>"/></a><br/><%= metadata_information[lang]['orgDisplayName']%>
+                    <a id="logolink" class="logo" href="<%= @metadata_information[lang]['idpInfoUrl'] %>"><img id="logoimg" src="<%= @metadata_information[lang]['url_LogoOrg_160x120']%>" alt="<%= @metadata_information[lang]['orgDisplayName']%>"/></a><br/><%= @metadata_information[lang]['orgDisplayName']%>
                   </c:when>
                   <%
                 end
               end
               %>
               <c:otherwise>
-                <a id="logolink" class="logo" href="<%= metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= metadata_information['en']['orgDisplayName']%>"/></a><br/><%= metadata_information['en']['orgDisplayName']%>
+                <a id="logolink" class="logo" href="<%= @metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= @metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= @metadata_information['en']['orgDisplayName']%>"/></a><br/><%= @metadata_information['en']['orgDisplayName']%>
               </c:otherwise>
               </c:choose>
             <%% } %>
@@ -194,8 +194,8 @@
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="requestedattrs"/>:</b><br/>
               <script language="javascript">
                 var langPreLinkA = {
-                  <% @metadata_information.each do |@l, @mi| %>
-                  "<%= @l %>": "<%= @mi['idpInfoUrl'] %>",
+                  <% @metadata_information.each do |l, mi| %>
+                  "<%= l %>": "<%= mi['idpInfoUrl'] %>",
                   <% end %>
                 };
             		var langPreLink = ("${language}" in langPreLinkA) ? langPreLinkA["${language}"] : langPreLinkA["en"];
@@ -237,8 +237,8 @@
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="optionalattrs"/>:</b><br/>
               <script language="javascript">
                  var langPreLinkA = {
-                   <% @metadata_information.each do |@l, @mi| %>
-                   "<%= @l %>": "<%= @mi['idpInfoUrl'] %>",
+                   <% @metadata_information.each do |l, mi| %>
+                   "<%= l %>": "<%= mi['idpInfoUrl'] %>",
                    <% end %>
                  };
              		 var langPreLink = ("${language}" in langPreLinkA) ? langPreLinkA["${language}"] : langPreLinkA["en"];

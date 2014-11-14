@@ -3,7 +3,7 @@
 	url = https://github.com/puppetlabs/puppetlabs-mysql
 [submodule "garr-common"]
 	path = garr-common
-	url = https://github.com/biancini/Puppet-GARRCommon
+	url = https://github.com/malavolti/Puppet-GARRCommon
 [submodule "puppetlabs/apache"]
 	path = puppetlabs/apache
 	url = https://github.com/puppetlabs/puppetlabs-apache

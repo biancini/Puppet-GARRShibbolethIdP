@@ -14,7 +14,7 @@
 		<p>
 		    <strong>Errore: URL IdP non valido (HTTP 404)</strong>
 		</p>
-		<p>Per supporto nella risoluzione del problema contattare: <a href="<%=metadata_information["technicalIDPadminEmail"]%>"><%=metadata_information["technicalIDPadminEmail"].gsub("mailto:","")%></a>.</p>
+		<p>Per supporto nella risoluzione del problema contattare: <a href="<%= @metadata_information["technicalIDPadminEmail"]%>"><%= @metadata_information["technicalIDPadminEmail"].gsub("mailto:","")%></a>.</p>
 	</td>
 	</tr>
 	</table>
