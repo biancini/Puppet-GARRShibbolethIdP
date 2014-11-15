@@ -254,6 +254,7 @@ class shib2idp::idp::finalize (
   
   mysql_database { 'userdb':
     ensure  => 'present',
+    require => Class['mysql::server'],
   }
 
   execute_mysql {

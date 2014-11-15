@@ -15,6 +15,7 @@ class shib2idp::idp::styles(
   $install_uapprove = true,
   $custom_styles = false,
 ){
+
   define message_file() {
     if ($name != "en" and inline_template("<%= name.length %>") == "2") {
       file { "/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes/messages_${name}.properties":
@@ -23,7 +24,7 @@ class shib2idp::idp::styles(
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/styles/messages_${name}.properties",
-        require => File['/usr/local/src/shibboleth-identityprovider'],
+        require => File['/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes'],
       }
     }
   }
@@ -31,6 +32,13 @@ class shib2idp::idp::styles(
   if ($custom_styles) {
     # Install graphical customization of look&feel
     file {
+      '/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes':
+        ensure  => directory,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        require => File['/usr/local/src/shibboleth-identityprovider'];
+
       '/usr/local/src/shibboleth-identityprovider/src/main/webapp/images/IDEM_logo.png':
         ensure  => present,
         owner   => 'root',
@@ -165,7 +173,7 @@ class shib2idp::idp::styles(
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/styles/messages.properties",
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/classes'];
     }
 
     $langs_array = keys($metadata_information)
