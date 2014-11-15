@@ -373,6 +373,16 @@ class shib2idp::management::phpldap (
       content => template("shib2idp/monitoring/action_lock.erb"),
       require => [Package['phpldapadmin'], File['pwdir']];
   }
+
+  if ($operatingsystem == "Ubuntu" and $operatingsystemrelease == "14.04"){
+      exec{ 'modify-TemplateRenderOrig1': 
+         command => "sed -i -e's/password_hash/password_hash_custom/' TemplateRenderOrig.php",
+         unless  => "grep 'password_hash_custom' TemplateRenderOrig.php",
+         cwd     => "/usr/share/phpldapadmin/lib",
+         path    => ["/bin", "/usr/bin"],
+         require => Exec['rename-TemplateRender'];
+      }
+  }
   
   exec {
     'rename-TemplateRender':
