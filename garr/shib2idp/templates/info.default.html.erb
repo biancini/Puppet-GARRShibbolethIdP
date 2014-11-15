@@ -30,19 +30,19 @@
         <script>
             if (userLang == "it-IT"){ 
                document.write ("<title><%= @metadata_information['it']['orgDisplayName'] %> </title>");
-               document.write ('<link href="<%= @metadata_information['it']['url_LogoOrg-32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
+               document.write ('<link href="<%= @metadata_information['it']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
             }
 
             else{ 
                document.write ("<title><%= @metadata_information['en']['orgDisplayName'] %> </title>");
-               document.write ('<link href="<%= @metadata_information['en']['url_LogoOrg-32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
+               document.write ('<link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />');
             }
         </script>
     </head>
 
 <body>
 <div id='infoHeader'>
-        <h1> <img src="<%= @metadata_information['it']['url_LogoOrg-160x120'] %>" id="infoLogoEnte"/> PARTECIPAZIONE A IDEM del <%= @metadata_information['it']['orgDisplayName'] %> </h1>
+        <h1> <img src="<%= @metadata_information['it']['url_LogoOrg_160x120'] %>" id="infoLogoEnte"/> PARTECIPAZIONE A IDEM del <%= @metadata_information['it']['orgDisplayName'] %> </h1>
 </div>
 
     <div id='infoDescription'>

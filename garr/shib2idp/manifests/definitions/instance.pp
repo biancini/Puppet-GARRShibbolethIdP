@@ -26,8 +26,8 @@
 #  * _privacyPage_:: URL where an user can found the Privacy Page for this IdP.
 #  * _nameOrg_:: Unit Organization Name
 #  * _idpInfoUrl_:: URL where an user can found more information about this entity (IdP)
-#  * _url_LogoOrg-32x32_:: URL where an user can found the Organization's Logo (32x32 px)
-#  * _url_LogoOrg-160x120_:: URL where an user can found the Organization's Logo (160x120 px)
+#  * _url_LogoOrg_32x32_:: URL where an user can found the Organization's Logo (32x32 px)
+#  * _url_LogoOrg_160x120_:: URL where an user can found the Organization's Logo (160x120 px)
 #
 #  * _technicalEmail_:: An email address of the technical who manage the IdP
 #
@@ -53,8 +53,8 @@
 #           'privacyPage'       => 'http://www.garr.it/',
 #           'nameOrg'           => 'Consortium GARR',
 #           'idpInfoUrl'        => 'https://puppetclient.example.com/idp/info.html',
-#           'url_LogoOrg-32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_en.png',
-#           'url_LogoOrg-160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_en.png',
+#           'url_LogoOrg_32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_en.png',
+#           'url_LogoOrg_160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_en.png',
 #         },
 #         'it' => {
 #           'orgDisplayName'    => 'Test IdP for IdP in the cloud project',
@@ -63,10 +63,10 @@
 #           'privacyPage'       => 'http://www.garr.it/',
 #           'nameOrg'           => 'Consortium GARR',
 #           'idpInfoUrl'        => 'https://puppetclient.example.com/idp/info.html',
-#           'url_LogoOrg-32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_it.png',
-#           'url_LogoOrg-160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_it.png',
+#           'url_LogoOrg_32x32' => 'https://puppetclient.example.com/idp/images/institutionLogo-32x32_it.png',
+#           'url_LogoOrg_160x120' => 'https://puppetclient.example.com/idp/images/institutionLogo-160x120_it.png',
 #         },
-#         'technicalEmail' => 'support@pupperclient.example.com',
+#         'technicalIDPadminEmail'     => 'support@pupperclient.example.com',
 #         'technicalIDPadminGivenName' => '',
 #         'technicalIDPadminSurName'   => '',
 #         'technicalIDPadminTelephone' => '',

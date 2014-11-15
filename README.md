@@ -226,8 +226,8 @@ node '<YOUR_IDP_FQDN>' {
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
         'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
-        'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_en.png',
-        'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_en.png',
+        'url_LogoOrg_32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_en.png',
+        'url_LogoOrg_160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_en.png',
       },
       'it'                => {
         'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
@@ -236,10 +236,10 @@ node '<YOUR_IDP_FQDN>' {
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
         'idpInfoUrl'             => 'https://<YOUR_IDP_FQDN>/idp/info.html',
-        'url_LogoOrg-32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_it.png',
-        'url_LogoOrg-160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_it.png',
+        'url_LogoOrg_32x32'      => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-32x32_it.png',
+        'url_LogoOrg_160x120'    => 'https://<YOUR_IDP_FQDN>/idp/images/logoEnte-160x120_it.png',
       },
-      'technicalEmail'             => 'mailto:support@garr.it',
+      'technicalIDPadminEmail'     => 'mailto:support@garr.it',
       'technicalIDPadminGivenName' => 'GivenName',
       'technicalIDPadminSurName'   => 'SurName',
       'technicalIDPadminTelephone' => '0200000000',
@@ -320,9 +320,9 @@ The parameters that can be specified to describe a Shibboleth IdP instance are t
    - `privacyPage`:URL where an user can found the Privacy Page for this IdP.
    - `nameOrg`: Unit Organization Name.
    - `idpInfoUrl`: URL where an user can found more information about this entity (IdP).
-   - `url_LogoOrg-32x32`: URL where an user can found the Organization's Logo (32x32 px).
-   - `url_LogoOrg-160x120`: URL where an user can found the Organization's Logo (160x120 px).
-   - `technicalEmail`: An email address of the technical who manage the IdP.
+   - `url_LogoOrg_32x32`: URL where an user can found the Organization's Logo (32x32 px).
+   - `url_LogoOrg_160x120`: URL where an user can found the Organization's Logo (160x120 px).
+   - `technicalIDPadminEmail`: An email address of the technical who manage the IdP.
    - `technicalIDPadminGivenName`: The Technical IDP Admin's name.
    - `technicalIDPadminSurName`: The Technical IDP Admin's surname.
    - `technicalIDPadminTelephone`: The Technical IDP Admin's telephone number.
