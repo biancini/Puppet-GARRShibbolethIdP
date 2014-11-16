@@ -26,7 +26,7 @@ class shib2idp::management::phpldap (
   $easy_insert     = false,
   $technical_email = undef,
 ) {
-    
+
   package {
     [ 'php5', 'php5-ldap']:
       ensure => present;
@@ -374,7 +374,7 @@ class shib2idp::management::phpldap (
       require => [Package['phpldapadmin'], File['pwdir']];
   }
 
-  if ($operatingsystem == "Ubuntu" and $operatingsystemrelease == "14.04"){
+  if (versioncmp($php_version, '5.5') >= 0){
       exec{ 'modify-TemplateRenderOrig1': 
          command => "sed -i -e's/password_hash/password_hash_custom/' TemplateRenderOrig.php",
          unless  => "grep 'password_hash_custom' TemplateRenderOrig.php",
