@@ -103,7 +103,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Localit&agrave;",
-               'dispDescr' => "Località di un edificio",
+               'dispDescr' => "Localit&agrave; di un edificio",
             },
          },
          'id'                => "locality",
@@ -179,7 +179,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Nome Organizzazione",
-               'dispDescr' => "Nome dell'rganizzazione",
+               'dispDescr' => "Nome dell'organizzazione",
             },
          },
          'id'                => "organizationName",
@@ -198,7 +198,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Unit&agrave; organizzativa",
-               'dispDescr' => "Unit&agrave; organizzativa di un'Organizzazione",
+               'dispDescr' => "Unit&agrave; organizzativa dell'Organizzazione",
             },
          },
          'id'                => "organizationalUnit",
@@ -388,7 +388,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "DN dell'organizzazione",
-               'dispDescr' => "DN dell'organizzazione: Il DN dell'organizzazione a cui è associato questo utente",
+               'dispDescr' => "DN dell'organizzazione: Il DN dell'organizzazione a cui &egrave; associato questo utente",
             },
          },
          'id'                => "eduPersonOrgDN",
