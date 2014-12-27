@@ -34,10 +34,7 @@ a:hover {
 }
 
 .container {
-  position: relative;
-  left: 34%;
-  width: 540px;
-  margin-left: -270px;
+  max-width: 600px;
 }
 .container-footer {
   padding-top: 12px;
