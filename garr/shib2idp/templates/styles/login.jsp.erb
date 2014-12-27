@@ -38,6 +38,7 @@
   <html lang="${language}">
     <head>
       <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <c:choose>
       <%
       @metadata_information.each do |lang, v|
@@ -56,7 +57,10 @@
         <link href="<%= @metadata_information['en']['url_LogoOrg_32x32'] %>" rel="shortcut icon" type="image/x-icon" />
       </c:otherwise>
       </c:choose>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
       <link rel="stylesheet" type="text/css" href="<%%= request.getContextPath()%>/login.css"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
       <script language="javascript">
            function setParam(name, value) {
               var l = window.location;
@@ -147,7 +151,7 @@
             <%% } %>
           </header>
       
-          <div class="content">
+          <div class="content row">
             <%% if ("true".equals(request.getParameter("spinfo"))) { %>
               <ul>
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="description"/>:</b><br/>
@@ -278,7 +282,7 @@
               </script></li>           
               </ul>
             <%% } else { %>
-            <div class="column one">
+            <div class="column one col-sm-4">
               <%% if (request.getAttribute("actionUrl") != null){ %>
                 <form id="login" action="<%%= request.getAttribute("actionUrl") %>" method="post">
               <%% } else { %>
@@ -318,19 +322,21 @@
                 </legend>
 
                 <section>
-                  <label for="username"><fmt:message key="username"/></label>
+                  <label for="username" class="hidden"><fmt:message key="username"/></label>
                   <input class="form-element form-field" name="j_username" type="text" value="">
                 </section>
 
                 <section>
-                  <label for="password"><fmt:message key="password"/></label>
+                  <label for="password" class="hidden"><fmt:message key="password"/></label>
                   <input class="form-element form-field" name="j_password" type="password" value="">
                 </section>
 
                 <% if @install_uapprove==true -%>
                 <section>
+                  <label style="left: 20px; width: auto" for="uApprove.consent-revocation">
                   <input id="uApprove.consent-revocation" type="checkbox" name="uApprove.consent-revocation" value="true"/>
-                  <label style="left: 20px; width: auto" for="uApprove.consent-revocation"><fmt:message key="clearconsent"/></label>
+                  <fmt:message key="clearconsent"/>
+                  </label>
                 </section>
                 <% end -%>
 
@@ -361,7 +367,7 @@
                     </p>
 
           </div>
-          <div class="column two">
+          <div class="column two col-sm-4">
             <ul class="list list-help"><a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="${idem}" style="width: 100px"/></a>
               <li class="list-help-item"><a href="/pw/changepw.php"><span class="item-marker">&rsaquo;</span> <fmt:message key="forgot"/></a></li>
               <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="help"/></a></li>
