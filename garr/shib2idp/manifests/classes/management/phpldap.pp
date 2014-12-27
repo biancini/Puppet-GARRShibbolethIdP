@@ -28,13 +28,15 @@ class shib2idp::management::phpldap (
 ) {
 
   package {
-    [ 'php5', 'php5-ldap']:
+    'php5-ldap':
       ensure => present;
 
     'phpldapadmin':
       ensure  => present,
-      require => Package['php5', 'php5-ldap'];
+      require => [Class['apache::mod::php'], Package['php5-ldap']];
   }
+
+  class { 'apache::mod::php': }
 
   $ldap_host_var      = $shib2idp::idp::finalize::ldap_host_var
   $ldap_use_ssl_var   = $shib2idp::idp::finalize::ldap_use_ssl_var
@@ -374,7 +376,8 @@ class shib2idp::management::phpldap (
       require => [Package['phpldapadmin'], File['pwdir']];
   }
 
-  if (versioncmp($php_version, '5.5') >= 0){
+  if ($operatingsystem == 'Ubuntu' and $operatingsystemmajrelease == '14.04'){
+
       exec{ 'modify-TemplateRenderOrig1': 
          command => "sed -i -e's/password_hash/password_hash_custom/' TemplateRenderOrig.php",
          unless  => "grep 'password_hash_custom' TemplateRenderOrig.php",

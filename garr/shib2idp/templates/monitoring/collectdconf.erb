@@ -6,7 +6,7 @@
 # You should also read /usr/share/doc/collectd-core/README.Debian.plugins
 # before enabling any more plugins.
 
-Hostname "<%= idpfqdn %>"
+Hostname "<%= @idpfqdn %>"
 #FQDNLookup true
 #BaseDir "/var/lib/collectd"
 #PluginDir "/usr/lib/collectd"
@@ -415,7 +415,7 @@ LoadPlugin users
         <Database userdb>
                 Host "localhost"
                 User "root"
-                Password "<%=rootpw%>"
+                Password "<%= @rootpw %>"
                 Socket "/var/run/mysqld/mysqld.sock"
                 Database "userdb"
         </Database>
@@ -423,7 +423,7 @@ LoadPlugin users
         <Database uApprove>
                 Host "localhost"
                 User "uApprove"
-                Password "<%=rootpw%>"
+                Password "<%= @rootpw %>"
                 Socket "/var/run/mysqld/mysqld.sock"
                 Database "uApprove"
         </Database>
@@ -457,7 +457,7 @@ LoadPlugin users
 #</Plugin>
 
 <Plugin network>
- Server "<%= collectdserver %>"
+ Server "<%= @collectdserver %>"
 </Plugin>
 
 #<Plugin network>

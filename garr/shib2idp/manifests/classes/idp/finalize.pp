@@ -146,14 +146,26 @@ class shib2idp::idp::finalize (
         require => Class['ldap::server::service'];
     }
 
-    if($osfamily == 'Debian' ){
+    if($operatingsystem == 'Ubuntu' and $operatingsystemrelease == "14.04"){
 
      file{ "/usr/lib/ldap/check_password.so":
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        source  => "puppet:///modules/shib2idp/ppolicy_modules/check_password.so",
+        source  => "puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-31-check_password.so",
+        require => [Class['ldap::server::service'], File['/etc/ldap/schema/ppolicy.schema']],
+      }
+    }
+
+    else{
+
+     file{ "/usr/lib/ldap/check_password.so":
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-28-check_password.so",
         require => [Class['ldap::server::service'], File['/etc/ldap/schema/ppolicy.schema']],
       }
     }

@@ -29,23 +29,22 @@ class shib2idp::prerequisites (
   $java_home = $shib2common::java::params::java_home
   $java_opts = $shib2common::java::params::java_opts
 
-   if rubyversion == '1.8.7'{
-      package { ['libldap-ruby1.8', 'gettext', 'python-ldap']: 
-         ensure => installed,
-      }
-   }
-   # Else Ruby > 1.8 (1.9.3)
-   else{
+  if rubyversion == '1.8.7'{
+     package { ['libldap-ruby1.8', 'gettext', 'python-ldap']: 
+        ensure => installed,
+     }
+  }
+  # Else Ruby > 1.8 (1.9.3)
+  else{
 
-      package { 'libldap-ruby1.8': 
-         ensure => purged,
-      }
+     package { 'libldap-ruby1.8': 
+        ensure => purged,
+     }
 
-
-      package { ['ruby-ldap', 'gettext', 'python-ldap']: 
-         ensure => installed,
-      }
-   }
+     package { ['ruby-ldap', 'gettext', 'python-ldap']: 
+        ensure => installed,
+     }
+  }
 
   include 'concat::setup'
 
