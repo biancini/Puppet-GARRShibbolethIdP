@@ -150,3 +150,8 @@ footer {
 #spName {
 	width: 266px;
 }
+
+ul {
+  list-style-type: none;
+  margin-left: 30px;
+}

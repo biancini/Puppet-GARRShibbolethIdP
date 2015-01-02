@@ -1,4 +1,4 @@
-<%%@ taglib uri="urn:mace:shibboleth:2.0:idp:ui" prefix="idpui" %>
+
 <%%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%%@ page import="edu.internet2.middleware.shibboleth.idp.util.HttpServletHelper" %>
@@ -128,8 +128,8 @@
         <div class="container">
           <header>
             <%% if ("true".equals(request.getParameter("spinfo"))) { %>
-             <idpui:serviceLogo minWidth="40" minHeight="40">default</idpui:serviceLogo><br/>
-             <idpui:serviceDescription>${spdescr}</idpui:serviceDescription><br />
+             <idpui:serviceLogo minWidth="40" minHeight="40"></idpui:serviceLogo><br/>
+             <b><idpui:serviceDescription><fmt:message key="spdescr"/></idpui:serviceDescription></b><br />
              <a href="javascript:setParam('spinfo', 'false');"><span class="item-marker">&lsaquo;</span> <fmt:message key="goback"/></a>
             <%% } else { %>
               <c:choose>
@@ -361,7 +361,7 @@
                 //    Example:
               %>
                     <p>
-                      <idpui:serviceLogo minWidth="40" minHeight="40"><fmt:message key="spdescr"/></idpui:serviceLogo><br/>
+                      <idpui:serviceLogo minWidth="40" minHeight="40"></idpui:serviceLogo><br/>
                       <idpui:serviceDescription><fmt:message key="spdescr"/></idpui:serviceDescription><br />
                       <a href="javascript:setParam('spinfo', 'true');"><span class="item-marker">&rsaquo;</span> <fmt:message key="moreinfo"/></a>
                     </p>
