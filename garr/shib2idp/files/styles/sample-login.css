@@ -23,9 +23,10 @@ a:visited {
 a:hover {
   text-decoration: underline;
 }
-img {
-  max-width: 100%;
-  margin-bottom: 12px;
+
+.jumbotron {
+  background: #ffffff;
+  text-align: left;
 }
 
 .wrapper {
@@ -33,25 +34,10 @@ img {
 }
 
 .container {
-  position: relative;
-  left: 34%;
-  width: 540px;
-  margin-left: -270px;
+  max-width: 600px;
 }
 .container-footer {
   padding-top: 12px;
-}
-@media only screen and (max-width: 1020px) {
-  .container {
-    left: 45%;
-  }
-}
-@media only screen and (max-width: 650px) {
-  .container {
-    position: static;
-    margin: 0 auto;
-    width: 280px;
-  }
 }
 
 header {
@@ -61,19 +47,6 @@ header {
 .logo img {
   border: none;
 }
-@media only screen and (max-width: 650px) {
-  .logo img {
-    display: none;
-  }
-  .logo {
-    background: url(images/dummylogo-mobile.png) no-repeat top center;
-    display: block;
-    height: 115px;
-    width: 100px;
-    margin: 0 auto;
-  }
-}
-
 .content {
   padding-bottom: 80px;
   overflow: hidden;
@@ -94,7 +67,7 @@ form {
   width: 240px;
   padding-bottom: 21px;
 }
-form label { /* labels are hidden */
+form label.hidden {
   position: absolute;
   left: -999em;
   width: 1em;
@@ -176,4 +149,9 @@ footer {
 
 #spName {
 	width: 266px;
+}
+
+ul {
+  list-style-type: none;
+  margin-left: 30px;
 }

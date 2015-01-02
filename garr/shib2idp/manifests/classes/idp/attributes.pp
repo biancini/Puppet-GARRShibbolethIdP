@@ -102,8 +102,8 @@ class shib2idp::idp::attributes() {
                'dispDescr' => "Locality of a building",
             },
             'it' => {
-               'dispName' => "Località",
-               'dispDescr' => "Località di un edificio",
+               'dispName' => "Localit&#224;",
+               'dispDescr' => "Localit&#224; di un edificio",
             },
          },
          'id'                => "locality",
@@ -179,7 +179,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Nome Organizzazione",
-               'dispDescr' => "Nome di un'Organizzazione",
+               'dispDescr' => "Nome dell'organizzazione",
             },
          },
          'id'                => "organizationName",
@@ -197,8 +197,8 @@ class shib2idp::idp::attributes() {
                'dispDescr' => "Organizational Unit of an Organization",
             },
             'it' => {
-               'dispName' => "Unità organizzativa",
-               'dispDescr' => "Unità organizzativa di un'Organizzazione",
+               'dispName' => "Unit&#224; organizzativa",
+               'dispDescr' => "Unit&#224; organizzativa dell'Organizzazione",
             },
          },
          'id'                => "organizationalUnit",
@@ -217,7 +217,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "E-mail",
-               'dispDescr' => "E-Mail: L'indirizzo e-mail preferito dall'utente",
+               'dispDescr' => "E-Mail: Iindirizzo e-mail preferito dall'utente",
             },
          },
          'id'                => "email",
@@ -388,7 +388,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "DN dell'organizzazione",
-               'dispDescr' => "DN dell'organizzazione: Il DN dell'organizzazione a cui è associato questo utente",
+               'dispDescr' => "DN dell'organizzazione: Il DN dell'organizzazione a cui &#232; associato questo utente",
             },
          },
          'id'                => "eduPersonOrgDN",
@@ -406,8 +406,8 @@ class shib2idp::idp::attributes() {
                'dispDescr' => "Organization unit path: The distinguished name (DN) of the directory entries representing the person's Organizational Unit(s)",
             },
             'it' => {
-               'dispName' => "DN dell'unità",
-               'dispDescr' => "DN dell'unità: Il DN dell'unità organizzativa di questo utente nella sua organizzazione",
+               'dispName' => "DN dell'unit&#224;",
+               'dispDescr' => "DN dell'unit&#224;: Il DN dell'unit&#224; organizzativa di questo utente nella sua organizzazione",
             },
          },
          'id'                => "eduPersonOrgUnitDN",
@@ -426,7 +426,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Affiliazione con ambito",
-               'dispDescr' => "Affiliazione con ambito: ruolo ricoperto @ dominio dell'Organizzazione",
+               'dispDescr' => "Affiliazione con ambito: ruolo ricoperto con dominio dell'Organizzazione",
             },
          },
          'id'                => "eduPersonScopedAffiliation",
@@ -489,7 +489,7 @@ class shib2idp::idp::attributes() {
             },
             'it' => {
                'dispName' => "Tempo ultima modifica password",
-               'dispDescr' => "Questo attributo indica l'ultimo momento in cui la password è stata modificata. Questo valore viene usato per stabilire se la password è scaduta o meno per la risorsa a cui si vuole accedere",
+               'dispDescr' => "Questo attributo indica l'ultimo momento in cui la password &#232; stata modificata. Questo valore viene usato per stabilire se la password &#232; scaduta o meno per la risorsa a cui si vuole accedere",
             },
          },
          'id'                => "pwdChangedTime",
