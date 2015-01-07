@@ -169,7 +169,7 @@ define shib2idp::instance (
 
   $curtomcat = $::tomcat::curtomcat
   if ($test_federation){
-    File['metadata-test-federation.xml']~>Exec['shib2-tomcat-restart']  
+    File['metadata-test-federation.xml'] ~> Service["${curtomcat}"]  
 
     download_file{ '/opt/shibboleth-idp/metadata/idem-test-metadata-sha256.xml':
       url     => "http://www.garr.it/idem-metadata/idem-test-metadata-sha256.xml",
@@ -194,7 +194,7 @@ define shib2idp::instance (
     }
   }
   else{
-    File['metadata-federation.xml']~>Exec['shib2-tomcat-restart']
+    File['metadata-federation.xml'] ~> Service["${curtomcat}"]
 
     download_file{ '/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml':
       url   => "http://www.garr.it/idem-metadata/edugain2idem-metadata-sha256.xml",

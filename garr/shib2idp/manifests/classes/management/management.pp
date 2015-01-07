@@ -76,7 +76,7 @@ class shib2idp::management (
       technical_email      => $technical_email,
       metadata_information => $metadata_information,
       easy_insert          => $phpldap_easy_insert,
-      notify               => Exec['shib2-apache-restart']
+      notify               => Service['httpd']
     }
   }
 
@@ -85,7 +85,7 @@ class shib2idp::management (
     rootpw          => $rootpw,
     idpfqdn         => $idpfqdn,
     test_federation => $test_federation,
-    notify          => Exec['shib2-apache-restart']
+    notify          => Service['httpd']
   }
   
 }

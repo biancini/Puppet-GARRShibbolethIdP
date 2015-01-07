@@ -73,7 +73,8 @@ class shib2idp::prerequisites (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      require => File["/etc/apache2/sites-available/idp.conf"];
+      require => File["/etc/apache2/sites-available/idp.conf"],
+      notify => Service ['httpd'];
   }
   
   $proxy_pass_idp = [
