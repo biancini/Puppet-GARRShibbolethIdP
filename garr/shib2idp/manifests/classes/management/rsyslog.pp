@@ -39,7 +39,7 @@ class shib2idp::management::rsyslog (
 	    group   => 'root',
 	    mode    => '0644',
 	    content  => template ("shib2idp/logging.xml.erb"),
-	    require => File['/etc/rsyslog.d/99-tomcat.conf'];
+	    require => [Shibboleth_install['execute_install'], File['/etc/rsyslog.d/99-tomcat.conf']];
 	  }
   } else {
     file { 

@@ -47,10 +47,20 @@ class shib2idp::idp::configure (
   }
 
   # Configure Shibboleth IdP
-  download_file { "${tomcat::tomcat_home}/lib/tomcat6-dta-ssl-1.0.0.jar": 
-    url     => 'https://build.shibboleth.net/nexus/content/repositories/releases/edu/internet2/middleware/security/tomcat6/tomcat6-dta-ssl/1.0.0/tomcat6-dta-ssl-1.0.0.jar',
-    require => Class['tomcat'],
-  }
+#  if ($curtomcat == "tomcat6"){
+
+#      download_file { "${tomcat::tomcat_home}/lib/tomcat6-dta-ssl-1.0.0.jar": 
+#         url     => 'https://build.shibboleth.net/nexus/content/repositories/releases/edu/internet2/middleware/security/tomcat6/tomcat6-dta-ssl/1.0.0/tomcat6-dta-ssl-1.0.0.jar',
+#         require => Class['tomcat'],
+#      }
+
+#  }
+#  elsif($curtomcat == "tomcat7"){
+
+#      download_file { "${tomcat::tomcat_home}/lib/tomcat7-dta-ssl-1.1.jar": 
+#         url     => 'https://github.com/Unicon/shibboleth-tomcat-dta-ssl/releases/download/v1.1/tomcat7-1.1.jar',
+#         require => Class['tomcat'],
+#      }
 
   augeas {
     "server.xml_connector_8009":

@@ -26,15 +26,17 @@ class shib2idp::management::phpldap (
   $easy_insert     = false,
   $technical_email = undef,
 ) {
-    
+
   package {
-    [ 'php5', 'php5-ldap']:
+    'php5-ldap':
       ensure => present;
 
     'phpldapadmin':
       ensure  => present,
-      require => Package['php5', 'php5-ldap'];
+      require => [Class['apache::mod::php'], Package['php5-ldap']];
   }
+
+  class { 'apache::mod::php': }
 
   $ldap_host_var      = $shib2idp::idp::finalize::ldap_host_var
   $ldap_use_ssl_var   = $shib2idp::idp::finalize::ldap_use_ssl_var
@@ -42,14 +44,11 @@ class shib2idp::management::phpldap (
   $ldap_use_plain_var = $shib2idp::idp::finalize::ldap_use_plain_var
   $admin_username     = regsubst($rootdn, 'cn=', '')
   
-  /*
   if ($technical_email) {
     $admin_email = $technical_email
   } else {
     $admin_email = "support@${domain_name}"
   }
-  */
-  $admin_email = "system.support@garr.it"
   
   exec { 'add-user-htaccess':
     command => "htpasswd -bc .htpasswd ${admin_username} ${rootldappw}",
@@ -372,6 +371,17 @@ class shib2idp::management::phpldap (
       mode    => '0644',
       content => template("shib2idp/monitoring/action_lock.erb"),
       require => [Package['phpldapadmin'], File['pwdir']];
+  }
+
+  if ($operatingsystem == 'Ubuntu' and $operatingsystemmajrelease == '14.04'){
+
+      exec{ 'modify-TemplateRenderOrig1': 
+         command => "sed -i -e's/password_hash/password_hash_custom/' TemplateRenderOrig.php",
+         unless  => "grep 'password_hash_custom' TemplateRenderOrig.php",
+         cwd     => "/usr/share/phpldapadmin/lib",
+         path    => ["/bin", "/usr/bin"],
+         require => Exec['rename-TemplateRender'];
+      }
   }
   
   exec {

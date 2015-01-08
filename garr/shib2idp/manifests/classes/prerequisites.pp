@@ -29,8 +29,21 @@ class shib2idp::prerequisites (
   $java_home = $shib2common::java::params::java_home
   $java_opts = $shib2common::java::params::java_opts
 
-  package { ['libldap-ruby1.8', 'gettext', 'python-ldap']: 
-    ensure => installed,
+  if rubyversion == '1.8.7'{
+     package { ['libldap-ruby1.8', 'gettext', 'python-ldap']: 
+        ensure => installed,
+     }
+  }
+  # Else Ruby > 1.8 (1.9.3)
+  else{
+
+     package { 'libldap-ruby1.8': 
+        ensure => purged,
+     }
+
+     package { ['ruby-ldap', 'gettext', 'python-ldap']: 
+        ensure => installed,
+     }
   }
 
   include 'concat::setup'
@@ -60,7 +73,8 @@ class shib2idp::prerequisites (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      require => File["/etc/apache2/sites-available/idp.conf"];
+      require => File["/etc/apache2/sites-available/idp.conf"],
+      notify => Service ['httpd'];
   }
   
   $proxy_pass_idp = [

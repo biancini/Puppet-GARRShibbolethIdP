@@ -16,4 +16,4 @@ import "definitions/*.pp"
 #
 # Sample Usage:
 #
-class shib2common { }
+class shib2idp { }

@@ -130,8 +130,8 @@ class shib2idp::idp::uapprove (
   }
 
   augeas { 'uapprove-web.xml':
-    context => "/files/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/web.xml",
-    changes => [
+   context => "/files/usr/local/src/shibboleth-identityprovider/src/main/webapp/WEB-INF/web.xml",
+   changes => [
       'set web-app/context-param/param-value/#text "$IDP_HOME$/conf/internal.xml; $IDP_HOME$/conf/service.xml; $IDP_HOME$/conf/uApprove.xml"',
       'ins #comment after web-app/*[last()]',
       'set web-app/#comment[last()] "uApprove Filter and Servlets"',
@@ -160,9 +160,9 @@ class shib2idp::idp::uapprove (
       'ins servlet-mapping after web-app/*[last()]',
       'set web-app/servlet-mapping[last()]/servlet-name/#text "uApprove - Attribute Release"',
       'set web-app/servlet-mapping[last()]/url-pattern/#text "/uApprove/AttributeRelease"',],
-    onlyif  => 'match web-app/context-param/param-value/#text[. =~ regexp(".*uApprove.xml.*")] size == 0',
-    require => File['/usr/local/src/shibboleth-identityprovider'],
-  }
+   onlyif  => 'match web-app/context-param/param-value/#text[. =~ regexp(".*uApprove.xml.*")] size == 0',
+   require => File['/usr/local/src/shibboleth-identityprovider'],
+ }
 
   file { 
       "${shibbolethsrc}/src/main/webapp/uApprove/terms-of-use.html":
