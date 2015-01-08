@@ -67,7 +67,7 @@ case $yn in
     ;;
   [Nn]* ) 
     echo "Now I create a new credential for you!"
-#    generate_cert
+    generate_cert
     CERT="OK"
     ;;
   * )
