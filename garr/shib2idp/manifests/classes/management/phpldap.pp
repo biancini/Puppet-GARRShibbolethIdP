@@ -36,6 +36,8 @@ class shib2idp::management::phpldap (
       require => [Class['apache::mod::php'], Package['php5-ldap']];
   }
 
+  class { 'apache::mod::php': } 
+
   $ldap_host_var      = $shib2idp::idp::finalize::ldap_host_var
   $ldap_use_ssl_var   = $shib2idp::idp::finalize::ldap_use_ssl_var
   $ldap_use_tls_var   = $shib2idp::idp::finalize::ldap_use_tls_var
