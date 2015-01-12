@@ -368,7 +368,7 @@
 
           </div>
           <div class="column two col-sm-4">
-            <ul class="list list-help"><a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="${idem}" style="width: 100px"/></a>
+            <ul class="list list-help">
               <li class="list-help-item"><a href="/pw/changepw.php"><span class="item-marker">&rsaquo;</span> <fmt:message key="forgot"/></a></li>
               <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="help"/></a></li>
               <c:choose>
@@ -402,6 +402,9 @@
             end
             %>
             <a href="javascript:setParam('language', 'en');"><img height="16px" src="<%%= request.getContextPath()%>/images/enFlag.png"></a>
+            </p>
+            <p>
+            <a href="http://www.idem.garr.it"><img src="<%%= request.getContextPath()%>/images/IDEM_logo.png" alt="${idem}" style="width: 100px"/></a>
             </p>
           </div>
           <%% } %>
