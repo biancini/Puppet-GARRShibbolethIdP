@@ -142,7 +142,7 @@ class shib2idp::prerequisites (
   # Install the mysql-java-connector
   class { 'mysql::bindings':
     java_enable => true,
-    require     => Class['mysql::server']
+    require     => Class['mysql::server', 'shib2common::java::package']
   }
 }
 

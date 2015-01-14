@@ -41,7 +41,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <c:choose>
       <%
-      @metadata_information.each do |lang, v|
+      @metadata_information.sort.each do |lang, v|
         if v.is_a?(Hash) and lang != "en"
           %>
           <c:when test="${language == '<%=lang%>'}">
@@ -103,7 +103,7 @@
 
     <c:choose>
     <%
-    @metadata_information.each do |lang, v|
+    @metadata_information.sort.each do |lang, v|
       if v.is_a?(Hash) and lang != "en"
         %>
         <c:when test="${language == '<%=lang%>'}">
@@ -134,7 +134,7 @@
             <%% } else { %>
               <c:choose>
               <%
-              @metadata_information.each do |lang, v|
+              @metadata_information.sort.each do |lang, v|
                 if v.is_a?(Hash) and lang != "en"
                   %>
                   <c:when test="${language == '<%=lang%>'}">
@@ -198,7 +198,7 @@
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="requestedattrs"/>:</b><br/>
               <script language="javascript">
                 var langPreLinkA = {
-                  <% @metadata_information.each do |l, mi| %>
+                  <% @metadata_information.sort.each do |l, mi| %>
                   "<%= l %>": "<%= mi['idpInfoUrl'] %>",
                   <% end %>
                 };
@@ -241,7 +241,7 @@
               <li><span class="item-marker">&rsaquo;</span> <b><fmt:message key="optionalattrs"/>:</b><br/>
               <script language="javascript">
                  var langPreLinkA = {
-                   <% @metadata_information.each do |l, mi| %>
+                   <% @metadata_information.sort.each do |l, mi| %>
                    "<%= l %>": "<%= mi['idpInfoUrl'] %>",
                    <% end %>
                  };
@@ -373,7 +373,7 @@
               <li class="list-help-item"><a href="<%= @metadata_information['technicalIDPadminEmail'] %>"><span class="item-marker">&rsaquo;</span> <fmt:message key="help"/></a></li>
               <c:choose>
               <%
-              @metadata_information.each do |lang, v|
+              @metadata_information.sort.each do |lang, v|
                 if v.is_a?(Hash) and lang != "en"
                   %>
                   <c:when test="${language == '<%=lang%>'}">
@@ -393,7 +393,7 @@
 
             <p>
             <%
-            @metadata_information.each do |lang, v|
+            @metadata_information.sort.each do |lang, v|
               if v.is_a?(Hash) and lang != "en"
               %>
               <a href="javascript:setParam('language', '<%=lang%>');"><img height="16px" src="<%%= request.getContextPath()%>/images/<%=lang%>Flag.png"></a>

@@ -79,6 +79,7 @@ class shib2idp::idp::configure (
       context => "/files/etc/default/${curtomcat}",
       changes => ["defvar authcomment *[. = 'AUTHBIND=no']", "ins AUTHBIND after \$authcomment", "set AUTHBIND yes",],
       onlyif  => "get AUTHBIND != 'yes'",
+      notify  => Service[$curtomcat],
       require => Class['tomcat'];
 
     "tomcat_javahome":
@@ -88,6 +89,7 @@ class shib2idp::idp::configure (
         "ins JAVA_HOME after \$javahome",
         "set JAVA_HOME ${shib2idp::prerequisites::java_home}",],
       onlyif  => "get JAVA_HOME != '${shib2idp::prerequisites::java_home}'",
+      notify  => Service[$curtomcat],
       require => Class['tomcat'];
 
     "tomcat_javaopts":
@@ -95,6 +97,15 @@ class shib2idp::idp::configure (
       changes => [
         "set JAVA_OPTS '${shib2idp::prerequisites::java_opts}'",],
       onlyif  => "get JAVA_OPTS != '${shib2idp::prerequisites::java_opts}'",
+      notify  => Service[$curtomcat],
+      require => Class['tomcat'];
+      
+    "tomcat_endorsed":
+      context => "/files/etc/default/${curtomcat}",
+      changes => [
+        "set JAVA_ENDORSED_DIRS '/usr/share/${curtomcat}/endorsed'",],
+      onlyif  => "get JAVA_ENDORSED_DIRS != '/usr/share/${curtomcat}/endorsed'",
+      notify  => Service[$curtomcat],
       require => Class['tomcat'];
       
     "catalinaproperties_endorsed":
@@ -103,6 +114,7 @@ class shib2idp::idp::configure (
         "set common.loader '\${catalina.base}/lib,\${catalina.base}/lib/*.jar,\${catalina.home}/lib,\${catalina.home}/lib/*.jar,/var/lib/${curtomcat}/common/classes,/var/lib/${curtomcat}/common/*.jar,/usr/share/${curtomcat}/endorsed/*.jar'",
       ],
       onlyif  => "get common.loader != '\${catalina.base}/lib,\${catalina.base}/lib/*.jar,\${catalina.home}/lib,\${catalina.home}/lib/*.jar,/var/lib/${curtomcat}/common/classes,/var/lib/${curtomcat}/common/*.jar,/usr/share/${curtomcat}/endorsed/*.jar'",
+      notify  => Service[$curtomcat],
       require => Class['tomcat'];
   }
 
