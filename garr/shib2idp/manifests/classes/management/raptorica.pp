@@ -59,6 +59,7 @@ class shib2idp::management::raptorica (
       cwd     => '/opt/raptor/ica/keys',
       path    => ['/bin', '/usr/bin'],
       unless  => 'test -f /opt/raptor/ica/keys/authorised-keys.jks',
+      creates => '/opt/raptor/ica/keys/authorised-keys.jks',
       require => File['/opt/raptor/ica/keys/raptor-mua-public.crt'],
       notify  => Service['raptoricad'];
       
@@ -66,7 +67,6 @@ class shib2idp::management::raptorica (
       command => "sed -i s/INFO/ERROR/g logging.xml",
       cwd     => '/opt/raptor/ica/conf',
       path    => ['/bin', '/usr/bin'],
-      creates => '/opt/raptor/ica/keys/authorised-keys.jks',
       onlyif  => 'grep INFO /opt/raptor/ica/conf/logging.xml',
       require => Package['raptor-ica'],
       notify  => Service['raptoricad'];
