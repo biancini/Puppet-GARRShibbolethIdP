@@ -55,12 +55,20 @@ class shib2idp::management::raptorica (
       notify  => Service['raptoricad'];
       
     'import MUA certificate':
-      command => "keytool -import -keystore authorised-keys.jks -storepass ${jks_password} -alias raptormua -file raptor-mua-public.crt",
+      command => "expect -c \"spawn keytool -import -keystore authorised-keys.jks -storepass ${jks_password} -alias raptormua -file raptor-mua-public.crt; expect \\\"Trust this certificate?\\\"; send \\\"yes\\n\\\"; interact\"",
       cwd     => '/opt/raptor/ica/keys',
       path    => ['/bin', '/usr/bin'],
-      creates => '/opt/raptor/ica/keys/authorised-keys.jks',
       unless  => 'test -f /opt/raptor/ica/keys/authorised-keys.jks',
       require => File['/opt/raptor/ica/keys/raptor-mua-public.crt'],
+      notify  => Service['raptoricad'];
+      
+    'lower log to ERROR':
+      command => "sed -i s/INFO/ERROR/g logging.xml",
+      cwd     => '/opt/raptor/ica/conf',
+      path    => ['/bin', '/usr/bin'],
+      creates => '/opt/raptor/ica/keys/authorised-keys.jks',
+      onlyif  => 'grep INFO /opt/raptor/ica/conf/logging.xml',
+      require => Package['raptor-ica'],
       notify  => Service['raptoricad'];
   }
 
