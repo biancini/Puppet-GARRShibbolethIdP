@@ -115,6 +115,7 @@ define shib2idp::instance (
   $first_install           = true,
   $phpldap_easy_insert     = undef,
   $uapprove_version        = undef,
+  $install_raptor          = undef,
 ) {
   
   class { 'shib2idp::prerequisites':
@@ -151,6 +152,7 @@ define shib2idp::instance (
   class { 'shib2idp::management':
     install_ldap         => $install_ldap,
     install_uapprove     => $install_uapprove,
+    install_raptor       => $install_raptor,
     logserver            => $logserver,
     nagiosserver         => $nagiosserver,
     collectdserver       => $collectdserver,
