@@ -55,7 +55,7 @@ class shib2idp::management::raptorica (
       notify  => Service['raptoricad'];
       
     'import MUA certificate':
-      command => "expect -c \"spawn keytool -import -keystore authorised-keys.jks -storepass ${jks_password} -alias raptormua -file raptor-mua-public.crt; expect \\\"Trust this certificate?\\\"; send \\\"yes\\n\\\"; interact\"",
+      command => "keytool -import -noprompt -keystore authorised-keys.jks -storepass ${jks_password} -alias raptormua -file raptor-mua-public.crt",
       cwd     => '/opt/raptor/ica/keys',
       path    => ['/bin', '/usr/bin'],
       unless  => 'test -f /opt/raptor/ica/keys/authorised-keys.jks',
