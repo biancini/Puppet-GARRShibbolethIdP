@@ -30,7 +30,7 @@ class shib2idp::management::nagios (
   $rootldappw       = 'ldappassword',) {
   # Configuration of Nagios NRPE server
   if ($nagiosserver) {
-    $searchuser = "uid=test,ou=people"
+    $searchuser = "uid=malavolti,ou=people"
 
     exec { 'samba-domain':
       command => "/bin/echo -e 'samba-common  samba-common/workgroup  string  IDP-IN-THE-CLOUD' | debconf-set-selections",
@@ -40,15 +40,21 @@ class shib2idp::management::nagios (
     }
 
     package {
-      "nagios-nrpe-server":
+      'nagios-nrpe-server':
         ensure  => installed,
-        require => [Package["debconf-utils"], Exec["samba-domain"]];
+        require => [Package['debconf-utils'], Exec['samba-domain']];
 
-      "sudo":
+      'sudo':
         ensure => installed;
         
-      "python-mechanize":
+      'python-mechanize':
         ensure => installed;
+    }
+    
+    service { 'nagios-nrpe-server':
+      enable  => true,
+      ensure  => 'running',
+      require => Package['nagios-nrpe-server'],
     }
 
     file_line { 'sudoers nrpe':
@@ -86,41 +92,43 @@ class shib2idp::management::nagios (
     if ($install_uapprove) {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-#        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
-#        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
+        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
-        "command[check_uApprove]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'uApprove'\" -d uApprove -u uApprove -p ${rootpw}"]
+        "command[check_uApprove]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'uApprove'\" -d uApprove -u uApprove -p ${rootpw}",
+        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}"]
     } else {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-#        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
-#        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
+        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
-        "command[check_uApprove]=/bin/bash -c \"echo 'UNKNOWN - uApprove non configurato per questo server.'; exit 3\""]
+        "command[check_uApprove]=/bin/bash -c \"echo 'UNKNOWN - uApprove non configurato per questo server.'; exit 3\"",
+        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}"]
     }
 
     file {
-#      '/usr/lib/nagios/plugins/check_login':
-#        ensure  => present,
-#        owner   => 'root',
-#        group   => 'root',
-#        mode    => '0755',
-#        content => template("shib2idp/monitoring/check_login.erb"),
-#        require => Package["nagios-nrpe-server", "python-mechanize", "python-ldap"];
+      '/usr/lib/nagios/plugins/check_login':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        content => template("shib2idp/monitoring/check_login.erb"),
+        require => Package["nagios-nrpe-server", "python-mechanize", "python-ldap"];
 
-#      '/usr/lib/nagios/plugins/check_aacli':
-#        ensure  => present,
-#        owner   => 'root',
-#        group   => 'root',
-#        mode    => '0755',
-#        content => template("shib2idp/monitoring/check_aacli.erb"),
-#        require => Package["nagios-nrpe-server"];
+      '/usr/lib/nagios/plugins/check_aacli':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        content => template("shib2idp/monitoring/check_aacli.erb"),
+        require => Package["nagios-nrpe-server"];
 
       '/usr/lib/nagios/plugins/check_cert':
         ensure  => present,
@@ -136,14 +144,9 @@ class shib2idp::management::nagios (
         group   => 'root',
         mode    => '0644',
         content => join($aacli_cmd, "\n"),
-        #require => File['/usr/lib/nagios/plugins/check_login', '/usr/lib/nagios/plugins/check_aacli', '/usr/lib/nagios/plugins/check_cert'],
-        require => File ['/usr/lib/nagios/plugins/check_cert'],
-        notify  => Exec['shib2-nagios-nrpe-server-restart'];
-    }
-
-    exec { 'shib2-nagios-nrpe-server-restart':
-      command     => "/usr/sbin/service nagios-nrpe-server restart",
-      refreshonly => true,
+        require => File['/usr/lib/nagios/plugins/check_login', '/usr/lib/nagios/plugins/check_aacli', '/usr/lib/nagios/plugins/check_cert'],
+        #require => File ['/usr/lib/nagios/plugins/check_cert'],
+        notify  => Service['nagios-nrpe-server'];
     }
   }
 
