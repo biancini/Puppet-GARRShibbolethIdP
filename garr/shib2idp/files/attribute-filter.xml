@@ -120,15 +120,4 @@
         <afp:AttributeRule attributeID="title"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
      </AttributeFilterPolicy>
 
-    <!-- UNIMO SPEMP di Test -->
-    <AttributeFilterPolicy id="IDEMspemb-test">
-        <PolicyRequirementRule xsi:type="basic:AttributeRequesterString" 
-        value="https://spemb.lab.unimo.it/shibboleth" />
-
-        <afp:AttributeRule attributeID="email"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
-        <afp:AttributeRule attributeID="title"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
-        <afp:AttributeRule attributeID="eduPersonPrincipalName"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
-        <afp:AttributeRule attributeID="surname"><afp:PermitValueRule xsi:type="basic:ANY"/></afp:AttributeRule>
-     </AttributeFilterPolicy>
-
 </AttributeFilterPolicyGroup>

@@ -361,7 +361,7 @@ class shib2idp::idp::finalize (
     } ->
     file {
       "/opt/shibboleth-idp/conf/attribute-filter.xml":
-        ensure  => absent,
+        ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',

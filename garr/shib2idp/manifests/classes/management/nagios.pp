@@ -92,7 +92,7 @@ class shib2idp::management::nagios (
     if ($install_uapprove) {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
         "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
@@ -105,7 +105,7 @@ class shib2idp::management::nagios (
     } else {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
         "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
