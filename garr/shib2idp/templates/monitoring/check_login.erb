@@ -15,6 +15,7 @@ basedn      = "<%= @basedn %>"
 adminuser   = "<%= @rootdn %>"
 ldappasswd  = "<%= @rootldappw %>"
 ldapsrv     = "<%= @ldap_host %>"
+scope       = "<%= @domain_name %>"
 ssl         = <%=
     if @use_ssl
       "True"
@@ -119,8 +120,7 @@ if options.checkLdap:
                   'givenName':'givenName',
                   'cn':'cn',
                   'mail':'mail',
-                  'eduPersonScopedAffiliation':'eduPersonScopedAffiliation',
-                  'eduPersonTargetedID':'eduPersonTargetedID',
+                  'eduPersonScopedAffiliation':'affiliation',
                   'eduPersonPrincipalName':'eppn'}
 
         # Parse all attribute values in HTML.
@@ -136,7 +136,10 @@ if options.checkLdap:
 
         # Check all attributes
         for curAttrLDAP in attrs:
-            valLDAP = ldapuser[curAttrLDAP]
+            if curAttrLDAP[0] == '@':
+                valLDAP = [('{0}@'+scope).format(i) for i in ldapuser[curAttrLDAP[1:]]]
+            else:
+                valLDAP = ldapuser[curAttrLDAP]
             valSP = spAttrs[attrs[curAttrLDAP]]
             if options.debug: print "Checking %s with %s for attribute: %s => %s" % (valLDAP, valSP, curAttrLDAP, attrs[curAttrLDAP])
             if not valSP in valLDAP:
