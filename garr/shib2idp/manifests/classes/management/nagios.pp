@@ -129,7 +129,7 @@ class shib2idp::management::nagios (
       '/usr/lib/nagios/plugins/check_aacli':
         ensure  => present,
         owner   => 'root',
-        group   => 'root',check_login
+        group   => 'root',
         mode    => '0755',
         content => template("shib2idp/monitoring/check_aacli.erb"),
         require => Package["nagios-nrpe-server"];
