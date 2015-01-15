@@ -145,12 +145,11 @@ if options.checkLdap:
 
     except Exception as e:
         # In case of an error put validAttrs to False to return exit status 1 below.
-        print e
         if options.debug: print e
         validAttrs = False
 
 # Search a valid string in the SP page and if found return 0 otherwise 2.
-if not "Politica della privacy" or not "Sta accedendo al seguente servizio:" in html:
+if not "Politica della privacy" in html:
     print "CRITICAL error while logging in user"
     sys.exit(2)
 elif validAttrs:

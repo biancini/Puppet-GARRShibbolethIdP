@@ -92,25 +92,29 @@ class shib2idp::management::nagios (
     if ($install_uapprove) {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login",
         "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
         "command[check_uApprove]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'uApprove'\" -d uApprove -u uApprove -p ${rootpw}",
-        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}"]
+        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
+        "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
+        "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
     } else {
       $aacli_cmd = [ 
         "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
+        "command[check_login]=/usr/lib/nagios/plugins/check_login",
         "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
         "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
         "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
         "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
         "command[check_uApprove]=/bin/bash -c \"echo 'UNKNOWN - uApprove non configurato per questo server.'; exit 3\"",
-        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}"]
+        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
+        "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
+        "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
     }
 
     file {
@@ -125,7 +129,7 @@ class shib2idp::management::nagios (
       '/usr/lib/nagios/plugins/check_aacli':
         ensure  => present,
         owner   => 'root',
-        group   => 'root',
+        group   => 'root',check_login
         mode    => '0755',
         content => template("shib2idp/monitoring/check_aacli.erb"),
         require => Package["nagios-nrpe-server"];
@@ -137,6 +141,22 @@ class shib2idp::management::nagios (
         mode    => '0755',
         content => template("shib2idp/monitoring/check_cert.erb"),
         require => Package["nagios-nrpe-server"];
+        
+      '/usr/lib/nagios/plugins/check_mem':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        source  => "puppet:///modules/shib2idp/monitoring/check_mem",
+        require => Package["nagios-nrpe-server"];
+        
+      '/usr/lib/nagios/plugins/check_ro_fs':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        source  => "puppet:///modules/shib2idp/monitoring/check_ro_fs",
+        require => Package["nagios-nrpe-server"];
 
       '/etc/nagios/nrpe.d/idp.cfg':
         ensure  => present,
@@ -144,8 +164,12 @@ class shib2idp::management::nagios (
         group   => 'root',
         mode    => '0644',
         content => join($aacli_cmd, "\n"),
-        require => File['/usr/lib/nagios/plugins/check_login', '/usr/lib/nagios/plugins/check_aacli', '/usr/lib/nagios/plugins/check_cert'],
-        #require => File ['/usr/lib/nagios/plugins/check_cert'],
+        require => File[
+          '/usr/lib/nagios/plugins/check_login',
+          '/usr/lib/nagios/plugins/check_aacli',
+          '/usr/lib/nagios/plugins/check_cert',
+          '/usr/lib/nagios/plugins/check_mem',
+          '/usr/lib/nagios/plugins/check_ro_fs'],
         notify  => Service['nagios-nrpe-server'];
     }
   }
