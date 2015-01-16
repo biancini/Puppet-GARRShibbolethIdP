@@ -112,7 +112,6 @@ define shib2idp::instance (
   $sambadomain             = undef,
   $test_federation         = undef,
   $custom_styles           = undef,
-  $first_install           = true,
   $phpldap_easy_insert     = undef,
   $uapprove_version        = undef,
   $install_raptor          = undef,
@@ -144,7 +143,6 @@ define shib2idp::instance (
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
     custom_styles        => $custom_styles,
-    first_install        => $first_install,
     uapprove_version     => $uapprove_version,
   }
   

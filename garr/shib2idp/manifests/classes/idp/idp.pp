@@ -63,7 +63,6 @@ class shib2idp::idp (
   $nagiosserver      = undef,
   $test_federation   = undef,
   $custom_styles     = undef,
-  $first_install     = true,
   $uapprove_version  = '2.5.0',
 ) {
   $curtomcat = $::tomcat::curtomcat
@@ -81,12 +80,7 @@ class shib2idp::idp (
   }
 
   # Checks and create needed folders
-  if ($first_install){ 
-      $overwrite_idp_install = true
-  }
-  else{ 
-      $overwrite_idp_install = false
-  }
+  $overwrite_idp_install = empty($::idpmetadata)
 
   file {
     '/usr/local/src/shibboleth-identityprovider':

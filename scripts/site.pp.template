@@ -61,6 +61,5 @@ node '{{ vals['idpfqdn'] }}' {
     sambadomain                  => '{{ vals['sambadomain'] }}',
     test_federation              => {{ vals['test_federation'] }},
     custom_styles                => {{ vals['custom_styles'] }},
-    first_install                => {{ vals['first_install'] }},
   }
 }

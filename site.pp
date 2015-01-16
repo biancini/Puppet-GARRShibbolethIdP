@@ -69,7 +69,6 @@ node 'puppetclient.mib.garr.it' {
     sambadomain                  => 'IDP-IN-THE-CLOUD',
     test_federation              => true,
     custom_styles                => true,
-    first_install                => true,
     phpldap_easy_insert          => true,
     uapprove_version             => '2.5.0',
   }

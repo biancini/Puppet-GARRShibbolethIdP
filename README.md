@@ -265,7 +265,6 @@ node '<YOUR_IDP_FQDN>' {
     sambadomain                  => 'IDP-IN-THE-CLOUD',
     test_federation              => true,
     custom_styles                => true,
-    first_install                => true,
     phpldap_easy_insert          => true,
     uapprove_version             => '2.5.0',
   }
@@ -355,7 +354,6 @@ The parameters that can be specified to describe a Shibboleth IdP instance are t
  * `sambadomain`: This parameter permits to specify the Samba domain name to be configured while installing Nagios.
  * `test_federation`: This parameter permits to specify if the IDP must be inserted into Test Federation (true) or into Production Federation (false).
  * `custom_styles`: This parameter permits to specify if the custom style of IdP Login Web Page must be installed (true) or not (false).
- * `first_install`: This parameter permits to specify if it is the first installation of IdP (true) or only an update (false).
  * `phpldap_easy_insert`: this parameter permits to specify whether the phpldapadmin interface provided for user management must be
    the complete one or the simplified version (true in this case implies that the simplified user management form will be installed).
  * `uapprove_version`: This parameter permits to choose which version of uApprove must be installed. The default version installed
