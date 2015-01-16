@@ -82,21 +82,23 @@ class shib2idp::prerequisites (
   ]
   
   apache::vhost { 'idp-ssl-8443':
-    servername  => "${idpfqdn}:8443",
-    port        => '8443',
-    serveradmin => $mailto,
-    docroot     => '/var/www',
-    ssl         => true,
-    ssl_cert    => '/opt/shibboleth-idp/credentials/idp.crt',
-    ssl_key     => '/opt/shibboleth-idp/credentials/idp.key',
-    add_listen  => true,
-    error_log   => true,
-    error_log_file => 'error.log',
-    access_log  => true,
-    access_log_file => 'ssl_access.log',
+    servername        => "${idpfqdn}:8443",
+    port              => '8443',
+    serveradmin       => $mailto,
+    docroot           => '/var/www',
+    ssl               => true,
+    ssl_cert          => '/opt/shibboleth-idp/credentials/idp.crt',
+    ssl_key           => '/opt/shibboleth-idp/credentials/idp.key',
+    ssl_protocol      => 'All -SSLv2 -SSLv3',
+    ssl_cipher        => 'ALL:!ADH:!RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP',
+    add_listen        => true,
+    error_log         => true,
+    error_log_file    => 'error.log',
+    access_log        => true,
+    access_log_file   => 'ssl_access.log',
     access_log_format => 'combined',
-    proxy_pass  => $proxy_pass_idp,
-    custom_fragment => '
+    proxy_pass        => $proxy_pass_idp,
+    custom_fragment   => '
   <Directory /usr/lib/cgi-bin>
      SSLOptions +StdEnvVars
   </Directory>
@@ -131,7 +133,7 @@ class shib2idp::prerequisites (
   # MSIE 7 and newer should be able to use keepalive
   BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
   ',
-    require => [Class['apache::mod::ssl'], Apache::Mod['proxy_ajp'], Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']],
+    require           => [Class['apache::mod::ssl'], Apache::Mod['proxy_ajp'], Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']],
   }
 
   # Install mysql-server and set the root's password to access it
