@@ -34,7 +34,6 @@
 # +nagiosserver+:: This parameter permits to specify a Nagios server, if it contains a value different from 'undef' NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
 # +custom_styles+:: This parameter permits to decide if install the default IdP style or the custom one.
 # +additional_metadata+:: undef,
-# +first_install+:: This parameter must contain 'true' if it is the first installation of an IdP, 'false' otherwise.
 # +uapprove_version+:: This parameter must contain the uApprove's version number to be installed.
 #
 # Actions:
