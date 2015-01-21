@@ -41,12 +41,13 @@ class shib2idp::management::collectd (
       mode    => '0644',
       content => template("shib2idp/monitoring/collectdconf.erb"),
       require => Package['collectd'],
-      notify  => Exec['collectd-restart'],
+      notify  => Service['collectd'],
     }
-
-    exec { 'collectd-restart':
-      command     => "/usr/sbin/service collectd restart",
-      refreshonly => true,
+    
+    service { 'collectd':
+      enable  => true,
+      ensure  => 'running',
+      require => Package['collectd'],
     }
   } else {
     file {
@@ -74,12 +75,7 @@ class shib2idp::management::collectd (
         group   => 'root',
         mode    => '0644',
         require => File["/etc/apache2/sites-available/collectd"],
-        notify  => Exec['collectd-apache-reload'],
-    }
-
-    exec { 'collectd-apache-reload':
-      command     => "/usr/sbin/service apache2 reload",
-      refreshonly => true,
+        notify  => Service['apache2'],
     }
   }
 }
