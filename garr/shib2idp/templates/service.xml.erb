@@ -26,8 +26,9 @@
         <srv:ConfigurationResource file="/opt/shibboleth-idp/conf/attribute-filter.xml" xsi:type="resource:FilesystemResource"/>
     </srv:Service>
 <% else -%>
+        <srv:ConfigurationResource file="/opt/shibboleth-idp/conf/attribute-filter.xml" xsi:type="resource:FilesystemResource"/>
         <srv:ConfigurationResource xsi:type="resource:FileBackedHttpResource"
-                                   url="https://www.idem.garr.it/it/component/docman/doc_download/219-attribute-filter?Itemid=75"
+                                   url="http://www.garr.it/idem-conf/attribute-filter.xml"
                                    file="/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml" />
     </srv:Service>
 <% end -%>

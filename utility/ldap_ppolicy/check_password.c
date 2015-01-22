@@ -80,6 +80,7 @@ int check_password(char *pPasswd, char **ppErrStr, Entry *pEntry) {
         strcpy(retmsg, "Password must contain at least one letter.");
     }
 */
+    char pwqr = 0;
     char *message;
     char retmsg[255];
 

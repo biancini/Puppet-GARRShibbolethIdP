@@ -189,8 +189,6 @@ sitepp_vals['sambadomain'] = request("Specify the samba domain for the IdP serve
 sitepp_vals['test_federation'] = request("Use IDEM Test Federation or not?", "true", example_as_default=True)
 #sitepp_vals['custom_styles'] = request("Use the IdP in the Cloud custom files for IdP Login Page (true) or leave the originals (false)?", "true", example_as_default=True)
 sitepp_vals['custom_styles'] = "true"
-#sitepp_vals['first_install'] = request("This is a new IdP or not?", "true", example_as_default=True)
-sitepp_vals['first_install'] = "true"
 
 #sitepp_vals['enable_network'] = request("Insert the network netmask where SSH the other management services will be accessible", "10.0.0.0/24", allow_empty=True)
 

@@ -95,7 +95,8 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/eduperson-200412.schema",
-        require => Class['ldap::server::service'];
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       "/etc/ldap/schema/eduperson-200412.ldif":
         ensure  => present,
@@ -103,7 +104,8 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/eduperson-200412.ldif",
-        require => Class['ldap::server::service'];
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       "/etc/ldap/schema/schac-20110705-1.4.1.schema":
         ensure  => present,
@@ -111,7 +113,8 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/schac-20110705-1.4.1.schema",
-        require => Class['ldap::server::service'];
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       "/etc/ldap/schema/schac-20110705-1.4.1.ldif":
         ensure  => present,
@@ -119,7 +122,8 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/schac-20110705-1.4.1.ldif",
-        require => Class['ldap::server::service'];
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       "/etc/ldap/schema/ppolicy.ldif":
         ensure  => present,
@@ -127,7 +131,8 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/ppolicy.ldif",
-        require => Class['ldap::server::service'];
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       "/etc/ldap/schema/ppolicy.schema":
         ensure  => present,
@@ -135,38 +140,37 @@ class shib2idp::idp::finalize (
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/schema/ppolicy.schema",
-        require => Class['ldap::server::service'];
+        require => [Package[$ldap::params::openldap_packages], File['/usr/lib/ldap/check_password.so']],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       '/etc/cron.hourly/lockusers':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0755',
-        content => template("shib2idp/monitoring/lockusers.py.erb"),
-        require => Class['ldap::server::service'];
+        content => template('shib2idp/monitoring/lockusers.py.erb');
     }
 
-    if($operatingsystem == 'Ubuntu' and $operatingsystemrelease == "14.04"){
-
-     file{ "/usr/lib/ldap/check_password.so":
+    if ($operatingsystem == 'Ubuntu' and $operatingsystemrelease == '14.04') {
+     file { '/usr/lib/ldap/check_password.so':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        source  => "puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-31-check_password.so",
-        require => [Class['ldap::server::service'], File['/etc/ldap/schema/ppolicy.schema']],
+        source  => 'puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-31-check_password.so',
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service],
       }
     }
-
-    else{
-
-     file{ "/usr/lib/ldap/check_password.so":
+    else {
+     file { '/usr/lib/ldap/check_password.so':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
-        source  => "puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-28-check_password.so",
-        require => [Class['ldap::server::service'], File['/etc/ldap/schema/ppolicy.schema']],
+        source  => 'puppet:///modules/shib2idp/ppolicy_modules/ldap-2-4-28-check_password.so',
+        require => Package[$ldap::params::openldap_packages],
+        notify  => Service[$ldap::params::lp_openldap_service],
       }
     }
 
@@ -175,59 +179,51 @@ class shib2idp::idp::finalize (
         ensure  => present,
         path    => '/etc/ldap/schema.conf',
         line    => 'include /etc/ldap/schema/eduperson-200412.schema',
-        require => [Class['ldap::server::service'], File['/etc/ldap/schema/eduperson-200412.schema']],
-        notify  => Exec['shib2-slapd-restart'];
+        require => [Package[$ldap::params::openldap_packages], File['/etc/ldap/schema/eduperson-200412.schema']],
+        notify  => Service[$ldap::params::lp_openldap_service];
 
       'schac-schema':
         ensure  => present,
         path    => '/etc/ldap/schema.conf',
         line    => 'include /etc/ldap/schema/schac-20110705-1.4.1.schema',
-        require => [Class['ldap::server::service'], File['/etc/ldap/schema/schac-20110705-1.4.1.schema']],
-        notify  => Exec['shib2-slapd-restart']
+        require => [Package[$ldap::params::openldap_packages], File['/etc/ldap/schema/schac-20110705-1.4.1.schema']],
+        notify  => Service[$ldap::params::lp_openldap_service];
     }
-
-    exec { 'shib2-slapd-restart':
-      command     => "/usr/sbin/service slapd restart",
-      require     => [Class['ldap::server::service'], File_line['eduperson-schema'], File_line['schac-schema']],
-      refreshonly => true,
-    }
-
-    Exec['shib2-slapd-restart'] -> Execute_ldap['ldapadd-ppolicies-ou'] -> Execute_ldap['ldapadd-ppolicies-entity'] 
 
     if $rubyversion == "1.8.7" {
-      execute_ldap { 'ldapadd-ppolicies-ou':
-         rootdn      => "${rootdn},${basedn}",
-         rootpw      => $rootldappw,
-         ldif_search => "ou=policies,${basedn}",
-         ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
-         require     => [Class['ldap::server::service'], Package['libldap-ruby1.8']],
-      }
-
-      execute_ldap { 'ldapadd-ppolicies-entity':
-         rootdn      => "${rootdn},${basedn}",
-         rootpw      => $rootldappw,
-         ldif_search => "cn=default,ou=policies,${basedn}",
-         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
-         require     => [Class['ldap::server::service'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
+      execute_ldap {
+        'ldapadd-ppolicies-ou':
+	        rootdn      => "${rootdn},${basedn}",
+	        rootpw      => $rootldappw,
+	        ldif_search => "ou=policies,${basedn}",
+	        ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+	        require     => [Service[$ldap::params::lp_openldap_service], Package['libldap-ruby1.8']];
+      
+        'ldapadd-ppolicies-entity':
+          rootdn      => "${rootdn},${basedn}",
+          rootpw      => $rootldappw,
+          ldif_search => "cn=default,ou=policies,${basedn}",
+          ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+          require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
       }
     }
     # Ruby on Ubuntu 14.04 == 1.9.3
     else{
-      execute_ldap { 'ldapadd-ppolicies-ou':
-         rootdn      => "${rootdn},${basedn}",
-         rootpw      => $rootldappw,
-         ldif_search => "ou=policies,${basedn}",
-         ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
-         require     => [Class['ldap::server::service'], Package['ruby-ldap']],
-      }
-
-      execute_ldap { 'ldapadd-ppolicies-entity':
-         rootdn      => "${rootdn},${basedn}",
-         rootpw      => $rootldappw,
-         ldif_search => "cn=default,ou=policies,${basedn}",
-         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
-         require     => [Class['ldap::server::service'], Package['ruby-ldap'], File['/usr/lib/ldap/check_password.so']],
-      }
+      execute_ldap {
+        'ldapadd-ppolicies-ou':
+          rootdn      => "${rootdn},${basedn}",
+          rootpw      => $rootldappw,
+          ldif_search => "ou=policies,${basedn}",
+          ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+          require     => [Service[$ldap::params::lp_openldap_service], Package['ruby-ldap']];
+          
+        'ldapadd-ppolicies-entity':
+	         rootdn      => "${rootdn},${basedn}",
+	         rootpw      => $rootldappw,
+	         ldif_search => "cn=default,ou=policies,${basedn}",
+	         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+	         require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['ruby-ldap'], File['/usr/lib/ldap/check_password.so']];
+	    }
     }
 
     $ldap_host_var      = '127.0.0.1:389'
@@ -301,7 +297,6 @@ class shib2idp::idp::finalize (
       group   => 'root',
       mode    => '0755',
       content => template("shib2idp/monitoring/backup_ldap.erb"),
-      require => Class['ldap::server::service'],
     }
   }
 
@@ -361,7 +356,7 @@ class shib2idp::idp::finalize (
     } ->
     file {
       "/opt/shibboleth-idp/conf/attribute-filter.xml":
-        ensure  => absent,
+        ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',

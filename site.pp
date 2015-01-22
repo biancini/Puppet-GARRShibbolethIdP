@@ -54,6 +54,7 @@ node 'puppetclient.mib.garr.it' {
     shibbolethversion            => '2.4.0',
     install_uapprove             => true,
     install_ldap                 => true,
+    install_raptor               => true,
     domain_name                  => 'mib.garr.it',
     basedn                       => 'dc=mib,dc=garr,dc=it',
     rootdn                       => 'cn=admin',
@@ -68,20 +69,19 @@ node 'puppetclient.mib.garr.it' {
     sambadomain                  => 'IDP-IN-THE-CLOUD',
     test_federation              => true,
     custom_styles                => true,
-    first_install                => true,
     phpldap_easy_insert          => true,
     uapprove_version             => '2.5.0',
   }
 
-  shib2ds::instance { "${hostname}-ds":
-    shibbolethdsversion      => '1.2.1',
-    federation_name          => 'GARR Milano Laboratorio',
-    test_federation          => true,
-    technicalEmail           => 'admin.idp@mib.garr.it',
-    technicalGivenName       => 'GivenName',
-    technicalSurName         => 'SurName',
-    dsfqdn                   => $hostfqdn,
-  }
+  #shib2ds::instance { "${hostname}-ds":
+  #  shibbolethdsversion      => '1.2.1',
+  #  federation_name          => 'GARR Milano Laboratorio',
+  #  test_federation          => true,
+  #  technicalEmail           => 'admin.idp@mib.garr.it',
+  #  technicalGivenName       => 'GivenName',
+  #  technicalSurName         => 'SurName',
+  #  dsfqdn                   => $hostfqdn,
+  #}
 }
 
 node 'sp-test1.mib.garr.it' {

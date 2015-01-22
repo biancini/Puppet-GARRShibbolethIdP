@@ -42,7 +42,7 @@ user_found = false
 wrong_attribute = false
 
 begin
-    aaclicommand = "#{idphome}/bin/aacli.sh --issuer=https://#{fqdn}/idp/shibboleth --principal=test --configDir=#{idphome}/conf"
+    aaclicommand = "#{idphome}/bin/aacli.sh --issuer=https://#{fqdn}/idp/shibboleth --principal=malavolti --configDir=#{idphome}/conf --requester=https://sp24-test.garr.it/shibboleth"
     aaclioutput = %x[bash -c "source /etc/environment; export JAVA_HOME; #{aaclicommand}"]
     if !($? == 0)
       puts "check_aacli: CRITICAL. Error while executing aacli command."
@@ -85,12 +85,12 @@ begin
    # If the search fails an LDAP::ResultError exception will raise up
    # The LDAP::ResultError will be saved into 'err' variable
    rescue LDAP::ResultError => err
-      fail("Ldap Search for user 'test' is failed with  error: #{err}")
+      fail("Ldap Search for test user is failed with  error: #{err}")
    # In case of an error, the new, bind or unbind methods raise an LDAP::Error exception
    # The LDAP::Error will be saved into 'msg' variable
    rescue LDAP::Error => msg
       # If an LDAP::Error exception rises up, Puppet show that exception message into its exception error 
-      raise(Puppet::Error, "Error while executing LDAP search for uid=test,ou=people,#{basedn}: #{msg}")
+      raise(Puppet::Error, "Error while executing LDAP search for #{searchuser}: #{msg}")
 end
 
 # Finally unbind the LDAP connection

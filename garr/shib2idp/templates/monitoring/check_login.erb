@@ -8,13 +8,14 @@ import optparse
 
 # Parameters to modify to test different IdPs
 idpEntityId = 'https://<%= @idpfqdn %>/idp/shibboleth'
-testuser    = 'test'
-testpass    = 'pass'
+testuser    = 'malavolti'
+testpass    = '8BrTa3OZ0T'
 spHostName  = 'sp24-test.garr.it'
 basedn      = "<%= @basedn %>"
 adminuser   = "<%= @rootdn %>"
 ldappasswd  = "<%= @rootldappw %>"
 ldapsrv     = "<%= @ldap_host %>"
+scope       = "<%= @domain_name %>"
 ssl         = <%=
     if @use_ssl
       "True"
@@ -119,8 +120,7 @@ if options.checkLdap:
                   'givenName':'givenName',
                   'cn':'cn',
                   'mail':'mail',
-                  'eduPersonScopedAffiliation':'eduPersonScopedAffiliation',
-                  'eduPersonTargetedID':'eduPersonTargetedID',
+                  '@eduPersonAffiliation':'affiliation',
                   'eduPersonPrincipalName':'eppn'}
 
         # Parse all attribute values in HTML.
@@ -136,7 +136,10 @@ if options.checkLdap:
 
         # Check all attributes
         for curAttrLDAP in attrs:
-            valLDAP = ldapuser[curAttrLDAP]
+            if curAttrLDAP[0] == '@':
+                valLDAP = [('{0}@'+scope).format(i) for i in ldapuser[curAttrLDAP[1:]]]
+            else:
+                valLDAP = ldapuser[curAttrLDAP]
             valSP = spAttrs[attrs[curAttrLDAP]]
             if options.debug: print "Checking %s with %s for attribute: %s => %s" % (valLDAP, valSP, curAttrLDAP, attrs[curAttrLDAP])
             if not valSP in valLDAP:
@@ -145,12 +148,11 @@ if options.checkLdap:
 
     except Exception as e:
         # In case of an error put validAttrs to False to return exit status 1 below.
-        print e
         if options.debug: print e
         validAttrs = False
 
 # Search a valid string in the SP page and if found return 0 otherwise 2.
-if not "Politica della privacy" or not "Sta accedendo al seguente servizio:" in html:
+if not "Politica della privacy" in html:
     print "CRITICAL error while logging in user"
     sys.exit(2)
 elif validAttrs:

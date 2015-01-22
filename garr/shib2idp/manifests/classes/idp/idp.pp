@@ -34,7 +34,6 @@
 # +nagiosserver+:: This parameter permits to specify a Nagios server, if it contains a value different from 'undef' NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
 # +custom_styles+:: This parameter permits to decide if install the default IdP style or the custom one.
 # +additional_metadata+:: undef,
-# +first_install+:: This parameter must contain 'true' if it is the first installation of an IdP, 'false' otherwise.
 # +uapprove_version+:: This parameter must contain the uApprove's version number to be installed.
 #
 # Actions:
@@ -63,7 +62,6 @@ class shib2idp::idp (
   $nagiosserver      = undef,
   $test_federation   = undef,
   $custom_styles     = undef,
-  $first_install     = true,
   $uapprove_version  = '2.5.0',
 ) {
   $curtomcat = $::tomcat::curtomcat
@@ -81,12 +79,7 @@ class shib2idp::idp (
   }
 
   # Checks and create needed folders
-  if ($first_install){ 
-      $overwrite_idp_install = true
-  }
-  else{ 
-      $overwrite_idp_install = false
-  }
+  $overwrite_idp_install = empty($::idpmetadata)
 
   file {
     '/usr/local/src/shibboleth-identityprovider':
@@ -152,8 +145,8 @@ class shib2idp::idp (
   }
 
   # Install the Shibboleth IdP
-  Shibboleth_install <| title == 'execute_install' |> ~> Exec['shib2-tomcat-restart']
-  Shibboleth_install <| title == 'execute_install' |> ~> Exec['shib2-apache-restart']
+  Shibboleth_install <| title == 'execute_install' |> ~> Service["${curtomcat}"]
+  Shibboleth_install <| title == 'execute_install' |> ~> Service['httpd']
 
   shibboleth_install { 'execute_install':
     idpfqdn          => $idpfqdn,
@@ -193,8 +186,8 @@ class shib2idp::idp (
   }
 
   # Configure the Shibboleth IdP
-  Class['shib2idp::idp::configure'] ~> Exec['shib2-tomcat-restart']
-  Class['shib2idp::idp::configure'] ~> Exec['shib2-apache-restart']
+  Class['shib2idp::idp::configure'] ~> Service["${curtomcat}"]
+  Class['shib2idp::idp::configure'] ~> Service['httpd']
 
   class { 'shib2idp::idp::configure':
     idpfqdn          => $idpfqdn,
@@ -203,8 +196,8 @@ class shib2idp::idp (
   }
 
   # Finalize the installation of the Shibboleth IdP
-  Class['shib2idp::idp::finalize'] ~> Exec['shib2-tomcat-restart']
-  Class['shib2idp::idp::finalize'] ~> Exec['shib2-apache-restart']
+  Class['shib2idp::idp::finalize'] ~> Service["${curtomcat}"]
+  Class['shib2idp::idp::finalize'] ~> Service['httpd']
 
   class { 'shib2idp::idp::finalize':
     metadata_information => $metadata_information,

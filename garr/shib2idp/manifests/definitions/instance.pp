@@ -112,9 +112,9 @@ define shib2idp::instance (
   $sambadomain             = undef,
   $test_federation         = undef,
   $custom_styles           = undef,
-  $first_install           = true,
   $phpldap_easy_insert     = undef,
   $uapprove_version        = undef,
+  $install_raptor          = undef,
 ) {
   
   class { 'shib2idp::prerequisites':
@@ -143,7 +143,6 @@ define shib2idp::instance (
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
     custom_styles        => $custom_styles,
-    first_install        => $first_install,
     uapprove_version     => $uapprove_version,
   }
   
@@ -151,6 +150,7 @@ define shib2idp::instance (
   class { 'shib2idp::management':
     install_ldap         => $install_ldap,
     install_uapprove     => $install_uapprove,
+    install_raptor       => $install_raptor,
     logserver            => $logserver,
     nagiosserver         => $nagiosserver,
     collectdserver       => $collectdserver,
@@ -169,7 +169,7 @@ define shib2idp::instance (
 
   $curtomcat = $::tomcat::curtomcat
   if ($test_federation){
-    File['metadata-test-federation.xml']~>Exec['shib2-tomcat-restart']  
+    File['metadata-test-federation.xml'] ~> Service["${curtomcat}"]  
 
     download_file{ '/opt/shibboleth-idp/metadata/idem-test-metadata-sha256.xml':
       url     => "http://www.garr.it/idem-metadata/idem-test-metadata-sha256.xml",
@@ -194,7 +194,7 @@ define shib2idp::instance (
     }
   }
   else{
-    File['metadata-federation.xml']~>Exec['shib2-tomcat-restart']
+    File['metadata-federation.xml'] ~> Service["${curtomcat}"]
 
     download_file{ '/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml':
       url   => "http://www.garr.it/idem-metadata/edugain2idem-metadata-sha256.xml",

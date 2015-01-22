@@ -27,6 +27,7 @@ class shib2idp::management (
   $metadata_information,
   $install_ldap        = true,
   $install_uapprove    = undef,
+  $install_raptor      = undef,
   $logserver           = undef,
   $nagiosserver        = undef,
   $collectdserver      = undef,
@@ -76,7 +77,16 @@ class shib2idp::management (
       technical_email      => $technical_email,
       metadata_information => $metadata_information,
       easy_insert          => $phpldap_easy_insert,
-      notify               => Exec['shib2-apache-restart']
+      notify               => Service['httpd']
+    }
+  }
+  
+  # Adding class for the Raptor ICA, if required
+  if ($install_raptor == true) {
+    class { 'shib2idp::management::raptorica':
+      jks_password         => $rootldappw,
+      metadata_information => $metadata_information,
+      require              => Class['shib2common::java::package'],
     }
   }
 
@@ -85,7 +95,7 @@ class shib2idp::management (
     rootpw          => $rootpw,
     idpfqdn         => $idpfqdn,
     test_federation => $test_federation,
-    notify          => Exec['shib2-apache-restart']
+    notify          => Service['httpd']
   }
   
 }
