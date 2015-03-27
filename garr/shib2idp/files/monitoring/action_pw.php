@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-function checkPOSTvalue($key, $regexp, $showvalue=false) {
-	$tmpvalue = $_POST[$key];
-	if (preg_match($regexp, $tmpvalue)) return $tmpvalue;
-
-	if ($showvalue) exit("Error with the $key paramenter provided: " . $_POST[$key]);
-	else exit("Error with the $key parameter provided.");
+function checkPOSTvalue($key, $regexp) {
+        $tmpvalue = $_POST[$key];
+        if (preg_match($regexp, $tmpvalue)) return $tmpvalue;
+        return false;
 }
+
+$error_message = false;
 
 //$pwd_regexp = '/^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[\W_]).*$/';
 $pwd_regexp = '/^[a-zA-Z\d\W_]*$/';
@@ -16,35 +16,60 @@ $basedn = checkPOSTvalue('base', '/^dc=[\w-]+(,\s?dc=[\w-]+)*$/', true);
 $dn = "ou=people," . $basedn;
 
 $username = checkPOSTvalue('username', '/^[a-zA-Z0-9_\-\.]{5,30}$/', true);
-$new_password = checkPOSTvalue('newpassword1', $pwd_regexp, false);
-
-$user_dn = "uid=" . $username . "," . $dn;
-
-$action = checkPOSTvalue('action', '/^admin|user$/', true);
-if ($action == 'admin') {
-        $connuser = "cn=admin," . $basedn;
-        $connpasswd = checkPOSTvalue('adminpw', $pwd_regexp, false);
-        $command = "/usr/bin/ldappasswd -x -D \"$connuser\" -x \"$user_dn\" -w $connpasswd -s $new_password";
-} else {
-        $connuser = "uid=" . checkPostvalue('username', '/^[a-zA-Z\d_\-\.]*$/', true) . "," . $dn;
-        $connpasswd = checkPOSTvalue('oldpassword', $pwd_regexp, false);
-        $command = "/usr/bin/ldappasswd -x -D \"$connuser\" -x \"$user_dn\" -w $connpasswd -a $connpasswd -s $new_password";
-}
-
-$output = array();
-$return_var = -1;
-exec(escapeshellcmd($command), $output, $return_var);
-
-if ($return_var == 0) {
-	$_SESSION['pw_message'] = $user_dn;
-	header("Location: changepw.php");
+if ($username === false) {
+        $error_message = "Error with the $key parameter provided.";
 }
 else {
-	if (isset($_SESSION['pw_message'])) unset($_SESSION['pw_message']);
-	echo "There was a problem changing your password, please call IT for help ($return_var).";
-        echo "<br/>";
-	var_dump($output);
+        $new_password = checkPOSTvalue('newpassword1', $pwd_regexp, false);
+        if ($new_password === false) {
+                $error_message = array(
+                        "en" => "Error with the $key parameter provided.",
+                        "it" => "Errore con il parametro $key fornito."
+                );
+        }
 }
+
+if ($error_message === false) {
+        $user_dn = "uid=" . $username . "," . $dn;
+
+        $action = checkPOSTvalue('action', '/^admin|user$/', true);
+        if ($action == 'admin') {
+                $connuser = "cn=admin," . $basedn;
+                $connpasswd = checkPOSTvalue('adminpw', $pwd_regexp, false);
+                $command = "/usr/bin/ldappasswd -x -D \"$connuser\" -x \"$user_dn\" -w $connpasswd -s $new_password";
+        } else {
+                $connuser = "uid=" . checkPostvalue('username', '/^[a-zA-Z\d_\-\.]*$/', true) . "," . $dn;
+                $connpasswd = checkPOSTvalue('oldpassword', $pwd_regexp, false);
+                $command = "/usr/bin/ldappasswd -x -D \"$connuser\" -x \"$user_dn\" -w $connpasswd -a $connpasswd -s $new_password";
+        }
+
+        $return_var = -1;
+        $output = array();
+        exec(escapeshellcmd($command), $output, $return_var);
+
+        if ($return_var != 0) {
+                $error_message = array(
+                        "en" => "The password must be at least 8 characters and must not contain your Name or your Surname.",
+                        "it" => "La password deve essere lunga almeno 8 caratteri e non deve contenere il tuo Nome o il tuo Cognome."
+                );
+                //$error_message .= "<br/>";
+                //$error_message .= print_r($output, true);
+        }
+}
+
+if (isset($_SESSION['pw_status'])) unset($_SESSION['pw_status']);
+if (isset($_SESSION['pw_message'])) unset($_SESSION['pw_message']);
+
+if ($error_message === false) {
+        $_SESSION['pw_status'] = 'ok';
+        $_SESSION['pw_message'] = $user_dn;
+}
+else {
+        $_SESSION['pw_status'] = 'error';
+        $_SESSION['pw_message'] = $error_message;
+}
+
+header("Location: changepw.php");
 
 
 /*
