@@ -64,7 +64,7 @@
     <bean id="shibboleth.JPAStorageService.DataSource"
         class="com.zaxxer.hikari.HikariDataSource" destroy-method="close" lazy-init="true"
         p:driverClassName="com.mysql.jdbc.Driver"
-        p:jdbcUrl="jdbc:mysql://localhost:3306/shibboleth"
-        p:username="shibboleth"
-        p:password="ciaoidp" />
+        p:jdbcUrl="jdbc:mysql://localhost:3306/storageservice"
+        p:username="root"
+        p:password="<%= @rootpw %>" />
 </beans>

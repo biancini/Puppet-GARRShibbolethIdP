@@ -45,7 +45,7 @@ class shib2idp::idp (
   $metadata_information,
   $shibbolethversion = '3.1.1',
   $idpfqdn           = undef,
-  $keystorepassword  = undef,
+  $keystorepassword  = 'secret',
   $mailto            = undef,
   $install_ldap      = undef,
   $domain_name       = undef,
@@ -70,7 +70,8 @@ class shib2idp::idp (
     extract         => 'zip',
     execute_command => [
       "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -type d -exec /bin/chmod 755 {} \\;",
-      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -type f -exec /bin/chmod 644 {} \\;",],
+      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -type f -exec /bin/chmod 644 {} \\;",
+      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -name \"*.sh\" -exec /bin/chmod 755 {} \\;",],
   }
 
   # Checks and create needed folders
@@ -85,7 +86,7 @@ class shib2idp::idp (
     '/opt/shibboleth-idp/':
       ensure => directory;
 
-    '/opt/shibboleth-idp/conf/':
+    '/opt/shibboleth-idp/lib/':
       ensure  => directory,
       require => File['/opt/shibboleth-idp/'];
 
@@ -105,9 +106,13 @@ class shib2idp::idp (
       source  => "puppet:///modules/shib2idp/jars/garr-ldaptive.jar",
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
 
-    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF':
+    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes':
       ensure  => directory,
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      
+    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF':
+      ensure  => directory,
+      require => File['/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes'];
       
     '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF/ord.xml':
       ensure  => present,
@@ -136,7 +141,7 @@ class shib2idp::idp (
     install_ldap_var => $install_ldap,
     custom_styles => $custom_styles,
     metadata_information => $metadata_information,
-    require => File['/opt/shibboleth-idp/', '/opt/shibboleth-idp/conf/'],
+    require => File['/opt/shibboleth-idp/'],
   }
 
   # Install the Shibboleth IdP
@@ -149,8 +154,17 @@ class shib2idp::idp (
     javahome         => $shib2idp::prerequisites::java_home,
     tomcathome       => $tomcat::tomcat_home,
     curtomcat        => $curtomcat,
-    scope            => $shib2idp::idp::finalize::scope,
+    idpscope         => $domain_name,
     require          => Class['shib2common::java::package', 'tomcat'],
+  }
+  
+  augeas { "idp.properties":
+    context => "/files/opt/shibboleth-idp/conf/idp.properties",
+    changes => [
+      "set idp.sealer.storePassword ${keystorepassword}",
+      "set idp.sealer.keyPassword ${keystorepassword}"],
+    onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
+    require => Shibboleth_install['execute_install'];
   }
 
   # Configure the Shibboleth IdP
