@@ -1,11 +1,11 @@
-node 'puppetclient.mib.garr.it' {
+node 'puppet-client.openstacklocal' {
   idpfirewall::firewall { "${hostname}-firewall": 
       iptables_enable_network => undef,
   }
 
-  $hostfqdn                = 'puppetclient.mib.garr.it'
+  $hostfqdn                = 'puppet-client.mi.garr.it'
   $keystorepassword        = 'puppetpassword'
-  $mailto                  = 'admin.idp@mib.garr.it'
+  $mailto                  = 'admin.idp@mi.garr.it'
   $nagiosserver            = '10.0.0.165'
 
   shib2common::instance { "${hostname}-common":
@@ -28,9 +28,9 @@ node 'puppetclient.mib.garr.it' {
         'orgUrl'                 => 'http://www.garr.it/',
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
-        'idpInfoUrl'             => 'https://puppetclient.mib.garr.it/idp/info.html',
-        'url_LogoOrg_32x32'      => 'https://puppetclient.mib.garr.it/idp/images/institutionLogo-32x32_en.png',
-        'url_LogoOrg_160x120'    => 'https://puppetclient.mib.garr.it/idp/images/institutionLogo-160x120_en.png',
+        'idpInfoUrl'             => 'https://puppet-client.mi.garr.it/idp/info.html',
+        'url_LogoOrg_32x32'      => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-32x32_en.png',
+        'url_LogoOrg_160x120'    => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-160x120_en.png',
       },
       'it'                => {
         'orgDisplayName'         => 'Test IdP for IdP in the cloud project',
@@ -38,11 +38,11 @@ node 'puppetclient.mib.garr.it' {
         'orgUrl'                 => 'http://www.garr.it/',
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
-        'idpInfoUrl'             => 'https://puppetclient.mib.garr.it/idp/info.html',
-        'url_LogoOrg_32x32'      => 'https://puppetclient.mib.garr.it/idp/images/institutionLogo-32x32_it.png',
-        'url_LogoOrg_160x120'    => 'https://puppetclient.mib.garr.it/idp/images/institutionLogo-360x120_it.png',
+        'idpInfoUrl'             => 'https://puppet-client.mi.garr.it/idp/info.html',
+        'url_LogoOrg_32x32'      => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-32x32_it.png',
+        'url_LogoOrg_160x120'    => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-360x120_it.png',
       },
-      'technicalIDPadminEmail'     => 'mailto:support@puppetclient.mib.garr.it',
+      'technicalIDPadminEmail'     => 'mailto:support@puppet-client.mi.garr.it',
       'technicalIDPadminGivenName' => 'GivenName',
       'technicalIDPadminSurName'   => 'SurName',
       'technicalIDPadminTelephone' => '0200000000',
@@ -55,8 +55,8 @@ node 'puppetclient.mib.garr.it' {
     install_uapprove             => true,
     install_ldap                 => true,
     install_raptor               => true,
-    domain_name                  => 'mib.garr.it',
-    basedn                       => 'dc=mib,dc=garr,dc=it',
+    domain_name                  => 'mi.garr.it',
+    basedn                       => 'dc=mi,dc=garr,dc=it',
     rootdn                       => 'cn=admin',
     rootpw                       => 'ldappassword',
     rootldappw                   => 'ldappassword',
@@ -77,17 +77,17 @@ node 'puppetclient.mib.garr.it' {
   #  shibbolethdsversion      => '1.2.1',
   #  federation_name          => 'GARR Milano Laboratorio',
   #  test_federation          => true,
-  #  technicalEmail           => 'admin.idp@mib.garr.it',
+  #  technicalEmail           => 'admin.idp@mi.garr.it',
   #  technicalGivenName       => 'GivenName',
   #  technicalSurName         => 'SurName',
   #  dsfqdn                   => $hostfqdn,
   #}
 }
 
-node 'sp-test1.mib.garr.it' {
-  $hostfqdn                = 'sp-test1.mib.garr.it'
+node 'sp-test1.mi.garr.it' {
+  $hostfqdn                = 'sp-test1.mi.garr.it'
   $keystorepassword        = 'puppetpassword'
-  $mailto                  = 'admin.idp@mib.garr.it'
+  $mailto                  = 'admin.idp@mi.garr.it'
   $nagiosserver            = '10.0.0.165'
 
   shib2common::instance { "${hostname}-common":
@@ -110,8 +110,8 @@ node 'sp-test1.mib.garr.it' {
         'orgUrl'                 => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
 	'nameService'            => 'Test SP',
-        'url_LogoOrg-32x32'      => 'https://puppetclient.mib.garr.it/idp/images/logoEnte-32x32_en.png',
-        'url_LogoOrg-160x120'    => 'https://puppetclient.mib.garr.it/idp/images/logoEnte-160x120_en.png',
+        'url_LogoOrg-32x32'      => 'https://puppet-client.mi.garr.it/idp/images/logoEnte-32x32_en.png',
+        'url_LogoOrg-160x120'    => 'https://puppet-client.mi.garr.it/idp/images/logoEnte-160x120_en.png',
       },
       'it'                => {
         'orgDisplayName'         => 'Test SP for IdP in the cloud project',
@@ -120,10 +120,10 @@ node 'sp-test1.mib.garr.it' {
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
 	'nameService'            => 'SP di test',
-        'url_LogoOrg-32x32'      => 'https://puppetclient.mib.garr.it/idp/images/logoEnte-32x32_it.png',
-        'url_LogoOrg-160x120'    => 'https://puppetclient.mib.garr.it/idp/images/logoEnte-160x120_it.png',
+        'url_LogoOrg-32x32'      => 'https://puppet-client.mi.garr.it/idp/images/logoEnte-32x32_it.png',
+        'url_LogoOrg-160x120'    => 'https://puppet-client.mi.garr.it/idp/images/logoEnte-160x120_it.png',
       },
-      'technicalEmail'             => 'mailto:support@puppetclient.mib.garr.it',
+      'technicalEmail'             => 'mailto:support@puppet-client.mi.garr.it',
       'technicalIDPadminGivenName' => 'GivenName',
       'technicalIDPadminSurName'   => 'SurName',
       'technicalIDPadminTelephone' => '',
@@ -158,14 +158,14 @@ node 'sp-test1.mib.garr.it' {
   }
 }
 
-node 'registry.mib.garr.it' {
+node 'registry.mi.garr.it' {
   idpfirewall::firewall { "${hostname}-firewall": 
       iptables_enable_network => undef,
   }
 
-  $hostfqdn                = 'registry.mib.garr.it'
+  $hostfqdn                = 'registry.mi.garr.it'
   $keystorepassword        = 'puppetpassword'
-  $mailto                  = 'admin.idp@mib.garr.it'
+  $mailto                  = 'admin.idp@mi.garr.it'
   $nagiosserver            = '10.0.0.165'
 
   shib2common::instance { "${hostname}-common":
@@ -185,8 +185,8 @@ node 'registry.mib.garr.it' {
         'orgUrl'                 => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
 	'nameService'            => 'Jagger',
-        'url_LogoOrg-32x32'      => 'https://registry.mib.garr.it/idp/images/logoEnte-32x32_en.png',
-        'url_LogoOrg-160x120'    => 'https://registry.mib.garr.it/idp/images/logoEnte-160x120_en.png',
+        'url_LogoOrg-32x32'      => 'https://registry.mi.garr.it/idp/images/logoEnte-32x32_en.png',
+        'url_LogoOrg-160x120'    => 'https://registry.mi.garr.it/idp/images/logoEnte-160x120_en.png',
       },
       'it'                => {
         'orgDisplayName'         => 'SP di test per il resource registry Jagger',
@@ -195,10 +195,10 @@ node 'registry.mib.garr.it' {
         'privacyPage'            => 'http://www.garr.it/',
         'nameOrg'                => 'Consortium GARR',
 	'nameService'            => 'Jagger',
-        'url_LogoOrg-32x32'      => 'https://registry.mib.garr.it/idp/images/logoEnte-32x32_it.png',
-        'url_LogoOrg-160x120'    => 'https://registry.mib.garr.it/idp/images/logoEnte-160x120_it.png',
+        'url_LogoOrg-32x32'      => 'https://registry.mi.garr.it/idp/images/logoEnte-32x32_it.png',
+        'url_LogoOrg-160x120'    => 'https://registry.mi.garr.it/idp/images/logoEnte-160x120_it.png',
       },
-      'technicalEmail'             => 'mailto:support@registry.mib.garr.it',
+      'technicalEmail'             => 'mailto:support@registry.mi.garr.it',
       'technicalIDPadminGivenName' => 'GivenName',
       'technicalIDPadminSurName'   => 'SurName',
       'technicalIDPadminTelephone' => '',
@@ -246,7 +246,7 @@ node 'registry.mib.garr.it' {
     logo_url               => 'https://www.idem.garr.it/documenti/doc_download/66-logo-idem-120-x-70',
     federation_name        => 'IDEM',
     jagger_password        => 'i7ryztaqlechgehcs5t7m5iy1ym9xxd4',
-    support_mailto         => 'andrea@mib.garr.it',
+    support_mailto         => 'andrea@mi.garr.it',
     registration_authority => 'http://www.idem.garr.it/',
     federation_latitude    => '41.8929163',
     federation_longitude   => '12.4825199',
