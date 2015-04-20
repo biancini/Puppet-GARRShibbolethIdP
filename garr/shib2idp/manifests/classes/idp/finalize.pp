@@ -261,6 +261,11 @@ class shib2idp::idp::finalize (
       require => [Shibboleth_install['execute_install'], Class['mysql::bindings::java']];
   }
   
+  download_file { "/var/lib/${curtomcat}/common/jstl-1.2.jar":
+    url             => "https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar",
+    require => Class['tomcat', 'mysql::bindings::java'],
+  }
+  
   mysql_database { ['userdb', 'storageservice']:
     ensure  => 'present',
     require => Class['mysql::server'],

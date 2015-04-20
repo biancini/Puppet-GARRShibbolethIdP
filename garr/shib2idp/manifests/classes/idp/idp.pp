@@ -162,7 +162,8 @@ class shib2idp::idp (
     context => "/files/opt/shibboleth-idp/conf/idp.properties",
     changes => [
       "set idp.sealer.storePassword ${keystorepassword}",
-      "set idp.sealer.keyPassword ${keystorepassword}"],
+      "set idp.sealer.keyPassword ${keystorepassword}",
+      "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
   }
