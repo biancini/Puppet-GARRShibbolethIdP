@@ -25,7 +25,7 @@
 <% 
    @metadata_information.each do |lang, v|
    if v.is_a?(Hash)
-      v.each do |field, value|
+      v.sort.each do |field, value|
          case field 
             when "orgDisplayName" -%>
                <mdui:DisplayName xml:lang="<%= lang %>"><%= value %></mdui:DisplayName>
@@ -144,7 +144,7 @@ $IDP_CERTIFICATE_ENCRYPT
     <Organization>
 <% @metadata_information.each do |lang, v|
    if v.is_a?(Hash)
-      v.each do |field, value|
+      v.sort.each do |field, value|
          case field 
             when "nameOrg" -%>
       <OrganizationName xml:lang="<%= lang %>"><%= value %></OrganizationName>
