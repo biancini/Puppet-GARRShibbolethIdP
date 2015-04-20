@@ -361,12 +361,12 @@ class shib2idp::idp::finalize (
       content => template("shib2idp/services.xml.erb"),
       require => Shibboleth_install['execute_install'];
   
-    "/opt/shibboleth-idp/conf/relying-party.xml":
+    "/opt/shibboleth-idp/conf/metadata-providers.xml":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template('shib2idp/relying-party.xml.erb'),
+      content => template('shib2idp/metadata-providers.xml.erb'),
       require => Shibboleth_install['execute_install'];
       
     "/opt/shibboleth-idp/conf/global.xml":
