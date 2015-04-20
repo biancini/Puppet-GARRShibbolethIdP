@@ -118,12 +118,6 @@ module Puppet
 			system("/bin/bash " + filename) or raise Puppet::Error, "Error while installing Shibboleth IdP." # If the system() return 'false' reise up the message "Error while..."
 
 			debug("Copying file for Java Security into java home")
-			# If the file ":sourcedir/lib/shibboleth-jce-1.1.0.jar" exists, copy the Java Security files into Java Home. Pay Attention to the white space into the strings of the system(...)!!!
-			if (File.exists?(@parameters[:sourcedir].value + "/lib/shibboleth-jce-1.1.0.jar"))
-				system("cp -fv " + @parameters[:sourcedir].value + "/lib/shibboleth-jce-1.1.0.jar " + @parameters[:javahome].value + "/jre/lib/ext/") or raise Puppet::Error, "Error while copying files."
-			end
-			system("cp -fv /usr/share/" + @parameters[:curtomcat].value + "/lib/servlet-api.jar " + @parameters[:installdir].value + "/lib/") or raise Puppet::Error, "Error while copying files."
-			system("/bin/cp -r " + @parameters[:sourcedir].value + "/endorsed/ " + @parameters[:tomcathome].value) or raise Puppet::Error, "Error while copying files."
 			system("/bin/chown " + @parameters[:curtomcat].value + ":" + @parameters[:curtomcat].value + " " + @parameters[:installdir].value + "/logs/ " + @parameters[:installdir].value + "/metadata/ " + @parameters[:installdir].value + "/credentials/") or raise Puppet::Error, "Error while setting credentials."
 
 			debug("Deleting file " + filename + ".")
