@@ -1,4 +1,4 @@
-node 'puppet-client.openstacklocal' {
+node 'puppet-client.mi.garr.it' {
   idpfirewall::firewall { "${hostname}-firewall": 
       iptables_enable_network => undef,
   }
