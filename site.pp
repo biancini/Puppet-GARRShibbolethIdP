@@ -51,8 +51,7 @@ node 'puppet-client.openstacklocal' {
     idpfqdn                      => $hostfqdn,
     keystorepassword             => $keystorepassword,
     mailto                       => $mailto,
-    shibbolethversion            => '2.4.0',
-    install_uapprove             => true,
+    shibbolethversion            => '3.1.1',
     install_ldap                 => true,
     install_raptor               => true,
     domain_name                  => 'mi.garr.it',
@@ -70,7 +69,6 @@ node 'puppet-client.openstacklocal' {
     test_federation              => true,
     custom_styles                => true,
     phpldap_easy_insert          => true,
-    uapprove_version             => '2.5.0',
   }
 
   #shib2ds::instance { "${hostname}-ds":
