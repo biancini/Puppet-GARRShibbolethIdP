@@ -102,7 +102,7 @@ class shib2idp::idp::styles(
         source  => "puppet:///modules/shib2idp/styles/template/error.png",
         require => File['/usr/local/src/shibboleth-identity-provider'];
        
-      '/usr/local/src/shibboleth-identityprovider/webapp/error-404.jsp':
+      '/usr/local/src/shibboleth-identity-provider/webapp/error-404.jsp':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
@@ -110,45 +110,45 @@ class shib2idp::idp::styles(
         content => template("shib2idp/styles/error-404.jsp.erb"),
         require => File['/usr/local/src/shibboleth-identity-provider'];
        
-      '/usr/local/src/shibboleth-identityprovider/webapp/error.jsp':
+      '/usr/local/src/shibboleth-identity-provider/webapp/error.jsp':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/styles/error.jsp.erb"),
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
        
-      '/usr/local/src/shibboleth-identityprovider/webapp/info.html':
+      '/usr/local/src/shibboleth-identity-provider/webapp/info.html':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/info.html.erb"),
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
        
-      '/usr/local/src/shibboleth-identityprovider/webapp/privacy.html':
+      '/usr/local/src/shibboleth-identity-provider/webapp/privacy.html':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/privacy.html.erb"),
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
        
-      '/usr/local/src/shibboleth-identityprovider/webapp/css/login.css':
+      '/usr/local/src/shibboleth-identity-provider/webapp/css/login.css':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/styles/${hostname}-login.css",
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
 
-      "/usr/local/src/shibboleth-identityprovider/webapp/WEB-INF/classes/messages.properties":
+      "/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/classes/messages.properties":
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/styles/messages.properties",
-        require => File['/usr/local/src/shibboleth-identityprovider/webapp/WEB-INF/classes'];
+        require => File['/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/classes'];
         
       '/usr/local/src/shibboleth-identity-provider/views/login.vm':
         ensure  => present,
@@ -156,15 +156,15 @@ class shib2idp::idp::styles(
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/styles/login.vm.erb"),
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
         
-      '/usr/local/src/shibboleth-identityprovider/messages/error-messages.properties':
+      '/usr/local/src/shibboleth-identity-provider/messages/error-messages.properties':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/styles/login.vm.erb"),
-        require => File['/usr/local/src/shibboleth-identityprovider'];
+        require => File['/usr/local/src/shibboleth-identity-provider'];
     }
     
     $langs_array = keys($metadata_information)

@@ -12,7 +12,7 @@
 #
 # To control the installation process, and to guarantee that an installation is able to continue
 # from a previously interrupted one, a semaphore system has been implemented. This semaphore
-# uses the file /usr/local/src/shibboleth-identityprovider/.puppet to retrieve the last executed
+# uses the file /usr/local/src/shibboleth-identity-provider/.puppet to retrieve the last executed
 # installation phase and eventually to continue from that point on.
 #
 # Parameters:
