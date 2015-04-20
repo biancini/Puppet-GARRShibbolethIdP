@@ -6,7 +6,6 @@
 #
 # Parameters:
 # +shibbolethversion+:: This parameter permits to specify the version of Shibboleth IdP to be downloaded from the Internet2 repositories. By default the 2.3.3 version will be downloaded.
-# +install_uapprove+:: This parameter permits to specify if uApprove has to be installed on this IdP
 # +install_ldap+:: This parameter permits to specify if an OpenLDAP server must be installed on the IdP machine or not.
 # +domain_name+:: This parameter permits to specify the domain name for the LDAP user database.
 # +basedn+:: This parameters must contain the base DN of the LDAP server.
@@ -72,8 +71,7 @@
 #         'technicalIDPadminTelephone' => '',
 #         'registrationInstant'        => '2013-06-27T12:00:00Z',
 #       },
-#       shibbolethversion       => '2.4.0',
-#       install_uapprove        => true,
+#       shibbolethversion       => '3.1.1',
 #       install_ldap            => true,
 #       domain_name             => 'example.com',
 #       basedn                  => 'dc=example,dc=com',
@@ -93,7 +91,6 @@
 define shib2idp::instance (
   $metadata_information,
   $shibbolethversion       = undef,
-  $install_uapprove        = undef,
   $install_ldap            = undef,
   $domain_name             = undef,
   $basedn                  = undef,
@@ -113,7 +110,6 @@ define shib2idp::instance (
   $test_federation         = undef,
   $custom_styles           = undef,
   $phpldap_easy_insert     = undef,
-  $uapprove_version        = undef,
   $install_raptor          = undef,
 ) {
   
@@ -127,7 +123,6 @@ define shib2idp::instance (
   class { 'shib2idp::idp':
     metadata_information => $metadata_information,
     shibbolethversion    => $shibbolethversion,
-    install_uapprove     => $install_uapprove,
     idpfqdn              => $idpfqdn,
     keystorepassword     => $keystorepassword,
     mailto               => $mailto,
@@ -143,13 +138,11 @@ define shib2idp::instance (
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
     custom_styles        => $custom_styles,
-    uapprove_version     => $uapprove_version,
   }
   
   # Install monitoring tools
   class { 'shib2idp::management':
     install_ldap         => $install_ldap,
-    install_uapprove     => $install_uapprove,
     install_raptor       => $install_raptor,
     logserver            => $logserver,
     nagiosserver         => $nagiosserver,

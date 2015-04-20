@@ -3,10 +3,11 @@
 # Example:
 # 
 #  shibboleth_install { 'execute_install':
-#    idpfqdn => $idpfqdn,
+#    idpfqdn          => $idpfqdn,
 #    keystorepassword => $keystorepassword,
-#    javahome => $shib2idp::java::params::java_home,
-#    tomcathome => $tomcat::tomcat_home,
+#    javahome         => $shib2idp::java::params::java_home,
+#    tomcathome       => $tomcat::tomcat_home,
+#    scope            => $shib2idp::idp::finalize::scope,
 #  }
 
 module Puppet
@@ -24,7 +25,7 @@ module Puppet
 
 		newparam(:sourcedir) do
 			desc "Path where the Shibboleth IdP sources are extracted."
-			defaultto "/usr/local/src/shibboleth-identityprovider"
+			defaultto "/usr/local/src/shibboleth-identity-provider"
 		end
 
 		newparam(:idpfqdn) do
@@ -51,6 +52,10 @@ module Puppet
 		
 		newparam(:curtomcat) do
 			desc "The current Tomcat version"
+		end
+		
+		newparam(:scope) do
+			desc "The scope for the IdP to be installed"
 		end
     
 		validate do
@@ -85,16 +90,28 @@ module Puppet
 			debug("Shibboleth_install[javahome] = " + @parameters[:javahome].value + ".")
 			debug("Shibboleth_install[tomcathome] = " + @parameters[:tomcathome].value + ".")
 			debug("Shibboleth_install[curtomcat] = " + @parameters[:curtomcat].value + ".")
+			debug("Shibboleth_install[scope] = " + @parameters[:scope].value + ".")
       
+			filename = @parameters[:sourcedir].value + "/autoinstall.properties"  # Creates a new property file to be used for input parameters of Shibboleth IdP installation.
+			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
+				saved_file.write("idp.src.dir = " + @parameters[:sourcedir].value + "\n")
+				saved_file.write("idp.target.dir = " + @parameters[:installdir].value + "\n")
+				saved_file.write("idp.host.name = " + @parameters[:idpfqdn].value + "\n")
+				saved_file.write("idp.sealer.password = " + @parameters[:keystorepassword].value + "\n")
+				saved_file.write("idp.keystore.password = " + @parameters[:keystorepassword].value + "\n")
+				saved_file.write("entityid = https://" + @parameters[:idpfqdn].value + "/idp/shibboleth" + "\n")
+				saved_file.write("scope = " + @parameters[:scope].value + "\n")
+				saved_file.write("idp.noprompt = true\n")
+			end
+			
 			filename = "/tmp/autoinstall.sh"  # Creates a new bash script who adds JAVA_HOME environment variable to the underlying system and calls the "install.sh" to install the Shibboleth IdP.
-        
 			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
 				saved_file.write("#!/bin/bash\n")
 				saved_file.write(". /etc/environment\n")
 				saved_file.write("export JAVA_HOME\n")
 				saved_file.write("\n")
 				saved_file.write("cd " + @parameters[:sourcedir].value + "\n")
-				saved_file.write("/bin/sh install.sh\n")
+				saved_file.write("/bin/bash bin/install.sh -Didp.property.file=autoinstall.properties\n")
 			end
       
 			debug("Executing install script.")

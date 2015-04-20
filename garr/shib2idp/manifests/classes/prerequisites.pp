@@ -35,8 +35,7 @@ class shib2idp::prerequisites (
      }
   }
   # Else Ruby > 1.8 (1.9.3)
-  else{
-
+  else {
      package { 'libldap-ruby1.8': 
         ensure => purged,
      }

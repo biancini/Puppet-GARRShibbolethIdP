@@ -12,7 +12,6 @@
 class shib2idp::idp::styles(
   $install_ldap_var = undef,
   $metadata_information = undef,
-  $install_uapprove = true,
   $custom_styles = false,
 ){
 

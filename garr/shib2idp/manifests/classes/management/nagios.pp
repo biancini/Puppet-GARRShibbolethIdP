@@ -3,7 +3,6 @@
 # This class installs the Nagios NRPE server on IdP and define his checks.
 #
 # Parameters:
-# +install_uapprove+:: This parameter permits to specify if uApprove has to be installed on this IdP
 # +nagiosserver+:: This parameter permits to specify a Nagios server, if it contains a value different from undef NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
 # +sambadomain+:: This parameter permits to specify the Samba domain name to be configured while installing Nagios.
 # +idpfqdn+:: This parameters must contain the fully qualified domain name of the IdP. This name must be the exact name used by client users to access the machine over the Internet. This FQDN, in fact, will be used to determine the CN of the certificate used for HTTPS. If the name is not identical with the server name specified by the client, the client's browser will raise a security exception.
@@ -20,7 +19,6 @@
 # This class file is not called directly.
 #
 class shib2idp::management::nagios (
-  $install_uapprove = undef,
   $nagiosserver     = undef,
   $sambadomain      = 'WORKGROUP',
   $idpfqdn          = 'puppetclient.example.com',
@@ -89,33 +87,18 @@ class shib2idp::management::nagios (
     $use_tls   = $shib2idp::idp::finalize::ldap_use_tls_var
     $fs_device = 'vda1'
     
-    if ($install_uapprove) {
-      $aacli_cmd = [ 
-        "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
-        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
-        "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
-        "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
-        "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
-        "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
-        "command[check_uApprove]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'uApprove'\" -d uApprove -u uApprove -p ${rootpw}",
-        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
-        "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
-        "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
-    } else {
-      $aacli_cmd = [ 
-        "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
-        "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
-        "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
-        "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
-        "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
-        "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
-        "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
-        "command[check_uApprove]=/bin/bash -c \"echo 'UNKNOWN - uApprove non configurato per questo server.'; exit 3\"",
-        "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
-        "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
-        "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
-    }
+    $aacli_cmd = [ 
+      "command[check_${fs_device}]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/${fs_device}",
+      "command[check_login]=/usr/lib/nagios/plugins/check_login -l",
+      "command[check_aacli]=/usr/lib/nagios/plugins/check_aacli",
+      "command[check_cert]=/usr/lib/nagios/plugins/check_cert",
+      "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
+      "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
+      "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
+      "command[check_storageservice]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'ustorageservice'\" -d storageservice -u root -p ${rootpw}",
+      "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
+      "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
+      "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
 
     file {
       '/usr/lib/nagios/plugins/check_login':

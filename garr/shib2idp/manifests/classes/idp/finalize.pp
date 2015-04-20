@@ -57,15 +57,6 @@ class shib2idp::idp::finalize (
       line   => "TOMCAT_LOG_DIR=/var/log/${curtomcat}/";
   }
 
-  file { "/opt/shibboleth-idp/conf/handler.xml":
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    source  => "puppet:///modules/shib2idp/handler.xml",
-    require => Shibboleth_install['execute_install'],
-  }
-
   if ($install_ldap) {
     class { 'ldap':
       server => 'true',
@@ -238,13 +229,23 @@ class shib2idp::idp::finalize (
     $ldap_use_plain_var = ($ldap_use_ssl_var == false and $ldap_use_tls_var == false)
   } # if - else
 
+  if ($ldap_use_ssl) {
+    exec { 'get-ldapcertificate':
+      command => "echo -n | openssl s_client -connect ${ldap_host}:636 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ldap-server.crt",
+      unless  => "ls ldap-server.crt",
+      cwd     => "/opt/shibboleth-idp/credentials",
+      path    => ["/bin", "/usr/bin"],
+      require => Shibboleth_install['execute_install'],
+    }
+  }
+
   file { "ldap-config-ssl":
-    path    => '/opt/shibboleth-idp/conf/login.config',
+    path    => '/opt/shibboleth-idp/conf/ldap.properties',
     ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template("shib2idp/login.config.erb"),
+    content => template("shib2idp/ldap.properties.erb"),
     require => Shibboleth_install['execute_install'],
   }
 
@@ -260,7 +261,7 @@ class shib2idp::idp::finalize (
       require => [Shibboleth_install['execute_install'], Class['mysql::bindings::java']];
   }
   
-  mysql_database { 'userdb':
+  mysql_database { ['userdb', 'storageservice']:
     ensure  => 'present',
     require => Class['mysql::server'],
   }
@@ -319,33 +320,15 @@ class shib2idp::idp::finalize (
 
   if ($test_federation_var == true){
     file {
-      "/opt/shibboleth-idp/conf/attribute-filter.xml":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => "puppet:///modules/shib2idp/attribute-filter.xml",
-        require => Shibboleth_install['execute_install'],
-    } ->
-    file {
       "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
-        ensure => absent,
-        owner  => $curtomcat,
-        group  => $curtomcat,
-        mode   => '0644',
-        require => Shibboleth_install['execute_install'],
-    } ->
-    file {
-      "/opt/shibboleth-idp/conf/service.xml":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
+        ensure  => absent,
+        owner   => $curtomcat,
+        group   => $curtomcat,
         mode    => '0644',
-        content => template("shib2idp/service.xml.erb"),
         require => Shibboleth_install['execute_install'],
     }
   }
-  else{
+  else {
     file {
       "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
         ensure  => present,
@@ -353,34 +336,40 @@ class shib2idp::idp::finalize (
         group   => $curtomcat,
         mode    => '0644',
         require => Shibboleth_install['execute_install'],
-    } ->
-    file {
-      "/opt/shibboleth-idp/conf/attribute-filter.xml":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => "puppet:///modules/shib2idp/attribute-filter.xml",
-        require => Shibboleth_install['execute_install'],
-    } ->
-    file {
-      "/opt/shibboleth-idp/conf/service.xml":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        content => template("shib2idp/service.xml.erb"),
-        require => Shibboleth_install['execute_install'],
     }
   }
-
-  file{
+  
+  file {
+    "/opt/shibboleth-idp/conf/attribute-filter.xml":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/attribute-filter.xml",
+      require => Shibboleth_install['execute_install'];
+  
+    "/opt/shibboleth-idp/conf/services.xml":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("shib2idp/services.xml.erb"),
+      require => Shibboleth_install['execute_install'];
+  
     "/opt/shibboleth-idp/conf/relying-party.xml":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       content => template('shib2idp/relying-party.xml.erb'),
+      require => Shibboleth_install['execute_install'];
+      
+    "/opt/shibboleth-idp/conf/global.xml":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/global.xml",
       require => Shibboleth_install['execute_install'];
   }
 

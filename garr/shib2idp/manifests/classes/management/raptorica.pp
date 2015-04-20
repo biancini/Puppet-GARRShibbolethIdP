@@ -4,7 +4,6 @@
 #
 # Parameters:
 # +shibbolethversion+:: This parameter permits to specify the version of Shibboleth IdP to be downloaded from the Internet2 repositories. By default the 2.3.3 version will be downloaded.
-# +install_uapprove+:: This parameter permits to specify if uApprove has to be installed on this IdP
 # +rootldappw+:: This parameters must contain the password of the user with access to the MySQL server.
 #
 # Actions:
