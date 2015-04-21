@@ -22,26 +22,26 @@
 -->
 
             <mdui:UIInfo>
-<% 
-   @metadata_information.each do |lang, v|
-   if v.is_a?(Hash)
-      v.sort.each do |field, value|
-         case field 
-            when "orgDisplayName" -%>
-               <mdui:DisplayName xml:lang="<%= lang %>"><%= value %></mdui:DisplayName>
-<%          when "communityDesc" -%>
-               <mdui:Description xml:lang="<%= lang %>"><%= value %></mdui:Description>
-<%          when "idpInfoUrl" -%>
-               <mdui:InformationURL xml:lang="<%= lang %>"><%= value %></mdui:InformationURL>
-<%          when "privacyPage" -%>
-               <mdui:PrivacyStatementURL xml:lang="<%= lang %>"><%= value %></mdui:PrivacyStatementURL>
-<%          when "url_LogoOrg_32x32" -%>
-               <mdui:Logo xml:lang="<%= lang %>" width="16" height="16"><%= value %></mdui:Logo>
-<%          when "url_LogoOrg_160x120" -%>
-               <mdui:Logo xml:lang="<%= lang %>" width="80" height="60"><%= value %></mdui:Logo>   
-<%       end 
-      end 
-   end 
+<%
+["orgDisplayName", "communityDesc", "idpInfoUrl", "privacyPage", "url_LogoOrg_32x32", "url_LogoOrg_160x120"].each do |field|
+    @metadata_information.each do |lang, v|
+      if v.is_a?(Hash) and v.has_key?(field)
+        case field 
+          when "orgDisplayName" -%>
+            <mdui:DisplayName xml:lang="<%= lang %>"><%= v[field] %></mdui:DisplayName>
+<%        when "communityDesc" -%>
+            <mdui:Description xml:lang="<%= lang %>"><%= v[field] %></mdui:Description>
+<%        when "idpInfoUrl" -%>
+            <mdui:InformationURL xml:lang="<%= lang %>"><%= v[field] %></mdui:InformationURL>
+<%        when "privacyPage" -%>
+            <mdui:PrivacyStatementURL xml:lang="<%= lang %>"><%= v[field] %></mdui:PrivacyStatementURL>
+<%        when "url_LogoOrg_32x32" -%>
+            <mdui:Logo xml:lang="<%= lang %>" width="16" height="16"><%= v[field] %></mdui:Logo>
+<%        when "url_LogoOrg_160x120" -%>
+            <mdui:Logo xml:lang="<%= lang %>" width="80" height="60"><%= v[field] %></mdui:Logo>   
+<%      end 
+      end
+    end
 end -%>
             </mdui:UIInfo>
         </Extensions>
@@ -142,20 +142,21 @@ $IDP_CERTIFICATE_ENCRYPT
     </AttributeAuthorityDescriptor>
 
     <Organization>
-<% @metadata_information.each do |lang, v|
-   if v.is_a?(Hash)
-      v.sort.each do |field, value|
-         case field 
-            when "nameOrg" -%>
-      <OrganizationName xml:lang="<%= lang %>"><%= value %></OrganizationName>
-<%          when "orgDisplayName" -%>
-      <OrganizationDisplayName xml:lang="<%= lang %>"><%= value %></OrganizationDisplayName>
-<%          when "orgUrl" -%>
-      <OrganizationURL xml:lang="<%= lang %>"><%= value %></OrganizationURL>
-<%          end 
-         end 
+<%
+["nameOrg", "orgDisplayName", "orgUrl"].each do |field|
+   @metadata_information.each do |lang, v|
+     if v.is_a?(Hash) and v.has_key?(field)
+       case field 
+         when "nameOrg" -%>
+      <OrganizationName xml:lang="<%= lang %>"><%= v[field] %></OrganizationName>
+<%       when "orgDisplayName" -%>
+      <OrganizationDisplayName xml:lang="<%= lang %>"><%= v[field] %></OrganizationDisplayName>
+<%       when "orgUrl" -%>
+      <OrganizationURL xml:lang="<%= lang %>"><%= v[field] %></OrganizationURL>
+<%     end 
      end 
-  end -%>
+   end 
+end -%>
    </Organization>
 
    <ContactPerson contactType="technical">

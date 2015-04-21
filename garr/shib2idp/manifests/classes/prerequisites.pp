@@ -45,6 +45,10 @@ class shib2idp::prerequisites (
      }
   }
 
+  package { 'libxerces2-java':
+    ensure => installed,
+  }
+
   include 'concat::setup'
 
   apache::mod { 'actions': }

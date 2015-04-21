@@ -138,14 +138,6 @@ class shib2idp::idp (
       source  => "puppet:///modules/shib2idp/jars/jstl-1.2.jar",
       require => Class['shib2common::java::package', 'tomcat'];
 
-    "/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar":
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => "puppet:///modules/shib2idp/jars/xercesImpl-2.11.0.jar",
-      require => Class['shib2common::java::package', 'tomcat'];
-
     "/var/lib/${curtomcat}/common/xml-apis-1.4.01.jar":
       ensure  => present,
       owner   => 'root',
@@ -166,7 +158,23 @@ class shib2idp::idp (
       ensure  => link,
       target  => "/usr/share/${curtomcat}/lib/ecj-3.7.1.jar",
       require => File["/usr/share/${curtomcat}/lib/ecj-3.7.1.jar"];
-      
+
+    "/etc/${curtomcat}/web.xml":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/web.xml",
+      require => Class['shib2common::java::package', 'tomcat'];
+   
+    ['/opt/shibboleth-idp/lib/xercesImpl-2.11.0.jar', "/var/lib/$[curtomcat}/common/xercesImpl-2.11.0.jar"]:
+      ensure  => link,
+      target  => "/usr/share/${curtomcat}/lib/xercesImpl-2.11.0.jar",
+      require => [Package['libxerces2-java'], Class['shib2common::java::package', 'tomcat']];
+
+    ['/usr/share/java/ecj.jar', '/usr/share/java/eclipse-ecj.jar', '/opt/shibboleth-idp/lib/servlet-api.jar', "/usr/share/${curtomcat}/lib/servlet-api.jar"]:
+      ensure  => absent,
+      require => Class['shib2common::java::package', 'tomcat'];
   }
 
   # Install the Shibboleth style
@@ -201,7 +209,7 @@ class shib2idp::idp (
       "set idp.sealer.keyPassword ${keystorepassword}",
       "set idp.consent.StorageService shibboleth.JPAStorageService",
       "set idp.ui.fallbackLanguages it,en,fr,es,de",
-      "set idp.xml.securityManager org.apache.xerces.util.SecurityManager"],
+      "set idp.xml.securityManager org.apache.xerces.util.SecurityManager",
       "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
