@@ -167,7 +167,7 @@ class shib2idp::idp (
       source  => "puppet:///modules/shib2idp/web.xml",
       require => Class['shib2common::java::package', 'tomcat'];
    
-    ['/opt/shibboleth-idp/lib/xercesImpl-2.11.0.jar', "/var/lib/$[curtomcat}/common/xercesImpl-2.11.0.jar"]:
+    ['/opt/shibboleth-idp/lib/xercesImpl-2.11.0.jar', "/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar"]:
       ensure  => link,
       target  => "/usr/share/${curtomcat}/lib/xercesImpl-2.11.0.jar",
       require => [Package['libxerces2-java'], Class['shib2common::java::package', 'tomcat']];
