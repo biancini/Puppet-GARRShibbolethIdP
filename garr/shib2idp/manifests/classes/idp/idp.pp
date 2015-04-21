@@ -202,6 +202,7 @@ class shib2idp::idp (
       "set idp.consent.StorageService shibboleth.JPAStorageService",
       "set idp.ui.fallbackLanguages it,en,fr,es,de",
       "set idp.xml.securityManager org.apache.xerces.util.SecurityManager"],
+      "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
   }

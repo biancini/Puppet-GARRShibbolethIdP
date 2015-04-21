@@ -261,6 +261,11 @@ class shib2idp::idp::finalize (
       require => [Shibboleth_install['execute_install'], Class['mysql::bindings::java']];
   }
   
+  download_file { "/var/lib/${curtomcat}/common/jstl-1.2.jar":
+    url             => "https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar",
+    require => Class['tomcat', 'mysql::bindings::java'],
+  }
+  
   mysql_database { ['userdb', 'storageservice']:
     ensure  => 'present',
     require => Class['mysql::server'],
@@ -356,12 +361,12 @@ class shib2idp::idp::finalize (
       content => template("shib2idp/services.xml.erb"),
       require => Shibboleth_install['execute_install'];
   
-    "/opt/shibboleth-idp/conf/relying-party.xml":
+    "/opt/shibboleth-idp/conf/metadata-providers.xml":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template('shib2idp/relying-party.xml.erb'),
+      content => template('shib2idp/metadata-providers.xml.erb'),
       require => Shibboleth_install['execute_install'];
       
     "/opt/shibboleth-idp/conf/global.xml":
