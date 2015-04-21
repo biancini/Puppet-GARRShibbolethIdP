@@ -213,6 +213,12 @@ class shib2idp::idp (
       "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
+  } ->
+  file { "/opt/shibboleth-idp/conf/idp.properties":
+    ensure  => present,
+    owner   => $curtomcat,
+    group   => $curtomcat,
+    mode    => '0644',
   }
 
   # Configure the Shibboleth IdP
