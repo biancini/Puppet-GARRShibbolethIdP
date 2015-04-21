@@ -169,7 +169,7 @@ class shib2idp::idp (
    
     ['/opt/shibboleth-idp/lib/xercesImpl-2.11.0.jar', "/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar"]:
       ensure  => link,
-      target  => "/usr/share/${curtomcat}/lib/xercesImpl-2.11.0.jar",
+      target  => "/usr/share/java/xercesImpl-2.11.0.jar",
       require => [Package['libxerces2-java'], Class['shib2common::java::package', 'tomcat']];
 
     ['/usr/share/java/ecj.jar', '/usr/share/java/eclipse-ecj.jar', '/opt/shibboleth-idp/lib/servlet-api.jar', "/usr/share/${curtomcat}/lib/servlet-api.jar"]:
@@ -213,13 +213,17 @@ class shib2idp::idp (
       "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
-  } ->
-  file { "/opt/shibboleth-idp/conf/idp.properties":
-    ensure  => present,
-    owner   => $curtomcat,
-    group   => $curtomcat,
-    mode    => '0644',
-  }
+  } ~>
+  exec { "change ownership for confs":
+    command     => "chown -R ${curtomcat}.${curtomcat} /opt/shibboleth-idp/conf",
+    refreshonly => true,
+    path        => ["/bin", "/usr/bin"],
+  } ~>
+  exec { "access rights confs":
+    command     => "find /opt/shibboleth-idp/conf -type f -exec chmod 664 {} \\;",
+    refreshonly => true,
+    path        => ["/bin", "/usr/bin"],
+  } 
 
   # Configure the Shibboleth IdP
   Class['shib2idp::idp::configure'] ~> Service["${curtomcat}"]
