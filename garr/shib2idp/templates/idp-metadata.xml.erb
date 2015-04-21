@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
-                     xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
-                     xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" 
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                     xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
-                     entityID="https://<%= @idpfqdn %>/idp/shibboleth">
+<!--
+     This is example metadata only. Do *NOT* supply it as is without review,
+     and do *NOT* provide it in real time to your partners.
 
-    <md:Extensions>
-        <mdrpi:RegistrationInfo xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" 
-                                registrationAuthority="http://www.idem.garr.it/" 
-                                registrationInstant="<%= @metadata_information['registrationInstant'] %>">
-            <mdrpi:RegistrationPolicy xml:lang="en">
-                https://www.idem.garr.it/idem-metadata-registration-practice-statement
-            </mdrpi:RegistrationPolicy>
-        </mdrpi:RegistrationInfo>
-    </md:Extensions>
+     This metadata is not dynamic - it will not change as your configuration changes.
+-->
+<EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" entityID="https://<%=@idpfqdn%>/idp/shibboleth">
 
-    <md:IDPSSODescriptor protocolSupportEnumeration="urn:mace:shibboleth:1.0 
-                                                     urn:oasis:names:tc:SAML:1.1:protocol
-                                                     urn:oasis:names:tc:SAML:2.0:protocol">
-        <md:Extensions>
-            <shibmd:Scope regexp="false"><%= @domain_name %></shibmd:Scope>
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">mi.garr.it</shibmd:Scope>
+<!--
+    Fill in the details for your IdP here 
+
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">A Name for the IdP at <%=@idpfqdn%></mdui:DisplayName>
+                <mdui:Description xml:lang="en">Enter a description of your IdP at <%=@idpfqdn%></mdui:Description>
+                <mdui:Logo height="HeightInPixels" width="WidthInPixels">https://<%=@idpfqdn%>/Path/To/Logo.png</mdui:Logo>
+            </mdui:UIInfo>
+-->
 
             <mdui:UIInfo>
 <% 
@@ -44,99 +43,131 @@
       end 
    end 
 end -%>
-            </mdui:UIInfo> 
-        </md:Extensions>
+            </mdui:UIInfo>
+        </Extensions>
 
-        <md:KeyDescriptor>
+        <KeyDescriptor use="signing">
             <ds:KeyInfo>
-                <ds:X509Data>
-                    <ds:X509Certificate>
-$IDP_CERTIFICATE
-                    </ds:X509Certificate>
-                </ds:X509Data>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_BACK
+                        </ds:X509Certificate>
+                    </ds:X509Data>
             </ds:KeyInfo>
-        </md:KeyDescriptor>
-        
-        <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" 
-                                      Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML1/SOAP/ArtifactResolution" 
-                                      index="1"/>
 
-        <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" 
-                                      Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML2/SOAP/ArtifactResolution" 
-                                      index="2"/>
-
-        <md:NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</md:NameIDFormat>
-        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
-
-        <md:SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" 
-                                Location="https://<%= @idpfqdn %>/idp/profile/Shibboleth/SSO"/>
-
-        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" 
-                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/POST/SSO"/>
-
-        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" 
-                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/POST-SimpleSign/SSO"/>
-
-        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" 
-                                Location="https://<%= @idpfqdn %>/idp/profile/SAML2/Redirect/SSO"/>
-    </md:IDPSSODescriptor>
-
-    <md:AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol
-                                                                 urn:oasis:names:tc:SAML:2.0:protocol">
-
-        <md:Extensions>
-            <shibmd:Scope regexp="false"><%= @domain_name%></shibmd:Scope>
-        </md:Extensions>
-
-        <md:KeyDescriptor>
+        </KeyDescriptor>
+        <KeyDescriptor use="signing">
             <ds:KeyInfo>
-                <ds:X509Data>
-                    <ds:X509Certificate>
-$IDP_CERTIFICATE
-                    </ds:X509Certificate>
-                </ds:X509Data>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_SIGN
+                        </ds:X509Certificate>
+                    </ds:X509Data>
             </ds:KeyInfo>
-        </md:KeyDescriptor>
 
-        <md:AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" 
-                             Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        </KeyDescriptor>
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_ENCRYPT
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
 
-        <md:AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" 
-                             Location="https://<%= @idpfqdn %>:8443/idp/profile/SAML2/SOAP/AttributeQuery"/>
+        </KeyDescriptor>
 
-        <md:NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</md:NameIDFormat>
-        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://<%=@idpfqdn%>:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://<%=@idpfqdn%>:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
 
-    </md:AttributeAuthorityDescriptor>
+        <!--
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/Redirect/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/POST/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/POST-SimpleSign/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://<%=@idpfqdn%>:8443/idp/profile/SAML2/SOAP/SLO"/>
+        -->
 
-   <md:Organization>
+        <NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+        <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+
+        <SingleSignOnService Binding="urn:mace:shibboleth:1.0:profiles:AuthnRequest" Location="https://<%=@idpfqdn%>/idp/profile/Shibboleth/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/POST/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+        <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://<%=@idpfqdn%>/idp/profile/SAML2/Redirect/SSO"/>
+
+    </IDPSSODescriptor>
+
+
+    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
+
+        <Extensions>
+            <shibmd:Scope regexp="false">mi.garr.it</shibmd:Scope>
+        </Extensions>
+
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_BACK
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+        <KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_SIGN
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+        <KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>
+$IDP_CERTIFICATE_ENCRYPT
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+            </ds:KeyInfo>
+
+        </KeyDescriptor>
+
+        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://<%=@idpfqdn%>:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
+        <!-- <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://<%=@idpfqdn%>:8443/idp/profile/SAML2/SOAP/AttributeQuery"/> -->
+        <!-- If you uncomment the above you should add urn:oasis:names:tc:SAML:2.0:protocol to the protocolSupportEnumeration above -->
+
+    </AttributeAuthorityDescriptor>
+
+    <Organization>
 <% @metadata_information.each do |lang, v|
    if v.is_a?(Hash)
       v.each do |field, value|
          case field 
             when "nameOrg" -%>
-      <md:OrganizationName xml:lang="<%= lang %>"><%= value %></md:OrganizationName>
+      <OrganizationName xml:lang="<%= lang %>"><%= value %></OrganizationName>
 <%          when "orgDisplayName" -%>
-      <md:OrganizationDisplayName xml:lang="<%= lang %>"><%= value %></md:OrganizationDisplayName>
+      <OrganizationDisplayName xml:lang="<%= lang %>"><%= value %></OrganizationDisplayName>
 <%          when "orgUrl" -%>
-      <md:OrganizationURL xml:lang="<%= lang %>"><%= value %></md:OrganizationURL>
+      <OrganizationURL xml:lang="<%= lang %>"><%= value %></OrganizationURL>
 <%          end 
          end 
      end 
   end -%>
-   </md:Organization>
+   </Organization>
 
-    <md:ContactPerson contactType="technical">
+   <ContactPerson contactType="technical">
 <% if @metadata_information['technicalIDPadminGivenName'] != '' -%>
-        <md:GivenName><%= @metadata_information['technicalIDPadminGivenName'] %></md:GivenName>
+        <GivenName><%= @metadata_information['technicalIDPadminGivenName'] %></GivenName>
 <% end -%>
 <% if @metadata_information['technicalIDPadminSurName'] != '' -%>
-        <md:SurName><%= @metadata_information['technicalIDPadminSurName'] %></md:SurName>
+        <SurName><%= @metadata_information['technicalIDPadminSurName'] %></SurName>
 <% end -%>
-        <md:EmailAddress><%= @metadata_information['technicalIDPadminEmail'] %></md:EmailAddress>
+        <EmailAddress><%= @metadata_information['technicalIDPadminEmail'] %></EmailAddress>
 <% if @metadata_information['technicalIDPadminTelephone'] != '' -%>
-        <md:TelephoneNumber><%= @metadata_information['technicalIDPadminTelephone'] %></md:TelephoneNumber>
+        <TelephoneNumber><%= @metadata_information['technicalIDPadminTelephone'] %></TelephoneNumber>
 <% end -%>
-    </md:ContactPerson>
-
-</md:EntityDescriptor>
+   </ContactPerson>
+</EntityDescriptor>

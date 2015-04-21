@@ -33,12 +33,12 @@ class shib2idp::management::rsyslog (
       refreshonly => true,
     }
 	
-	  file { '/opt/shibboleth-idp/conf/logging.xml':
+	  file { '/opt/shibboleth-idp/conf/logback.xml':
 	    ensure  => present,
 	    owner   => 'root',
 	    group   => 'root',
 	    mode    => '0644',
-	    content  => template ("shib2idp/logging.xml.erb"),
+	    content  => template ("shib2idp/logback.xml.erb"),
 	    require => [Shibboleth_install['execute_install'], File['/etc/rsyslog.d/99-tomcat.conf']];
 	  }
   } else {

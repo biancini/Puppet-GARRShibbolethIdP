@@ -107,14 +107,26 @@ module Puppet
 			desc "The content of the metadata file to be created"
 		end
 
-		newparam(:certfilename) do
+		newparam(:certfilename_sign) do
 			desc "The path of the certificate file for the installed IdP"
-			defaultto "/opt/shibboleth-idp/credentials/idp.crt"
+			defaultto "/opt/shibboleth-idp/credentials/idp-signing.crt"
+		end
+		
+		newparam(:certfilename_encrypt) do
+			desc "The path of the certificate file for the installed IdP"
+			defaultto "/opt/shibboleth-idp/credentials/idp-encryption.crt"
+		end
+		
+		newparam(:certfilename_back) do
+			desc "The path of the certificate file for the installed IdP"
+			defaultto "/opt/shibboleth-idp/credentials/idp-backchannel.crt"
 		end
     
 		validate do
 			fail("filecontent parameter is required") if self[:filecontent].nil?
-    		fail("certfilename parameter is required") if self[:certfilename].nil?
+    		fail("certfilename_sign parameter is required") if self[:certfilename_sign].nil?
+    		fail("certfilename_encrypt parameter is required") if self[:certfilename_encrypt].nil?
+    		fail("certfilename_back parameter is required") if self[:certfilename_back].nil?
 			fail("metadata is required") if self[:metadata].nil? 
 		end
 
@@ -130,21 +142,43 @@ module Puppet
 				downloadTemplate = false
 				changeCert = false
 				# If 'idp-metadata.xml' exists, verify and change his certificate.
-				if File.exists?(resource[:name])
-					# Open the XML file into 'resource[:name]' with read permission
-					# and create a new xmldoc to modify it
-					xmlfile = File.open(resource[:name], "r")
-					xmldoc = REXML::Document.new xmlfile
+				begin
+				    # Open the XML file into 'resource[:name]' with read permission
+				    # and create a new xmldoc to modify it
+				    xmlfile = File.open(resource[:name], "r")
+				    xmldoc = REXML::Document.new xmlfile
 
-					# Retrieve the source certificate and remove the BEGIN and END CERTIFICATE
-					sourceCert = File.readlines(resource[:certfilename])
-					sourceCert.delete_if {|x| x.include?('-----') }
+				    # Retrieve the source certificate and remove the BEGIN and END CERTIFICATE
+				    sourceCertSign = File.readlines(resource[:certfilename_sign])
+				    sourceCertSign.delete_if {|x| x.include?('-----') }
+				    
+				    sourceCertEncrypt = File.readlines(resource[:certfilename_encrypt])
+				    sourceCertEncrypt.delete_if {|x| x.include?('-----') }
+				    
+				    sourceCertBackchannel = File.readlines(resource[:certfilename_back])
+				    sourceCertBackchannel.delete_if {|x| x.include?('-----') }
+				    
+				    changeCertSign = true
+				    changeCertEncrypt = true
+				    changeCertBackchannel = true
 
-					# Verify if the certificate must be synchronized or not. 
-					# 'sourceCert.join' convert the array sourceCert into a string
-					REXML::XPath.each(xmldoc, "//ds:X509Certificate") do |e|
-						changeCert = !(e.text.to_s == sourceCert.join)
-					end 
+				    # Verify if the certificate must be synchronized or not. 
+				    # 'sourceCert.join' convert the array sourceCert into a string
+				    REXML::XPath.each(xmldoc, "//ds:X509Certificate") do |e|
+				        if e.text.to_s == sourceCertSign.join then
+					        changeCertSign = false
+					    end
+					    
+					    if e.text.to_s == sourceCertEncrypt.join then
+					        changeCertEncrypt = false
+					    end
+					    
+					    if e.text.to_s == sourceCertBackchannel.join then
+					        changeCertBackchannel = false
+					    end
+				    end
+				    
+				    changeCert = changeCertSign or changeCertEncrypt or changeCertBackchannel
 
 					# Verify if the MDUI Information must be synchronized or not
 					rules = {
@@ -167,9 +201,9 @@ module Puppet
 						end
 					end
 				# Otherwise, if 'idp-metadata.xml' not exists.
-				else
+				rescue Exception
 					downloadTemplate = true
-				end # if - else
+				end # begin
 				 
 				(downloadTemplate or changeCert) ? :outofsync : :insync
 			end # retrieve
@@ -180,28 +214,31 @@ module Puppet
 				debug("Idp_metadata[name] = " + resource[:name] + ".")
 				debug("Idp_metadata[metadata] = " + (resource[:metadata].nil? ? "NULL" : resource[:metadata].to_s) + ".")
 				debug("Idp_metadata[filecontent] = " + resource[:filecontent] + ".")
-				debug("Idp_metadata[certfilename] = " + resource[:certfilename] + ".")
+				debug("Idp_metadata[certfilename_sign] = " + resource[:certfilename_sign] + ".")
+				debug("Idp_metadata[certfilename_encrypt] = " + resource[:certfilename_encrypt] + ".")
+				debug("Idp_metadata[certfilename_back] = " + resource[:certfilename_back] + ".")
        
-				require "rexml/document"
-
-				xmldoc = REXML::Document.new resource[:filecontent]
-
+				xmldoc = resource[:filecontent]
+				
 				# Retrieve the source certificate and remove the BEGIN and END CERTIFICATE        
-				sourceCert = File.readlines(resource[:certfilename])
-				sourceCert.delete_if {|x| x.include?('-----') }
+				sourceCertSign = File.readlines(resource[:certfilename_sign])
+			    sourceCertSign.delete_if {|x| x.include?('-----') }
+			    
+			    sourceCertEncrypt = File.readlines(resource[:certfilename_encrypt])
+			    sourceCertEncrypt.delete_if {|x| x.include?('-----') }
+			    
+			    sourceCertBackchannel = File.readlines(resource[:certfilename_back])
+			    sourceCertBackchannel.delete_if {|x| x.include?('-----') }
 	 
 				# Insert the new certificate into the right position on idp-metadata.xml file.
-				REXML::XPath.each(xmldoc, "//ds:X509Certificate") do |e|
-					e.text = sourceCert.join
-				end
-
+				xmldoc = xmldoc.gsub(/\$IDP_CERTIFICATE_SIGN/, sourceCertSign.join("\n"))
+				xmldoc = xmldoc.gsub(/\$IDP_CERTIFICATE_ENCRYPT/, sourceCertEncrypt.join("\n"))
+				xmldoc = xmldoc.gsub(/\$IDP_CERTIFICATE_BACK/, sourceCertBackchannel.join("\n"))
+				
 				# Here the 'xmldoc' contains the correct XML content. 
 		  
 				# Now creates a new 'idp-metadata.xml' file and saves in it the new content stored into 'xmldoc'
-				destXML = File.open(resource[:name],"w")
-	  
-				# Write on the 'idp-metadata.xml' file
-				destXML.write(xmldoc)
+				File.open(resource[:name], "w") {|file| file.puts xmldoc}
 
 			end # :insync
 		end # ensure

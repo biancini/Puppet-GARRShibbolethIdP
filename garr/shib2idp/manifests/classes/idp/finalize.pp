@@ -369,15 +369,17 @@ class shib2idp::idp::finalize (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      source  => "puppet:///modules/shib2idp/global.xml",
+      content => template('shib2idp/global.xml.erb'),
       require => Shibboleth_install['execute_install'];
   }
 
   idp_metadata { '/opt/shibboleth-idp/metadata/idp-metadata.xml':
-    filecontent  => template('shib2idp/idp-metadata.xml.erb'),
-    metadata     => $metadata_information,
-    certfilename => '/opt/shibboleth-idp/credentials/idp.crt',
-    require      => Shibboleth_install['execute_install'],
+    filecontent          => template('shib2idp/idp-metadata.xml.erb'),
+    metadata             => $metadata_information,
+    certfilename_sign    => '/opt/shibboleth-idp/credentials/idp-signing.crt',
+    certfilename_encrypt => '/opt/shibboleth-idp/credentials/idp-encryption.crt',
+    certfilename_back    => '/opt/shibboleth-idp/credentials/idp-backchannel.crt',
+    require              => Shibboleth_install['execute_install'],
   }
 
   download_file { '/opt/shibboleth-idp/credentials/idem-metadata-signer.pem':

@@ -95,7 +95,7 @@ class shib2idp::management::nagios (
       "command[check_ldap]=/usr/lib/nagios/plugins/check_ldap -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
       "command[check_ldaps]=/usr/lib/nagios/plugins/check_ldaps -H \"${ldap_host}\" -b \"${basedn}\" -D \"${rootdn},${basedn}\" -P ${rootldappw} -3",
       "command[check_userdb]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'\" -d userdb -u root -p ${rootpw}",
-      "command[check_storageservice]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'ustorageservice'\" -d storageservice -u root -p ${rootpw}",
+      "command[check_uApprove]=/usr/lib/nagios/plugins/check_mysql_query -q \"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'ustorageservice'\" -d storageservice -u root -p ${rootpw}",
       "command[check_phpldapadmin]=/usr/lib/nagios/plugins/check_http -H localhost --ssl --url=/phpldapadmin/ --authorization=admin:${rootldappw}",
       "command[check_ro_fs]=/usr/lib/nagios/plugins/check_ro_fs -p /",
       "command[check_ram]=/usr/lib/nagios/plugins/check_mem 20 10"]
