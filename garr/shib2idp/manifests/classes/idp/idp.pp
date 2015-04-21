@@ -130,42 +130,42 @@ class shib2idp::idp (
       source  => "puppet:///modules/shib2idp/jars/HikariCP-java6-2.3.6.jar",
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
       
-    '/var/lib/tomcat7/common/jstl-1.2.jar':
+    "/var/lib/${curtomcat}/common/jstl-1.2.jar":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       source  => "puppet:///modules/shib2idp/jars/jstl-1.2.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      require => Class['shib2common::java::package', 'tomcat'];
 
-    '/var/lib/tomcat7/common/xercesImpl-2.11.0.jar':
+    "/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       source  => "puppet:///modules/shib2idp/jars/xercesImpl-2.11.0.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      require => Class['shib2common::java::package', 'tomcat'];
 
-    '/var/lib/tomcat7/common/xml-apis-1.4.01.jar':
+    "/var/lib/${curtomcat}/common/xml-apis-1.4.01.jar":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       source  => "puppet:///modules/shib2idp/jars/xml-apis-1.4.01.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      require => Class['shib2common::java::package', 'tomcat'];
 
-    '/usr/share/tomcat7/lib/ecj-3.7.1.jar':
+    "/usr/share/${curtomcat}/lib/ecj-3.7.1.jar":
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       source  => "puppet:///modules/shib2idp/jars/ecj-3.7.1.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      require => Class['shib2common::java::package', 'tomcat'];
 
-    ['/usr/share/tomcat7/lib/ecj.jar', '/usr/share/tomcat7/lib/eclipse-ecj.jar']:
+    ["/usr/share/${curtomcat}/lib/ecj.jar", "/usr/share/${curtomcat}/lib/eclipse-ecj.jar"]:
       ensure  => link,
-      target  => "/usr/share/tomcat7/lib/ecj-3.7.1.jar",
-      require => File['/usr/share/tomcat7/lib/ecj-3.7.1.jar'];
+      target  => "/usr/share/${curtomcat}/lib/ecj-3.7.1.jar",
+      require => File["/usr/share/${curtomcat}/lib/ecj-3.7.1.jar"];
       
   }
 
