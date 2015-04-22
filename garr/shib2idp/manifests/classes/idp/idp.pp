@@ -90,22 +90,6 @@ class shib2idp::idp (
       ensure  => directory,
       require => File['/opt/shibboleth-idp/'];
 
-    '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/ldaptive.jar':
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => "puppet:///modules/shib2idp/jars/ldaptive.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
-      
-    '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/garr-ldaptive.jar':
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => "puppet:///modules/shib2idp/jars/garr-ldaptive.jar",
-      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
-
     '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes':
       ensure  => directory,
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
@@ -215,7 +199,7 @@ class shib2idp::idp (
     require => Shibboleth_install['execute_install'];
   } ~>
   exec { "change ownership for confs":
-    command     => "chown -R ${curtomcat}.${curtomcat} /opt/shibboleth-idp/conf",
+    command     => "chown -R ${curtomcat}.${curtomcat} /opt/shibboleth-idp",
     refreshonly => true,
     path        => ["/bin", "/usr/bin"],
   } ~>
