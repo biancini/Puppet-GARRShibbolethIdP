@@ -84,16 +84,10 @@ class shib2idp::idp (
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
 
     '/opt/shibboleth-idp/':
-      ensure => directory,
-      owner   => $curtomcat,
-      group   => $curtomcat,
-      mode    => '0775';
+      ensure => directory;
 
     '/opt/shibboleth-idp/lib/':
       ensure  => directory,
-      owner   => $curtomcat,
-      group   => $curtomcat,
-      mode    => '0775',
       require => File['/opt/shibboleth-idp/'];
 
     '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/garr-ldaptive.jar':
