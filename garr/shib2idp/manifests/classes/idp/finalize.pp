@@ -263,7 +263,7 @@ class shib2idp::idp::finalize (
       owner   => $curtomcat,
       group   => $curtomcat,
       mode    => '0664',
-      source  => "puppet:///modules/shib2idp/jars/xml-apis-1.4.01.jar",
+      source  => "puppet:///modules/shib2idp/password-authn-config.xml",
       require => Shibboleth_install['execute_install'];
   }
 
