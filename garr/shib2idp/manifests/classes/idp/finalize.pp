@@ -244,26 +244,26 @@ class shib2idp::idp::finalize (
   file {
     '/opt/shibboleth-idp/conf/ldap.properties':
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template("shib2idp/ldap.properties.erb"),
       require => Shibboleth_install['execute_install'];
       
     '/opt/shibboleth-idp/conf/authn/jaas.config':
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template("shib2idp/jaas.config.erb"),
       require => Shibboleth_install['execute_install'];
       
     '/opt/shibboleth-idp/conf/authn/password-authn-config.xml':
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => "puppet:///modules/shib2idp/password-authn-config.xml",
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
+      source  => "puppet:///modules/shib2idp/jars/xml-apis-1.4.01.jar",
       require => Shibboleth_install['execute_install'];
   }
 
@@ -334,9 +334,9 @@ class shib2idp::idp::finalize (
 
     "/opt/shibboleth-idp/conf/attribute-resolver.xml":
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template("shib2idp/attribute-resolver.xml.erb"),
       require => Shibboleth_install['execute_install'];
   }
@@ -346,8 +346,8 @@ class shib2idp::idp::finalize (
       "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
         ensure  => absent,
         owner   => $curtomcat,
-        group   => $curtomcat,
-        mode    => '0644',
+	      group   => $curtomcat,
+	      mode    => '0664',
         require => Shibboleth_install['execute_install'],
     }
   }
@@ -356,8 +356,8 @@ class shib2idp::idp::finalize (
       "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
         ensure  => present,
         owner   => $curtomcat,
-        group   => $curtomcat,
-        mode    => '0644',
+	      group   => $curtomcat,
+	      mode    => '0664',
         require => Shibboleth_install['execute_install'],
     }
   }
@@ -365,33 +365,33 @@ class shib2idp::idp::finalize (
   file {
     "/opt/shibboleth-idp/conf/attribute-filter.xml":
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       source  => "puppet:///modules/shib2idp/attribute-filter.xml",
       require => Shibboleth_install['execute_install'];
   
     "/opt/shibboleth-idp/conf/services.xml":
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template("shib2idp/services.xml.erb"),
       require => Shibboleth_install['execute_install'];
   
     "/opt/shibboleth-idp/conf/metadata-providers.xml":
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template('shib2idp/metadata-providers.xml.erb'),
       require => Shibboleth_install['execute_install'];
       
     "/opt/shibboleth-idp/conf/global.xml":
       ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
       content => template('shib2idp/global.xml.erb'),
       require => Shibboleth_install['execute_install'];
   }

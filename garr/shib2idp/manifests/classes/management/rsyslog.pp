@@ -15,6 +15,9 @@
 class shib2idp::management::rsyslog (
   $logserver = undef,
 ) {
+  
+  $curtomcat = $::tomcat::curtomcat
+  
   if ($logserver) {
 	  # Remote logging with rsyslog
 	  file { '/etc/rsyslog.d/99-tomcat.conf':
@@ -35,9 +38,9 @@ class shib2idp::management::rsyslog (
 	
 	  file { '/opt/shibboleth-idp/conf/logback.xml':
 	    ensure  => present,
-	    owner   => 'root',
-	    group   => 'root',
-	    mode    => '0644',
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
 	    content  => template ("shib2idp/logback.xml.erb"),
 	    require => [Shibboleth_install['execute_install'], File['/etc/rsyslog.d/99-tomcat.conf']];
 	  }

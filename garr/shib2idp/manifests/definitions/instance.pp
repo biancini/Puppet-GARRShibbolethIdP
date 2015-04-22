@@ -198,7 +198,7 @@ define shib2idp::instance (
       ensure  => present,
       owner   => $curtomcat,
       group   => $curtomcat,
-      mode    => '0644',
+      mode    => '0664',
       require => Download_file['/opt/shibboleth-idp/metadata/edugain2idem-metadata-sha256.xml'],
     }
 
@@ -207,7 +207,7 @@ define shib2idp::instance (
       ensure  => absent,
       owner   => $curtomcat,
       group   => $curtomcat,
-      mode    => '0644',
+      mode    => '0664',
     }
   }
 
