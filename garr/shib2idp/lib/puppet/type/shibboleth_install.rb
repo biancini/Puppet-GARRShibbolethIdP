@@ -123,8 +123,8 @@ module Puppet
 			debug("Executing install script.")
 			system("/bin/bash " + filename) or raise Puppet::Error, "Error while installing Shibboleth IdP." # If the system() return 'false' reise up the message "Error while..."
 
-			debug("Copying file for Java Security into java home")
-			system("cp -fv /usr/share/" + @parameters[:curtomcat].value + "/lib/servlet-api.jar " + @parameters[:installdir].value + "/lib/") or raise Puppet::Error, "Error while copying files."
+			debug("Copying file for velocity templates")
+			system("/bin/cp " + @parameters[:sourcedir].value + "/views/*.vm " + @parameters[:installdir].value + "/views/") or raise Puppet::Error, "Error while copying velocity templates."
 			system("/bin/chown -R " + @parameters[:curtomcat].value + ":" + @parameters[:curtomcat].value + " " + @parameters[:installdir].value + "/logs/ " + @parameters[:installdir].value + "/metadata/ " + @parameters[:installdir].value) or raise Puppet::Error, "Error while setting credentials."
 
 			debug("Deleting file " + filename + ".")

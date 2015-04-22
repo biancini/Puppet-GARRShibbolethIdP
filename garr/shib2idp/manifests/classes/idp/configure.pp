@@ -74,6 +74,18 @@ class shib2idp::idp::configure (
       ],
       onlyif  => "get Connector/#attribute/port[../port = '8009'] == ''",
       require => Class['tomcat'];
+      
+    "server.xml_connector_8080":
+      context => "/files/etc/${curtomcat}/server.xml/Server/Service[#attribute/name = 'Catalina']",
+      changes => [
+        "set Connector[last()+1]/#attribute/port 8080",
+        "set Connector[last()]/#attribute/protocol HTTP/1.1",
+        "set Connector[last()]/#attribute/connectionTimeout 20000",
+        "set Connector[last()]/#attribute/address 127.0.0.1",
+        "set Connector[last()]/#attribute/redirectPort 8443",
+      ],
+      onlyif  => "get Connector/#attribute/port[../port = '8080'] == ''",
+      require => Class['tomcat'];
 
     "tomcat_authbind":
       context => "/files/etc/default/${curtomcat}",

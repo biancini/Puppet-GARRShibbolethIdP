@@ -205,17 +205,7 @@ class shib2idp::idp (
       "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
     require => Shibboleth_install['execute_install'];
-  } ~>
-  exec { "change ownership for confs":
-    command     => "chown -R ${curtomcat}.${curtomcat} /opt/shibboleth-idp",
-    refreshonly => true,
-    path        => ["/bin", "/usr/bin"],
-  } ~>
-  exec { "access rights confs":
-    command     => "find /opt/shibboleth-idp/conf -type f -exec chmod 664 {} \\;",
-    refreshonly => true,
-    path        => ["/bin", "/usr/bin"],
-  } 
+  }
 
   # Configure the Shibboleth IdP
   Class['shib2idp::idp::configure'] ~> Service["${curtomcat}"]
