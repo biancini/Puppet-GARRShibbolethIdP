@@ -84,7 +84,7 @@ class shib2idp::idp (
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
 
     '/opt/shibboleth-idp/':
-      ensure => directory
+      ensure => directory,
       owner   => $curtomcat,
       group   => $curtomcat,
       mode    => '0775';
