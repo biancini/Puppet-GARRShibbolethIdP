@@ -149,13 +149,21 @@ class shib2idp::idp::styles(
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/styles/messages.properties",
         require => File['/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/classes'];
-        
+      
       '/usr/local/src/shibboleth-identity-provider/views/login.vm':
         ensure  => present,
         owner   => 'root',
         group   => 'root',
         mode    => '0644',
         content => template("shib2idp/styles/login.vm.erb"),
+        require => File['/usr/local/src/shibboleth-identity-provider'];
+        
+      '/usr/local/src/shibboleth-identity-provider/views/login-error.vm':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => template("shib2idp/styles/login-error.vm.erb"),
         require => File['/usr/local/src/shibboleth-identity-provider'];
         
       '/usr/local/src/shibboleth-identity-provider/messages/error-messages.properties':

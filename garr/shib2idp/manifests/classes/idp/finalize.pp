@@ -228,6 +228,8 @@ class shib2idp::idp::finalize (
     $ldap_use_tls_var   = $ldap_use_tls
     $ldap_use_plain_var = ($ldap_use_ssl_var == false and $ldap_use_tls_var == false)
   } # if - else
+  
+  
 
   if ($ldap_use_ssl) {
     exec { 'get-ldapcertificate':
@@ -239,14 +241,30 @@ class shib2idp::idp::finalize (
     }
   }
 
-  file { "ldap-config-ssl":
-    path    => '/opt/shibboleth-idp/conf/ldap.properties',
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template("shib2idp/ldap.properties.erb"),
-    require => Shibboleth_install['execute_install'],
+  file {
+    '/opt/shibboleth-idp/conf/ldap.properties':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("shib2idp/ldap.properties.erb"),
+      require => Shibboleth_install['execute_install'];
+      
+    '/opt/shibboleth-idp/conf/authn/jaas.config':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template("shib2idp/jaas.config.erb"),
+      require => Shibboleth_install['execute_install'];
+      
+    '/opt/shibboleth-idp/conf/authn/password-authn-config.xml':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/password-authn-config.xml",
+      require => Shibboleth_install['execute_install'];
   }
 
   file {

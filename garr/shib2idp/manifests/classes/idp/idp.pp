@@ -90,6 +90,14 @@ class shib2idp::idp (
       ensure  => directory,
       require => File['/opt/shibboleth-idp/'];
 
+    '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/garr-ldaptive.jar':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/jars/garr-ldaptive.jar",
+      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+
     '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes':
       ensure  => directory,
       require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
