@@ -1,4 +1,4 @@
-* {
+ * {
   margin: 0;
   padding: 0;
 }
@@ -124,7 +124,7 @@ form section {
 }
 
 footer {
-  color: #ffffff;
+  color: #000000;
   font-size: 11px;
   background: #717171;
 }
@@ -133,7 +133,7 @@ footer {
 }
 .footer-links a:link,
 .footer-links a:visited {
-  color: #ffffff;
+  color: #000000;
   font-weight: bold;
 }
 .footer-links a:after {
@@ -154,4 +154,4 @@ footer {
 ul {
   list-style-type: none;
   margin-left: 0px;
-}
+
