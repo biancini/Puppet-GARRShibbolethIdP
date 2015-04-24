@@ -40,7 +40,7 @@ node 'puppet-client.mi.garr.it' {
         'nameOrg'                => 'Consortium GARR',
         'idpInfoUrl'             => 'https://puppet-client.mi.garr.it/idp/info.html',
         'url_LogoOrg_32x32'      => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-32x32_it.png',
-        'url_LogoOrg_160x120'    => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-360x120_it.png',
+        'url_LogoOrg_160x120'    => 'https://puppet-client.mi.garr.it/idp/images/institutionLogo-160x120_it.png',
       },
       'technicalIDPadminEmail'     => 'mailto:support@puppet-client.mi.garr.it',
       'technicalIDPadminGivenName' => 'GivenName',

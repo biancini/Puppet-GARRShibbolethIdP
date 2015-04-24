@@ -3,10 +3,26 @@
 # General strings
 idp.title = <%= @metadata_information['en']['orgDisplayName'] %>
 idp.title.suffix = Error
-idp.logo = /images/<%= @metadata_information['en']['url_LogoOrg-160x120'] %>
+idp.logo = <%= @metadata_information['en']['url_LogoOrg_160x120'] %>
 idp.logo.alt-text = <%= @metadata_information['en']['orgDisplayName'] %>
 idp.message = An unidentified error occurred.
-idp.footer = Insert your footer text here.
+idp.footer = The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %> now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDescription'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.
+
+idp.description = Description
+idp.organization = Organization
+idp.contacts = Contacts
+idp.nocontacts = No contacts provided
+idp.privacy = Privacy Policy
+idp.noprivacy = No privacy policy specified
+idp.infopage = Information website
+idp.noinfopage = No information website provided
+idp.info = Information page
+idp.idem = IDEM Federation
+idp.ideminfo = Information about IDEM
+
+metadata.logo32 = <%= @metadata_information['en']['url_LogoOrg_32x32'] %>
+metadata.infoUrl = <%= @metadata_information['en']['idpInfoUrl'] %>
+metadata.privacyPage = <%= @metadata_information['en']['privacyPage'] %>
 
 # Event to error key mappings
 
@@ -58,13 +74,13 @@ context-check-denied.message = You are not eligible for the service requested.
 
 no-release.title = Release of Information Prevented
 no-release.message = At your request, the release of your information has been blocked. If you wish to \
-                      change your decision, you may access the service again and approve the release in the \
-                      future.
+                     change your decision, you may access the service again and approve the release in the \
+                     future.
 
 no-terms.title = Terms of Use Refused
 no-terms.message = Having refused the mandatory Terms of Use, access to the service is not permitted. \
-                    If you wish to change your decision, you may access the service again and approve  \
-                    the terms in the future. 
+                   If you wish to change your decision, you may access the service again and approve  \
+                   the terms in the future. 
 
 async-logout.title = Logout Completed
 async-logout.message = Logout complete. Service provider requested no response.
@@ -74,15 +90,15 @@ authn.message = User login was not successful or could not meet the requirements
 
 endpoint.title = Unable to Respond
 endpoint.message = The login service was unable to identify a compatible way to respond to the requested \
-                    application. This is generally to due to a misconfiguration on the part of the application \
-                    and should be reported to the application's support team or owner.
+                   application. This is generally to due to a misconfiguration on the part of the application \
+                   and should be reported to the application's support team or owner.
 
 relying-party.title = Unsupported Request
 relying-party.message = The application you have accessed is not registered for use with this service.
 
 security-cfg.title = Security Configuration Error
 security-cfg.message = The login service and the requested application do not share a compatible \
-                        security configuration, and the request cannot be fulfilled.
+                       security configuration, and the request cannot be fulfilled.
 
 stale.title = Stale Request
 stale.message = <p>You may be seeing this page because you used the Back button while browsing a \
@@ -105,6 +121,6 @@ runtime-error.message = <p>A software error was encountered that prevents normal
 error.title = Error
 error.message = An error occurred: $eventId
 
-root.title = Shibboleth IdP
+root.title = <%= @metadata_information['en']['orgDisplayName'] %>
 root.message = No services are available at this location.
-root.footer = Insert your footer text here.
+idp.footer = The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %> now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDescription'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.
