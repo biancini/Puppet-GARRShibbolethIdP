@@ -86,10 +86,6 @@ class shib2idp::idp (
     '/opt/shibboleth-idp/':
       ensure => directory;
 
-    '/opt/shibboleth-idp/lib/':
-      ensure  => directory,
-      require => File['/opt/shibboleth-idp/'];
-
     '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/garr-ldaptive.jar':
       ensure  => present,
       owner   => 'root',
