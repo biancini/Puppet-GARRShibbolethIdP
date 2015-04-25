@@ -265,9 +265,7 @@ class shib2idp::idp::finalize (
       mode    => '0664',
       source  => "puppet:///modules/shib2idp/password-authn-config.xml",
       require => Shibboleth_install['execute_install'];
-  }
 
-  file {
     "/var/lib/${curtomcat}/common/mysql-connector-java.jar":
       ensure  => 'link',
       target  => '/usr/share/java/mysql-connector-java.jar',
@@ -399,6 +397,7 @@ class shib2idp::idp::finalize (
   idp_metadata { '/opt/shibboleth-idp/metadata/idp-metadata.xml':
     filecontent          => template('shib2idp/idp-metadata.xml.erb'),
     metadata             => $metadata_information,
+    certfilename         => '/opt/shibboleth-idp/credentials/idp.crt',
     certfilename_sign    => '/opt/shibboleth-idp/credentials/idp-signing.crt',
     certfilename_encrypt => '/opt/shibboleth-idp/credentials/idp-encryption.crt',
     certfilename_back    => '/opt/shibboleth-idp/credentials/idp-backchannel.crt',

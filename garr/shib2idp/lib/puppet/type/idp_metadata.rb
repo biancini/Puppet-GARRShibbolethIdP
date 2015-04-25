@@ -107,6 +107,11 @@ module Puppet
             desc "The content of the metadata file to be created"
         end
 
+        newparam(:certfilename) do
+            desc "The path of the certificate file for the installed IdP"
+            defaultto "/opt/shibboleth-idp/credentials/idp.crt"
+        end
+
         newparam(:certfilename_sign) do
             desc "The path of the certificate file for the installed IdP"
             defaultto "/opt/shibboleth-idp/credentials/idp-signing.crt"
@@ -124,6 +129,7 @@ module Puppet
     
         validate do
             fail("filecontent parameter is required") if self[:filecontent].nil?
+            fail("certfilename parameter is required") if self[:certfilename].nil?
             fail("certfilename_sign parameter is required") if self[:certfilename_sign].nil?
             fail("certfilename_encrypt parameter is required") if self[:certfilename_encrypt].nil?
             fail("certfilename_back parameter is required") if self[:certfilename_back].nil?
@@ -220,14 +226,26 @@ module Puppet
        
                 xmldoc = resource[:filecontent]
                 
-                # Retrieve the source certificate and remove the BEGIN and END CERTIFICATE        
-                sourceCertSign = File.readlines(resource[:certfilename_sign])
+                # Retrieve the source certificate and remove the BEGIN and END CERTIFICATE
+                if File.exists?(resource[:certfilename_sign])
+                    sourceCertSign = File.readlines(resource[:certfilename_sign])
+                else
+                    sourceCertSign = File.readlines(resource[:certfilename])
+                end
                 sourceCertSign.delete_if {|x| x.include?('-----') }
                 
-                sourceCertEncrypt = File.readlines(resource[:certfilename_encrypt])
+                if File.exists?(resource[:certfilename_sign])
+                    sourceCertEncrypt = File.readlines(resource[:certfilename_encrypt])
+                else
+                    sourceCertEncrypt = File.readlines(resource[:certfilename])
+                end
                 sourceCertEncrypt.delete_if {|x| x.include?('-----') }
                 
-                sourceCertBackchannel = File.readlines(resource[:certfilename_back])
+                if File.exists?(resource[:certfilename_back])
+                    sourceCertBackchannel = File.readlines(resource[:certfilename_back])
+                else
+                    sourceCertBackchannel = File.readlines(resource[:certfilename])
+                end
                 sourceCertBackchannel.delete_if {|x| x.include?('-----') }
      
                 # Insert the new certificate into the right position on idp-metadata.xml file.
