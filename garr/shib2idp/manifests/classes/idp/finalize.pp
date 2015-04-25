@@ -271,7 +271,7 @@ class shib2idp::idp::finalize (
       target  => '/usr/share/java/mysql-connector-java.jar',
       require => Class['tomcat', 'mysql::bindings::java'];
 
-    "/opt/shibboleth-idp/lib/mysql-connector-java.jar":
+    "/opt/shibboleth-idp/bin/lib/mysql-connector-java.jar":
       ensure  => 'link',
       target  => '/usr/share/java/mysql-connector-java.jar',
       require => [Shibboleth_install['execute_install'], Class['mysql::bindings::java']];
