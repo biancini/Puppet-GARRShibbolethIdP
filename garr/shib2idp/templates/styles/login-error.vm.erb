@@ -20,13 +20,13 @@
 #if ($message)
     <section>
         #if ($message.contains("PASSWORD_EXPIRED"))
-            <p class="form-element form-error">#springMessageText("pwdexpired", "Password Expired"). <a href='/pw/changepw.php'>#springMessageText("changepwd", "Change it")</a>.</p>
+            <p class="form-element form-error">#springMessageText("idp.login.pwdexpired", "Password Expired"). <a href='/pw/changepw.php'>#springMessageText("idp.login.changepwd", "Change it")</a>.</p>
         #elseif ($message.contains("CHANGE_AFTER_RESET"))
-            <p class="form-element form-error">#springMessageText("invalidpwd", "Invalid password"). <a href='/pw/changepw.php'>#springMessageText("changepwd", "Change it")</a>.</p>
+            <p class="form-element form-error">#springMessageText("idp.login.invalidpwd", "Invalid password"). <a href='/pw/changepw.php'>#springMessageText("idp.login.changepwd", "Change it")</a>.</p>
         #elseif ($message.contains("ACCOUNT_LOCKED"))
-            <p class="form-element form-error">#springMessageText("locked", "Account temporarily locked").</p>
+            <p class="form-element form-error">#springMessageText("idp.login.locked", "Account temporarily locked").</p>
         #else
-            <p class="form-element form-error">#springMessageText("wrong", "Wrong Username or Password. Try Again").</p>
+            <p class="form-element form-error">#springMessageText("idp.login.wrong", "Wrong Username or Password. Try Again").</p>
         #end
     </section>
 #end
