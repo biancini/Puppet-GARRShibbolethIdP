@@ -266,6 +266,14 @@ class shib2idp::idp::finalize (
       source  => "puppet:///modules/shib2idp/password-authn-config.xml",
       require => Shibboleth_install['execute_install'];
 
+    '/opt/shibboleth-idp/conf/relying-party.xml':
+      ensure  => present,
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0664',
+      source  => "puppet:///modules/shib2idp/relying-party.xml",
+      require => Shibboleth_install['execute_install'];
+
     "/var/lib/${curtomcat}/common/mysql-connector-java.jar":
       ensure  => 'link',
       target  => '/usr/share/java/mysql-connector-java.jar',
@@ -403,6 +411,14 @@ class shib2idp::idp::finalize (
     url     => 'https://www.idem.garr.it/documenti/doc_download/321-idem-metadata-signer-2019',
     require => Shibboleth_install['execute_install'],
   }
+
+  augeas { 'services.properties':
+    context => '/files/opt/shibboleth-idp/conf/services.properties',
+    changes => ["idp.service.relyingparty.resources 'shibboleth.RelyingPartyResolverResources'"],
+    onlyif  => "get idp.service.relyingparty.resources != 'shibboleth.RelyingPartyResolverResources'",
+    require => Shibboleth_install['execute_install'];
+  }
+
   
   #@@file { "/etc/shibboleth/${hostname}-metadata.xml":
   #  content => $::idpmetadata,
