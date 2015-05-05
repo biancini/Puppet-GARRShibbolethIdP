@@ -155,12 +155,12 @@ class shib2idp::idp (
       source  => "puppet:///modules/shib2idp/web.xml",
       require => Class['shib2common::java::package', 'tomcat'];
    
-    ['/opt/shibboleth-idp/lib/xercesImpl-2.11.0.jar', "/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar"]:
+    ["/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar"]:
       ensure  => link,
       target  => "/usr/share/java/xercesImpl-2.11.0.jar",
       require => [Package['libxerces2-java'], Class['shib2common::java::package', 'tomcat']];
 
-    ['/usr/share/java/ecj.jar', '/usr/share/java/eclipse-ecj.jar', '/opt/shibboleth-idp/lib/servlet-api.jar', "/usr/share/${curtomcat}/lib/servlet-api.jar"]:
+    ['/usr/share/java/ecj.jar', '/usr/share/java/eclipse-ecj.jar', "/usr/share/${curtomcat}/lib/servlet-api.jar"]:
       ensure  => absent,
       require => Class['shib2common::java::package', 'tomcat'];
   }
@@ -190,29 +190,20 @@ class shib2idp::idp (
     require          => Class['shib2common::java::package', 'tomcat'],
   }
   
-  augeas {
-    "idp.properties 1":
-      context => "/files/opt/shibboleth-idp/conf/idp.properties",
-      changes => [
-        "set idp.sealer.storePassword ${keystorepassword}",
-        "set idp.sealer.keyPassword ${keystorepassword}",
-        "set idp.consent.StorageService shibboleth.JPAStorageService",
-        "set idp.ui.fallbackLanguages it,en,fr,es,de",
-        "set idp.xml.securityManager org.apache.xerces.util.SecurityManager",
-        "set idp.scope ${domain_name}"],
-      onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
-      require => Shibboleth_install['execute_install'];
-
-    "idp.properties 2":
-      context => "/files/opt/shibboleth-idp/conf/idp.properties",
-      changes => [
-        'set idp.signing.key %{idp.home}/credentials/idp.key',
-        'idp.signing.cert %{idp.home}/credentials/idp.crt',
-        'idp.encryption.key %{idp.home}/credentials/idp.key',
-        'idp.encryption.cert %{idp.home}/credentials/idp.crt'],
-      onlyif  => 'test -f /opt/shibboleth-idp/credentials/idp.key',
-      require => Shibboleth_install['execute_install'];
+  augeas { 'idp.properties':
+    context => "/files/opt/shibboleth-idp/conf/idp.properties",
+    changes => [
+      "set idp.sealer.storePassword ${keystorepassword}",
+      "set idp.sealer.keyPassword ${keystorepassword}",
+      "set idp.consent.StorageService shibboleth.JPAStorageService",
+      "set idp.ui.fallbackLanguages it,en,fr,es,de",
+      "set idp.xml.securityManager org.apache.xerces.util.SecurityManager",
+      "set idp.scope ${domain_name}"],
+    onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
+    require => Shibboleth_install['execute_install'];
   }
+
+  exec { ["ln -"]
 
   # Configure the Shibboleth IdP
   Class['shib2idp::idp::configure'] ~> Service["${curtomcat}"]

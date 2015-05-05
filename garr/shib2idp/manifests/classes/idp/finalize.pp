@@ -414,7 +414,7 @@ class shib2idp::idp::finalize (
 
   augeas { 'services.properties':
     context => '/files/opt/shibboleth-idp/conf/services.properties',
-    changes => ["idp.service.relyingparty.resources 'shibboleth.RelyingPartyResolverResources'"],
+    changes => ["set idp.service.relyingparty.resources 'shibboleth.RelyingPartyResolverResources'"],
     onlyif  => "get idp.service.relyingparty.resources != 'shibboleth.RelyingPartyResolverResources'",
     require => Shibboleth_install['execute_install'];
   }

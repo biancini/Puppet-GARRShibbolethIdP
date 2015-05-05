@@ -126,9 +126,15 @@ module Puppet
                         debug("Create link to idp.crt and idp.key if not already present.")
                         if not File.exists?('/opt/shibboleth-idp/credentials/idp.crt')
                             system("/bin/ln -s /opt/shibboleth-idp/credentials/idp-signing.crt /opt/shibboleth-idp/credentials/idp.crt")
+                        else
+                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.crt /opt/shibboleth-idp/credentials/idp-signing.crt")
+                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.crt /opt/shibboleth-idp/credentials/idp-encryption.crt")
                         end
                         if not File.exists?('/opt/shibboleth-idp/credentials/idp.key')
                             system("/bin/ln -s /opt/shibboleth-idp/credentials/idp-signing.key /opt/shibboleth-idp/credentials/idp.key")
+                        else
+                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.key /opt/shibboleth-idp/credentials/idp-signing.key")
+                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.key /opt/shibboleth-idp/credentials/idp-encryption.key")
                         end
 
 			debug("Copying file for velocity templates and messages")
