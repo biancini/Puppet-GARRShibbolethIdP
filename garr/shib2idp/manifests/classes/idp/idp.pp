@@ -200,10 +200,8 @@ class shib2idp::idp (
       "set idp.xml.securityManager org.apache.xerces.util.SecurityManager",
       "set idp.scope ${domain_name}"],
     onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
-    require => Shibboleth_install['execute_install'];
+    require => Shibboleth_install['execute_install'],
   }
-
-  exec { ["ln -"]
 
   # Configure the Shibboleth IdP
   Class['shib2idp::idp::configure'] ~> Service["${curtomcat}"]
