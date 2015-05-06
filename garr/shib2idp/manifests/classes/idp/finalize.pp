@@ -342,27 +342,6 @@ class shib2idp::idp::finalize (
       require => Shibboleth_install['execute_install'];
   }
 
-  if ($test_federation_var == true){
-    file {
-      "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
-        ensure  => absent,
-        owner   => $curtomcat,
-	      group   => $curtomcat,
-	      mode    => '0664',
-        require => Shibboleth_install['execute_install'],
-    }
-  }
-  else {
-    file {
-      "/opt/shibboleth-idp/conf/IDEM-attribute-filter.xml":
-        ensure  => present,
-        owner   => $curtomcat,
-	      group   => $curtomcat,
-	      mode    => '0664',
-        require => Shibboleth_install['execute_install'],
-    }
-  }
-  
   file {
     "/opt/shibboleth-idp/conf/attribute-filter.xml":
       ensure  => present,
