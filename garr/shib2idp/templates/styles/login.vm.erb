@@ -78,7 +78,7 @@
           #set ($logo = $rpUIContext.getLogo())
           #if ($logo)
             <img src= "$encoder.encodeForHTMLAttribute($logo)"
-                 alt="$encoder.encodeForHTMLAttribute($serviceName)">
+                 alt="Logo">
           #end
           <br/><b>#springMessageText("idp.login.spdescr", "SP description")</b><br/>
           #set ($desc = $rpUIContext.getServiceDescription())
@@ -114,7 +114,13 @@
               #set ($technicalName = $rpUIContext.getContactGivenName("technical"))
               #set ($technicalSurName = $rpUIContext.getContactSurName("technical"))
               #if ($technicalEmail)
-              <a href='$encoder.encodeForHTMLAttribute($technicalEmail)'>$encoder.encodeForHTMLAttribute($technicalName) $encoder.encodeForHTMLAttribute($technicalSurName)</a>
+              <a href='$encoder.encodeForHTMLAttribute($technicalEmail)'>
+                  #if ($technicalName && $technicalSurName)
+                  $encoder.encodeForHTMLAttribute($technicalName) $encoder.encodeForHTMLAttribute($technicalSurName)
+                  #else
+                  $encoder.encodeForHTMLAttribute($technicalEmail.replace("mailto:", ""))
+                  #end
+              </a>
               #else
               #springMessageText("idp.nocontacts", "No contacts provided")
               #end
