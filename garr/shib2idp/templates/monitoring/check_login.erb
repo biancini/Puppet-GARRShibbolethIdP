@@ -152,7 +152,7 @@ if options.checkLdap:
         validAttrs = False
 
 # Search a valid string in the SP page and if found return 0 otherwise 2.
-if not "Politica della Privacy".lower() in html.lower:
+if not "Politica della Privacy".lower() in html.lower():
     print "CRITICAL error while logging in user"
     sys.exit(2)
 elif validAttrs:
