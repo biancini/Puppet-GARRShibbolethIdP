@@ -66,11 +66,57 @@
               var results = regex.exec(location.search);
               return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
            }
+           
+           function check_epb() {
+              var cookiestring = RegExp("epb[^;]+").exec(document.cookie);
+              var value = unescape(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
+              if (value == "ok") {
+                  document.getElementById('epb-notice').style.display = 'none';
+              }
+           }
+           
+           function hide_epb() {
+              document.cookie = "epb=ok; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+              document.getElementById('epb-notice').style.display = 'none';
+           }
+           
+           function show_policy() {
+               el = document.getElementById("overlay");
+               el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+           }
         </script>
         </head>
-        <body>
-        
+        <body onload="check_epb()">
+
+    <div id="overlay">
+        <div>
+<h1>#springMessage("idp.login.epb.title")</h1>
+<h2>#springMessage("idp.login.epb.subtitle1")</h2>
+<p>#springMessage("idp.login.epb.paragraph1_1")</p>
+<p>#springMessage("idp.login.epb.paragraph1_2")</p>
+<h2>#springMessage("idp.login.epb.subtitle2")</h2>
+<p>#springMessage("idp.login.epb.paragraph2_1")</p>
+<h2>#springMessage("idp.login.epb.subtitle3")</h2>
+<p>#springMessage("idp.login.epb.paragraph3_1")</p>
+<h2>#springMessage("idp.login.epb.subtitle4")</h2>
+<p>#springMessage("idp.login.epb.paragraph4_1")</p>
+<p>#springMessage("idp.login.epb.paragraph4_2")</p>
+<p><br/></p>
+<p>#springMessage("idp.login.epb.paragraph4_3")</p>
+<h2>#springMessage("idp.login.epb.subtitle5")</h2>
+<p>#springMessage("idp.login.epb.paragraph5_1")</p>
+<p>#springMessage("idp.login.epb.paragraph5_2")</p>
+<h2>#springMessage("idp.login.epb.subtitle6")</h2>
+<p>#springMessage("idp.login.epb.paragraph6_1")</p>
+<p>#springMessage("idp.login.epb.paragraph6_2")</p>
+<p><br/></p>
+<p><center><a href='#' onclick='show_policy(); return false'>#springMessage("idp.login.epb.close")</a></center></p>
+        </div>
+    </div>
+
     <div class="wrapper">
+      <div id="epb-notice">#springMessage("idp.login.epb") <a href="#" onclick="show_policy(); return false">#springMessage("idp.login.epb_info")</a> <a href="#" onclick="hide_epb(); return false">#springMessage("idp.login.epb_ok")</a></div>
+    
       <div class="container">
         <header>
         #if ($request.getParameter("spinfo") == "true")
