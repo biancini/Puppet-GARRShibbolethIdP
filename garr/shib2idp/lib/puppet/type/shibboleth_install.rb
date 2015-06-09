@@ -104,7 +104,7 @@ module Puppet
 				saved_file.write("idp.noprompt = true\n")
 			end
 			
-			system("/bin/rm -f " + @parameters[:installdir] + "/edit-webapp/css/*")
+			system("/bin/rm -f " + @parameters[:installdir].value + "/edit-webapp/css/*")
 			
 			filename = @parameters[:sourcedir].value + "/autoinstall-merge.properties"  # Creates a new property file to be used for input parameters of Shibboleth IdP installation.
 			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
@@ -126,17 +126,17 @@ module Puppet
 			system("/bin/bash " + filename) or raise Puppet::Error, "Error while installing Shibboleth IdP." # If the system() return 'false' reise up the message "Error while..."
 
             debug("Create link to idp.crt and idp.key if not already present.")
-            if not File.exists?(@parameters[:installdir] + "/credentials/idp.crt")
-                system("/bin/ln -s " + @parameters[:installdir] + "/credentials/idp-signing.crt " + @parameters[:installdir] + "/credentials/idp.crt")
+            if not File.exists?(@parameters[:installdir].value + "/credentials/idp.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.crt " + @parameters[:installdir].value + "/credentials/idp.crt")
             else
-                system("/bin/ln -s " + @parameters[:installdir] + "/idp.crt " + @parameters[:installdir] + "/idp-signing.crt")
-                system("/bin/ln -s " + @parameters[:installdir] + "/idp.crt " + @parameters[:installdir] + "/idp-encryption.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.crt " + @parameters[:installdir].value + "/idp-signing.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.crt " + @parameters[:installdir].value + "/idp-encryption.crt")
             end
-            if not File.exists?(@parameters[:installdir] + "/credentials/idp.key")
-                system("/bin/ln -s " + @parameters[:installdir] + "/credentials/idp-signing.key " + @parameters[:installdir] + "/credentials/idp.key")
+            if not File.exists?(@parameters[:installdir].value + "/credentials/idp.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.key " + @parameters[:installdir].value + "/credentials/idp.key")
             else
-                system("/bin/ln -s " + @parameters[:installdir] + "/idp.key " + @parameters[:installdir] + "/idp-signing.key")
-                system("/bin/ln -s " + @parameters[:installdir] + "/idp.key " + @parameters[:installdir] + "/idp-encryption.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.key " + @parameters[:installdir].value + "/idp-signing.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.key " + @parameters[:installdir].value + "/idp-encryption.key")
             end
 
 			debug("Copying file for velocity templates and messages")
