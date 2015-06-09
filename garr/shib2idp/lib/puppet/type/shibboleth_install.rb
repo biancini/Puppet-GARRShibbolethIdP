@@ -129,14 +129,14 @@ module Puppet
             if not File.exists?(@parameters[:installdir].value + "/credentials/idp.crt")
                 system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.crt " + @parameters[:installdir].value + "/credentials/idp.crt")
             else
-                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.crt " + @parameters[:installdir].value + "/idp-signing.crt")
-                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.crt " + @parameters[:installdir].value + "/idp-encryption.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.crt " + @parameters[:installdir].value + "/credentials/idp-signing.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.crt " + @parameters[:installdir].value + "/credentials/idp-encryption.crt")
             end
             if not File.exists?(@parameters[:installdir].value + "/credentials/idp.key")
                 system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.key " + @parameters[:installdir].value + "/credentials/idp.key")
             else
-                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.key " + @parameters[:installdir].value + "/idp-signing.key")
-                system("/bin/ln -s " + @parameters[:installdir].value + "/idp.key " + @parameters[:installdir].value + "/idp-encryption.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.key " + @parameters[:installdir].value + "/credentials/idp-signing.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.key " + @parameters[:installdir].value + "/credentials/idp-encryption.key")
             end
 
 			debug("Copying file for velocity templates and messages")
