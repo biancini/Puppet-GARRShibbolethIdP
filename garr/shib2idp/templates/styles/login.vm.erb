@@ -82,13 +82,13 @@
            
            function show_policy() {
                el = document.getElementById("overlay");
-               el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+               el.style.display = (el.style.display == "none") ? "block" : "none";
            }
         </script>
         </head>
         <body onload="check_epb()">
 
-    <div id="overlay">
+    <div id="overlay" style="display: none">
         <div>
 <h1>#springMessage("idp.login.epb.title")</h1>
 <h2>#springMessage("idp.login.epb.subtitle1")</h2>

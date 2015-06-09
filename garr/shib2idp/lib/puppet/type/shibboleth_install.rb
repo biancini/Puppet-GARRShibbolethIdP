@@ -104,6 +104,8 @@ module Puppet
 				saved_file.write("idp.noprompt = true\n")
 			end
 			
+			system("/bin/rm -f " + @parameters[:installdir] + "/edit-webapp/css/*")
+			
 			filename = @parameters[:sourcedir].value + "/autoinstall-merge.properties"  # Creates a new property file to be used for input parameters of Shibboleth IdP installation.
 			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
 				saved_file.write("idp.entityID = https://" + @parameters[:idpfqdn].value + "/idp/shibboleth" + "\n")
@@ -123,19 +125,19 @@ module Puppet
 			debug("Executing install script.")
 			system("/bin/bash " + filename) or raise Puppet::Error, "Error while installing Shibboleth IdP." # If the system() return 'false' reise up the message "Error while..."
 
-                        debug("Create link to idp.crt and idp.key if not already present.")
-                        if not File.exists?('/opt/shibboleth-idp/credentials/idp.crt')
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp-signing.crt /opt/shibboleth-idp/credentials/idp.crt")
-                        else
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.crt /opt/shibboleth-idp/credentials/idp-signing.crt")
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.crt /opt/shibboleth-idp/credentials/idp-encryption.crt")
-                        end
-                        if not File.exists?('/opt/shibboleth-idp/credentials/idp.key')
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp-signing.key /opt/shibboleth-idp/credentials/idp.key")
-                        else
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.key /opt/shibboleth-idp/credentials/idp-signing.key")
-                            system("/bin/ln -s /opt/shibboleth-idp/credentials/idp.key /opt/shibboleth-idp/credentials/idp-encryption.key")
-                        end
+            debug("Create link to idp.crt and idp.key if not already present.")
+            if not File.exists?(@parameters[:installdir] + "/credentials/idp.crt")
+                system("/bin/ln -s " + @parameters[:installdir] + "/credentials/idp-signing.crt " + @parameters[:installdir] + "/credentials/idp.crt")
+            else
+                system("/bin/ln -s " + @parameters[:installdir] + "/idp.crt " + @parameters[:installdir] + "/idp-signing.crt")
+                system("/bin/ln -s " + @parameters[:installdir] + "/idp.crt " + @parameters[:installdir] + "/idp-encryption.crt")
+            end
+            if not File.exists?(@parameters[:installdir] + "/credentials/idp.key")
+                system("/bin/ln -s " + @parameters[:installdir] + "/credentials/idp-signing.key " + @parameters[:installdir] + "/credentials/idp.key")
+            else
+                system("/bin/ln -s " + @parameters[:installdir] + "/idp.key " + @parameters[:installdir] + "/idp-signing.key")
+                system("/bin/ln -s " + @parameters[:installdir] + "/idp.key " + @parameters[:installdir] + "/idp-encryption.key")
+            end
 
 			debug("Copying file for velocity templates and messages")
 			system("/bin/cp -f " + @parameters[:sourcedir].value + "/views/*.vm " + @parameters[:installdir].value + "/views/") or raise Puppet::Error, "Error while copying velocity templates."
