@@ -138,14 +138,14 @@
                 if v.is_a?(Hash) and lang != "en"
                   %>
                   <c:when test="${language == '<%=lang%>'}">
-                    <a id="logolink" class="logo" href="<%= @metadata_information[lang]['idpInfoUrl'] %>"><img id="logoimg" src="<%= @metadata_information[lang]['url_LogoOrg_160x120']%>" alt="<%= @metadata_information[lang]['orgDisplayName']%>"/></a><br/><%= @metadata_information[lang]['orgDisplayName']%>
+                    <a id="logolink" class="logo" href="<%= @metadata_information[lang]['orgUrl'] %>"><img id="logoimg" src="<%= @metadata_information[lang]['url_LogoOrg_160x120']%>" alt="<%= @metadata_information[lang]['orgDisplayName']%>"/></a><br/><%= @metadata_information[lang]['orgDisplayName']%>
                   </c:when>
                   <%
                 end
               end
               %>
               <c:otherwise>
-                <a id="logolink" class="logo" href="<%= @metadata_information['en']['idpInfoUrl'] %>"><img id="logoimg" src="<%= @metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= @metadata_information['en']['orgDisplayName']%>"/></a><br/><%= @metadata_information['en']['orgDisplayName']%>
+                <a id="logolink" class="logo" href="<%= @metadata_information['en']['orgUrl'] %>"><img id="logoimg" src="<%= @metadata_information['en']['url_LogoOrg_160x120']%>" alt="<%= @metadata_information['en']['orgDisplayName']%>"/></a><br/><%= @metadata_information['en']['orgDisplayName']%>
               </c:otherwise>
               </c:choose>
             <%% } %>
