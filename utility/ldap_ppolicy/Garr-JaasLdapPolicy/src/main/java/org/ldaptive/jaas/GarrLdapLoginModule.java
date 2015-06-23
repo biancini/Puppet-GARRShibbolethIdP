@@ -102,10 +102,9 @@ public class GarrLdapLoginModule extends AbstractLoginModule {
 
 
 	/** {@inheritDoc} */
-	public boolean login() throws LoginException {
+	@Override
+	protected boolean login(NameCallback nameCb, PasswordCallback passCb) throws LoginException {
 		try {
-			final NameCallback nameCb = new NameCallback("Enter user: ");
-			final PasswordCallback passCb = new PasswordCallback("Enter user password: ", false);
 			getCredentials(nameCb, passCb, false);
 			authRequest.setUser(nameCb.getName());
 			authRequest.setCredential(new Credential(passCb.getPassword()));

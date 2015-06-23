@@ -35,8 +35,7 @@ class shib2idp::prerequisites (
      }
   }
   # Else Ruby > 1.8 (1.9.3)
-  else{
-
+  else {
      package { 'libldap-ruby1.8': 
         ensure => purged,
      }
@@ -44,6 +43,10 @@ class shib2idp::prerequisites (
      package { ['ruby-ldap', 'gettext', 'python-ldap']: 
         ensure => installed,
      }
+  }
+
+  package { 'libxerces2-java':
+    ensure => installed,
   }
 
   include 'concat::setup'
@@ -90,7 +93,7 @@ class shib2idp::prerequisites (
     ssl_cert          => '/opt/shibboleth-idp/credentials/idp.crt',
     ssl_key           => '/opt/shibboleth-idp/credentials/idp.key',
     ssl_protocol      => 'All -SSLv2 -SSLv3',
-    ssl_cipher        => 'ALL:!ADH:!RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP',
+    ssl_cipher        => 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK',
     add_listen        => true,
     error_log         => true,
     error_log_file    => 'error.log',

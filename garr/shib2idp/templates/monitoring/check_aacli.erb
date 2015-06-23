@@ -42,7 +42,7 @@ user_found = false
 wrong_attribute = false
 
 begin
-    aaclicommand = "#{idphome}/bin/aacli.sh --issuer=https://#{fqdn}/idp/shibboleth --principal=malavolti --configDir=#{idphome}/conf --requester=https://sp24-test.garr.it/shibboleth"
+    aaclicommand = "#{idphome}/bin/aacli.sh --issuer=https://#{fqdn}/idp/shibboleth --principal=malavolti --configDir=#{idphome}/conf --requester=https://sp24-test.garr.it/shibboleth --saml2"
     aaclioutput = %x[bash -c "source /etc/environment; export JAVA_HOME; #{aaclicommand}"]
     if !($? == 0)
       puts "check_aacli: CRITICAL. Error while executing aacli command."

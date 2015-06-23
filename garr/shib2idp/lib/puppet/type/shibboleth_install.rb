@@ -3,10 +3,11 @@
 # Example:
 # 
 #  shibboleth_install { 'execute_install':
-#    idpfqdn => $idpfqdn,
+#    idpfqdn          => $idpfqdn,
 #    keystorepassword => $keystorepassword,
-#    javahome => $shib2idp::java::params::java_home,
-#    tomcathome => $tomcat::tomcat_home,
+#    javahome         => $shib2idp::java::params::java_home,
+#    tomcathome       => $tomcat::tomcat_home,
+#    idpscope         => $shib2idp::idp::finalize::scope,
 #  }
 
 module Puppet
@@ -24,7 +25,7 @@ module Puppet
 
 		newparam(:sourcedir) do
 			desc "Path where the Shibboleth IdP sources are extracted."
-			defaultto "/usr/local/src/shibboleth-identityprovider"
+			defaultto "/usr/local/src/shibboleth-identity-provider"
 		end
 
 		newparam(:idpfqdn) do
@@ -52,11 +53,16 @@ module Puppet
 		newparam(:curtomcat) do
 			desc "The current Tomcat version"
 		end
+		
+		newparam(:idpscope) do
+			desc "The scope for the IdP to be installed"
+		end
     
 		validate do
 			fail("keystorepassword cwd is required") if self[:keystorepassword].nil?
 			fail("javahome cwd is required") if self[:javahome].nil?
 			fail("tomcathome cwd is required") if self[:tomcathome].nil?
+			fail("idpscope is required") if self[:idpscope].nil?
 		end
 
 ####	ensure property is not necessary, because it is not used.
@@ -85,29 +91,58 @@ module Puppet
 			debug("Shibboleth_install[javahome] = " + @parameters[:javahome].value + ".")
 			debug("Shibboleth_install[tomcathome] = " + @parameters[:tomcathome].value + ".")
 			debug("Shibboleth_install[curtomcat] = " + @parameters[:curtomcat].value + ".")
+			debug("Shibboleth_install[idpscope] = " + @parameters[:idpscope].value + ".")
       
+			filename = @parameters[:sourcedir].value + "/autoinstall.properties"  # Creates a new property file to be used for input parameters of Shibboleth IdP installation.
+			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
+				saved_file.write("idp.src.dir = " + @parameters[:sourcedir].value + "\n")
+				saved_file.write("idp.target.dir = " + @parameters[:installdir].value + "\n")
+				saved_file.write("idp.host.name = " + @parameters[:idpfqdn].value + "\n")
+				saved_file.write("idp.sealer.password = " + @parameters[:keystorepassword].value + "\n")
+				saved_file.write("idp.keystore.password = " + @parameters[:keystorepassword].value + "\n")
+				saved_file.write("idp.merge.properties = autoinstall-merge.properties\n")
+				saved_file.write("idp.noprompt = true\n")
+			end
+			
+			system("/bin/rm -f " + @parameters[:installdir].value + "/edit-webapp/css/*")
+			
+			filename = @parameters[:sourcedir].value + "/autoinstall-merge.properties"  # Creates a new property file to be used for input parameters of Shibboleth IdP installation.
+			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
+				saved_file.write("idp.entityID = https://" + @parameters[:idpfqdn].value + "/idp/shibboleth" + "\n")
+				saved_file.write("idp.scope = " + @parameters[:idpscope].value + "\n")
+			end
+			
 			filename = "/tmp/autoinstall.sh"  # Creates a new bash script who adds JAVA_HOME environment variable to the underlying system and calls the "install.sh" to install the Shibboleth IdP.
-        
 			File.open(filename, "w") do |saved_file|  # Open it and complete it line by line
 				saved_file.write("#!/bin/bash\n")
 				saved_file.write(". /etc/environment\n")
 				saved_file.write("export JAVA_HOME\n")
 				saved_file.write("\n")
 				saved_file.write("cd " + @parameters[:sourcedir].value + "\n")
-				saved_file.write("/bin/sh install.sh\n")
+				saved_file.write("/bin/bash bin/install.sh -Didp.property.file=autoinstall.properties\n") 
 			end
       
 			debug("Executing install script.")
 			system("/bin/bash " + filename) or raise Puppet::Error, "Error while installing Shibboleth IdP." # If the system() return 'false' reise up the message "Error while..."
 
-			debug("Copying file for Java Security into java home")
-			# If the file ":sourcedir/lib/shibboleth-jce-1.1.0.jar" exists, copy the Java Security files into Java Home. Pay Attention to the white space into the strings of the system(...)!!!
-			if (File.exists?(@parameters[:sourcedir].value + "/lib/shibboleth-jce-1.1.0.jar"))
-				system("cp -fv " + @parameters[:sourcedir].value + "/lib/shibboleth-jce-1.1.0.jar " + @parameters[:javahome].value + "/jre/lib/ext/") or raise Puppet::Error, "Error while copying files."
-			end
-			system("cp -fv /usr/share/" + @parameters[:curtomcat].value + "/lib/servlet-api.jar " + @parameters[:installdir].value + "/lib/") or raise Puppet::Error, "Error while copying files."
-			system("/bin/cp -r " + @parameters[:sourcedir].value + "/endorsed/ " + @parameters[:tomcathome].value) or raise Puppet::Error, "Error while copying files."
-			system("/bin/chown " + @parameters[:curtomcat].value + ":" + @parameters[:curtomcat].value + " " + @parameters[:installdir].value + "/logs/ " + @parameters[:installdir].value + "/metadata/ " + @parameters[:installdir].value + "/credentials/") or raise Puppet::Error, "Error while setting credentials."
+            debug("Create link to idp.crt and idp.key if not already present.")
+            if not File.exists?(@parameters[:installdir].value + "/credentials/idp.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.crt " + @parameters[:installdir].value + "/credentials/idp.crt")
+            else
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.crt " + @parameters[:installdir].value + "/credentials/idp-signing.crt")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.crt " + @parameters[:installdir].value + "/credentials/idp-encryption.crt")
+            end
+            if not File.exists?(@parameters[:installdir].value + "/credentials/idp.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp-signing.key " + @parameters[:installdir].value + "/credentials/idp.key")
+            else
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.key " + @parameters[:installdir].value + "/credentials/idp-signing.key")
+                system("/bin/ln -s " + @parameters[:installdir].value + "/credentials/idp.key " + @parameters[:installdir].value + "/credentials/idp-encryption.key")
+            end
+
+			debug("Copying file for velocity templates and messages")
+			system("/bin/cp -f " + @parameters[:sourcedir].value + "/views/*.vm " + @parameters[:installdir].value + "/views/") or raise Puppet::Error, "Error while copying velocity templates."
+			system("/bin/cp -f " + @parameters[:sourcedir].value + "/messages/*.properties " + @parameters[:installdir].value + "/messages/") or raise Puppet::Error, "Error while copying messages files."
+			system("/bin/chown -R " + @parameters[:curtomcat].value + ":" + @parameters[:curtomcat].value + " " + @parameters[:installdir].value + "/logs/ " + @parameters[:installdir].value + "/metadata/ " + @parameters[:installdir].value) or raise Puppet::Error, "Error while setting credentials."
 
 			debug("Deleting file " + filename + ".")
 			File.delete(filename)

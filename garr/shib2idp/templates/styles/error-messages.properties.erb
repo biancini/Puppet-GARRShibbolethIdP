@@ -1,0 +1,126 @@
+# Title / Message mappings for error view
+
+# General strings
+idp.title = <%= @metadata_information['en']['orgDisplayName'] %>
+idp.title.suffix = Error
+idp.logo = <%= @metadata_information['en']['url_LogoOrg_160x120'] %>
+idp.logo.alt-text = <%= @metadata_information['en']['orgDisplayName'] %>
+idp.message = An unidentified error occurred.
+idp.footer = The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %> now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDescription'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.
+
+idp.description = Description
+idp.organization = Organization
+idp.contacts = Contacts
+idp.nocontacts = No contacts provided
+idp.privacy = Privacy Policy
+idp.noprivacy = No privacy policy specified
+idp.infopage = Information website
+idp.noinfopage = No information website provided
+idp.info = Information page
+idp.idem = IDEM Federation
+idp.ideminfo = Information about IDEM
+
+metadata.logo32 = <%= @metadata_information['en']['url_LogoOrg_32x32'] %>
+metadata.infoUrl = <%= @metadata_information['en']['idpInfoUrl'] %>
+metadata.privacyPage = <%= @metadata_information['en']['privacyPage'] %>
+
+# Event to error key mappings
+
+AccessDenied = access
+ContextCheckDenied = context-check-denied
+AsyncLogout = async-logout
+EndpointResolutionFailed = endpoint
+InvalidProfileConfiguration = relying-party
+InvalidSecurityConfiguration = security-cfg
+MessageReplay = stale
+MessageExpired = stale
+UnableToDecode = stale
+AccountError = authn
+AuthenticationException = authn
+InvalidCredentials = authn
+NoCredentials = authn
+NoPotentialFlow = authn
+RequestUnsupported = authn
+SubjectCanonicalizationError = authn
+InvalidAttributeContext = unexpected
+InvalidAuthenticationContext = unexpected
+InvalidSubjectContext = unexpected
+InvalidSubjectCanonicalizationContext = unexpected
+InvalidMessageContext = unexpected
+InvalidMessageVersion = unexpected
+InvalidProfileContext = unexpected
+InvalidRelyingPartyContext = unexpected
+InvalidRelyingPartyConfiguration = unexpected
+MessageAuthenticationError = unexpected
+MessageProcessingError = unexpected
+UnableToEncode = unexpected
+UnableToSign = unexpected
+UnableToEncrypt = unexpected
+AttributeReleaseRejected = no-release
+TermsRejected = no-terms
+RuntimeException = runtime-error
+
+# Exception to error key mappings
+
+FlowExecutionRestorationFailureException = stale
+
+# Error key to title and message mappings
+
+access.title = Access Denied
+access.message = You do not have access to the requested resource.
+
+context-check-denied.title = Access Denied
+context-check-denied.message = You are not eligible for the service requested.
+
+no-release.title = Release of Information Prevented
+no-release.message = At your request, the release of your information has been blocked. If you wish to \
+                     change your decision, you may access the service again and approve the release in the \
+                     future.
+
+no-terms.title = Terms of Use Refused
+no-terms.message = Having refused the mandatory Terms of Use, access to the service is not permitted. \
+                   If you wish to change your decision, you may access the service again and approve  \
+                   the terms in the future. 
+
+async-logout.title = Logout Completed
+async-logout.message = Logout complete. Service provider requested no response.
+
+authn.title = Login Failed
+authn.message = User login was not successful or could not meet the requirements of the requesting application.
+
+endpoint.title = Unable to Respond
+endpoint.message = The login service was unable to identify a compatible way to respond to the requested \
+                   application. This is generally to due to a misconfiguration on the part of the application \
+                   and should be reported to the application's support team or owner.
+
+relying-party.title = Unsupported Request
+relying-party.message = The application you have accessed is not registered for use with this service.
+
+security-cfg.title = Security Configuration Error
+security-cfg.message = The login service and the requested application do not share a compatible \
+                       security configuration, and the request cannot be fulfilled.
+
+stale.title = Stale Request
+stale.message = <p>You may be seeing this page because you used the Back button while browsing a \
+                 secure web site or application. Alternatively, you may have mistakenly bookmarked \
+                 the web login form instead of the actual web site you wanted to bookmark or used a \
+                 link created by somebody else who made the same mistake.</p> \
+                 <br/> \
+                 <p>Left unchecked, this can cause errors on some browsers or result in you returning to \
+                 the web site you tried to leave, so this page is presented instead.</p>
+
+unexpected.title = Unexpected Error
+unexpected.message = An unexpected error was encountered, usually reflecting a configuration or software error.
+
+runtime-error.title = Uncaught Exception
+runtime-error.message = <p>A software error was encountered that prevents normal operation:</p><br/> \
+                         <p><strong>#if($exception)$encoder.encodeForHTML($exception.toString())#else$encoder.encodeForHTML($flowExecutionException.getCause().toString())#end</strong></p><br/> \
+                         <p>Please report this problem to your Help Desk or administrative staff. It has \
+                         also been logged for an administrator to review.</p>
+
+error.title = Error
+error.message = An error occurred: $eventId
+
+root.title = <%= @metadata_information['en']['orgDisplayName'] %>
+root.message = No services are available at this location.
+idp.footer = The <%= @metadata_information['en']['orgDisplayName'] %>, <%= @metadata_information['en']['orgDescription'] %> now is a part of <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement for the access federated) to realize the Italian Authentication and Authorization Infrastructure on the GARR network.<br/>The <%= @metadata_information['en']['orgDescription'] %> releases credentials to provide access into this authentication system (Identity Provider) for his employees and researchers.

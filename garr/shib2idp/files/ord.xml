@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+                                     http://java.sun.com/xml/ns/persistence/orm_1_0.xsd" version="1.0">
+  <package>org.opensaml.storage.impl</package>
+ 
+  <!-- changes the table name and column names -->
+  <entity class="JPAStorageRecord" access="PROPERTY">
+    <table name="StorageService.shibrecords"/>
+    <id-class class="JPAStorageRecord$RecordId"/>
+    <attributes>
+      <id name="context">
+        <column name="record_ctx" nullable="false"/>
+      </id>
+      <id name="key">
+        <column name="record_id" nullable="false"/>
+      </id>
+      <basic name="value">
+        <column name="record_val" nullable="false"/>
+        <lob/> <!-- without this the default type is varchar -->
+      </basic>
+      <basic name="expiration">
+        <column name="record_exp" nullable="true"/>
+      </basic>
+      <basic name="version">
+        <column name="record_ver" nullable="false"/>
+      </basic>
+    </attributes>
+  </entity>
+  <embeddable class="JPAStorageRecord$RecordId" access="PROPERTY">
+    <attributes>
+      <basic name="context">
+        <column name="record_ctx" nullable="false"/>
+      </basic>
+      <basic name="key">
+        <column name="record_id" nullable="false"/>
+      </basic>
+    </attributes>
+  </embeddable>
+</entity-mappings> 

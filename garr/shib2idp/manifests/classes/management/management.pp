@@ -4,7 +4,6 @@
 #
 # Parameters:
 # +install_ldap+:: This parameter permits to specify if an OpenLDAP server must be installed on the IdP machine or not.
-# +install_uapprove+:: This parameter permits to specify if uApprove has to be installed on this IdP
 # +logserver+:: This parameter permits to specify if the logs should be sent to a centralized log server. In case this variable is not undef, rsyslog will be configured to send the logs to the specified server.
 # +nagiosserver+:: This parameter permits to specify a Nagios server, if it contains a value different from undef NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
 # +collectdserver+::
@@ -26,7 +25,6 @@
 class shib2idp::management (
   $metadata_information,
   $install_ldap        = true,
-  $install_uapprove    = undef,
   $install_raptor      = undef,
   $logserver           = undef,
   $nagiosserver        = undef,
@@ -48,7 +46,6 @@ class shib2idp::management (
       logserver => $logserver;
 
     'shib2idp::management::nagios':
-      install_uapprove => $install_uapprove,
       nagiosserver     => $nagiosserver,
       sambadomain      => $sambadomain,
       idpfqdn          => $idpfqdn,

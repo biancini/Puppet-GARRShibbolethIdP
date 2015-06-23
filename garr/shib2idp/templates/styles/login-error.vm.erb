@@ -1,0 +1,32 @@
+## Velocity Template for login error message production, included by login.vm
+##
+## authenticationErrorContext - context containing error data, if available
+##
+#if ($authenticationErrorContext && $authenticationErrorContext.getClassifiedErrors().size() > 0)
+    ## This handles errors that are classified by the message maps in the authentication config.
+    #set ($eventId = $authenticationErrorContext.getClassifiedErrors().iterator().next())
+    #set ($eventKey = $springMacroRequestContext.getMessage("$eventId", "login"))
+    #set ($message = $springMacroRequestContext.getMessage("${eventKey}.message", "Login Failure: $eventId"))
+#elseif ($authenticationErrorContext && $authenticationErrorContext.getExceptions().size() > 0)
+    ## This handles login exceptions that are left unclassified.
+    #set ($loginException = $authenticationErrorContext.getExceptions().get(0))
+    #if ($loginException.getMessage())
+        #set ($message = "Login Failure: $loginException.getMessage()")
+    #else
+        #set ($message = $loginException.toString())
+    #end
+#end
+
+#if ($message)
+    <section>
+        #if ($message.contains("PASSWORD_EXPIRED"))
+            <p class="form-element form-error">#springMessageText("idp.login.pwdexpired", "Password Expired"). <a href='/pw/changepw.php'>#springMessageText("idp.login.changepwd", "Change it")</a>.</p>
+        #elseif ($message.contains("CHANGE_AFTER_RESET"))
+            <p class="form-element form-error">#springMessageText("idp.login.invalidpwd", "Invalid password"). <a href='/pw/changepw.php'>#springMessageText("idp.login.changepwd", "Change it")</a>.</p>
+        #elseif ($message.contains("ACCOUNT_LOCKED"))
+            <p class="form-element form-error">#springMessageText("idp.login.locked", "Account temporarily locked").</p>
+        #else
+            <p class="form-element form-error">#springMessageText("idp.login.wrong", "Wrong Username or Password. Try Again").</p>
+        #end
+    </section>
+#end

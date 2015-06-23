@@ -1,0 +1,124 @@
+# Title / Message mappings for error view
+
+# General strings
+idp.title = <%= @metadata_information['it']['orgDisplayName'] %>
+idp.title.suffix = Errore
+idp.logo = <%= @metadata_information['it']['url_LogoOrg_160x120'] %>
+idp.logo.alt-text = <%= @metadata_information['it']['orgDisplayName'] %>
+idp.message = Si &egrave; verificato un errore sconosciuto.
+idp.footer = Il <%= @metadata_information['it']['orgDisplayName'] %>, <%= @metadata_information['it']['orgDescription'] %> partecipa ad <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement federato per l'accesso ai servizi) per la realizzazione dell'Infrastruttura di Autenticazione e Autorizzazione federata della rete GARR.<br/>Il <%= @metadata_information['it']['orgDescription'] %> rilascia credenziali d'accesso per questo sistema di autenticazione (Identity Provider) ai propri dipendenti e ai ricercatori affiliati.
+idp.description = Descrizione
+idp.organization = Organizzazione
+idp.contacts = Contatti
+idp.nocontacts = Nessun contatto fornito
+idp.privacy = Privacy Policy
+idp.noprivacy = Nessuna politica di privacy specificata
+idp.infopage = Sito di informazioni
+idp.noinfopage = Nessun sito di informationi specificato
+idp.info = Pagina di informazioni
+idp.idem = Federazione IDEM
+idp.ideminfo = Informazioni su IDEM
+
+metadata.logo32 = <%= @metadata_information['it']['url_LogoOrg_32x32'] %>
+metadata.infoUrl = <%= @metadata_information['it']['idpInfoUrl'] %>
+metadata.privacyPage = <%= @metadata_information['it']['privacyPage'] %>
+
+# Event to error key mappings
+
+AccessDenied = accesso
+ContextCheckDenied = context-check-denied
+AsyncLogout = async-logout
+EndpointResolutionFailed = endpoint
+InvalidProfileConfiguration = relying-party
+InvalidSecurityConfiguration = security-cfg
+MessageReplay = in stallo
+MessageExpired = in stallo
+UnableToDecode = in stallo
+AccountError = authn
+AuthenticationException = authn
+InvalidCredentials = authn
+NoCredentials = authn
+NoPotentialFlow = authn
+RequestUnsupported = authn
+SubjectCanonicalizationError = authn
+InvalidAttributeContext = inatteso
+InvalidAuthenticationContext = inatteso
+InvalidSubjectContext = inaspettato
+InvalidSubjectCanonicalizationContext = inaspettato
+InvalidMessageContext = inaspettato
+InvalidMessageVersion = inaspettato
+InvalidProfileContext = inaspettato
+InvalidRelyingPartyContext = inaspettato
+InvalidRelyingPartyConfiguration = inaspettato
+MessageAuthenticationError = inaspettato
+MessageProcessingError = inaspettato
+UnableToEncode = inaspettato
+UnableToSign = inaspettato
+UnableToEncrypt = inaspettato
+AttributeReleaseRejected = no-release
+TermsRejected = no-terms
+RuntimeException = runtime-error
+
+# Exception to error key mappings
+
+FlowExecutionRestorationFailureException = in stallo
+
+# Error key to title and message mappings
+
+access.title = Accesso Negato
+access.message = Non hai accesso alla risorsa richiesta.
+
+context-check-denied.title = Accesso Negato
+context-check-denied.message = Non hai diritto ad accedere al servizio richiesto.
+
+no-release.title = Negato il rilascio delle Informazioni
+no-release.message = Su tua richiesta, il rilascio di tue informazioni &egrave; stato bloccato. Se desideri \
+                      rivedere la tua decisione, puoi accedere nuovametne al servizio e approvare il rilascio di delle infomrazioni per il futuro.
+
+no-terms.title = Termini di Utilizzo Rifiutati
+no-terms.message = Avendo rifiutato i Termini di Utilizzo, che sono obbligatori, l'accesso al servizio non &egrave; permesso. \
+                    Se desideri cambiare la tua decisione, puoi accedere nuovamente al servizio e approvare \
+                    i termini per il futuro. 
+
+async-logout.title = Logout Completato
+async-logout.message = Logout completato. Il Service provider non ha richiesto nessun risposta.
+
+authn.title = Login Fallito
+authn.message = La login dell'utente non &egrave; andata a buon fine o potrebbe non soddisfare i requisiti minimi richiesti dall'applicazione.
+
+endpoint.title = Impossibilato a Rispondere
+endpoint.message = Il servizio di login non &egrave; stato in grado di identificare una modalit&agrave; compatibili per risundere all'applicazione richiesta.\
+                    Questo generalmente &egrave; dovuto a una configurazione errata da parte dell'applicazione e dovrebbe essere segnalato al \
+                    team di supporto o al proprietario dell'applicazione.
+
+relying-party.title = Richiesta non Supportata
+relying-party.message = L'applicazione a cui hai fatto accesso non &egrave; registrata per usarequesto servizio.
+
+security-cfg.title = Errore di Configurazione della Sicurezza
+security-cfg.message = Il servizio di login e l'applicazione richiesta non condividono una configurazione di sicurezza compatibile, \
+                        la richiesta, quindi, non pu&ograve; essere soddisfatta.
+
+stale.title = Richiesta in Stallo
+stale.message = <p>Potresti star visualizzando questa pagina perch&egrave; hai utilizzato il tasto "Indietro" sul tuo browser mentre stavi visitando \
+                 un sito web o un'applicazione sicura. Alternativamente, potresti aver erroneamente aggiunto unsegnalibro alla pagina di login \
+                 invece che all sito web cui realmente vorresti accedere. O potresti aver usato un link creato da qualcun altro che ha fatto questo \
+                 errore.</p> \
+                 <br/> \
+                 <p>Se non fosse stata controllata, questa situazione su alcuni browser avrebbe potuto risultare in un loop verso la pagina da cui stai \
+                 cercando di uscire, quindi quest'altra pagina di errore &egrave; mostrata al suo posto.</p>
+
+unexpected.title = Errore Inaspettato
+unexpected.message = &Egrave; stato identificato un errore inaspettato, questo solitamente &egrave; dovuto a un errore di configurazione o a un problema del software.
+
+runtime-error.title = Eccezione non Catturata
+runtime-error.message = <p>&Egrave; stato riscontrato un errore software che ha impedito la normale esecuzione dell'operazione richiesta:</p><br/> \
+                         <p><strong>#if($exception)$encoder.encodeForHTML($exception.toString())#else$encoder.encodeForHTML($flowExecutionException.getCause().toString())#end</strong></p><br/> \
+                         <p>Per favore riporta questo problema al tuo Help Desk o al personale amministrativo. L'errore &egrave; gi&agreve; stato scritto \
+                         nei log del sistema perch&egrave; gli amministratori possano esaminarlo.</p>
+
+error.title = Errore
+error.message = Un errore &egrave; occorso: $eventId
+
+root.title = <%= @metadata_information['it']['orgDisplayName'] %>
+root.message = Nessun servizio disponibile a questo indirizzo.
+root.footer = Il <%= @metadata_information['it']['orgDisplayName'] %>, <%= @metadata_information['it']['orgDescription'] %> partecipa ad <strong>IDEM</strong> (<strong>IDE</strong>ntity <strong>M</strong>anagement federato per l'accesso ai servizi) per la realizzazione dell'Infrastruttura di Autenticazione e Autorizzazione federata della rete GARR.<br/>Il <%= @metadata_information['it']['orgDescription'] %> rilascia credenziali d'accesso per questo sistema di autenticazione (Identity Provider) ai propri dipendenti e ai ricercatori affiliati.

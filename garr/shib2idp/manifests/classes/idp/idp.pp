@@ -12,13 +12,12 @@
 #
 # To control the installation process, and to guarantee that an installation is able to continue
 # from a previously interrupted one, a semaphore system has been implemented. This semaphore
-# uses the file /usr/local/src/shibboleth-identityprovider/.puppet to retrieve the last executed
+# uses the file /usr/local/src/shibboleth-identity-provider/.puppet to retrieve the last executed
 # installation phase and eventually to continue from that point on.
 #
 # Parameters:
 # +metadata_information+:: Information to be put in metadata file into English and Italian language.
 # +shibbolethversion+:: This parameter permits to specify the version of Shibboleth IdP to be downloaded from the Internet2 repositories. By default the 2.3.3 version will be downloaded.
-# +install_uapprove+:: This parameter permits to specify if uApprove has to be installed on this IdP.
 # +idpfqdn+:: This parameters must contain the fully qualified domain name of the IdP. This name must be the exact name used by client users to access the machine over the Internet. This FQDN, in fact, will be used to determine the CN of the certificate used for HTTPS. If the name is not identical with the server name specified by the client, the client's browser will raise a security exception.
 # +keystorepassword+:: This parameter permits to specify the keystore password used to protect the keystore file on the IdP server.
 # +mailto+:: The email address to be notified when the certificate used for HTTPS is about to expire. if no email address is specified, no mail warning will be sent.
@@ -34,7 +33,6 @@
 # +nagiosserver+:: This parameter permits to specify a Nagios server, if it contains a value different from 'undef' NRPE daemon will be installed and configured to accept connections from the specified Nagios server.
 # +custom_styles+:: This parameter permits to decide if install the default IdP style or the custom one.
 # +additional_metadata+:: undef,
-# +uapprove_version+:: This parameter must contain the uApprove's version number to be installed.
 #
 # Actions:
 #
@@ -45,10 +43,9 @@
 #
 class shib2idp::idp (
   $metadata_information,
-  $shibbolethversion = '2.4.0',
-  $install_uapprove  = undef,
+  $shibbolethversion = '3.1.1',
   $idpfqdn           = undef,
-  $keystorepassword  = undef,
+  $keystorepassword  = 'secret',
   $mailto            = undef,
   $install_ldap      = undef,
   $domain_name       = undef,
@@ -62,86 +59,121 @@ class shib2idp::idp (
   $nagiosserver      = undef,
   $test_federation   = undef,
   $custom_styles     = undef,
-  $uapprove_version  = '2.5.0',
 ) {
   $curtomcat = $::tomcat::curtomcat
 
   # Download and unpack Shibboleth source files from Internet2 site
-  Download_file <| title == "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}" |> ~> Shibboleth_install <| title == 'execute_install' |>
+  Download_file <| title == "/usr/local/src/shibboleth-identity-provider-${shibbolethversion}" |> ~> Shibboleth_install <| title == 'execute_install' |>
 
-  download_file { "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}":
-    url             => "http://shibboleth.net/downloads/identity-provider/${shibbolethversion}/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
-    #url             => "http://${::pupmaster}/downloads/shibboleth-identityprovider-${shibbolethversion}-bin.zip",
+  download_file { "/usr/local/src/shibboleth-identity-provider-${shibbolethversion}":
+    url             => "http://shibboleth.net/downloads/identity-provider/${shibbolethversion}/shibboleth-identity-provider-${shibbolethversion}.zip",
     extract         => 'zip',
     execute_command => [
-      "/usr/bin/find /usr/local/src/shibboleth-identityprovider-${shibbolethversion} -type d -exec /bin/chmod 755 {} \\;",
-      "/usr/bin/find /usr/local/src/shibboleth-identityprovider-${shibbolethversion} -type f -exec /bin/chmod 644 {} \\;",],
+      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -type d -exec /bin/chmod 755 {} \\;",
+      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -type f -exec /bin/chmod 644 {} \\;",
+      "/usr/bin/find /usr/local/src/shibboleth-identity-provider-${shibbolethversion} -name \"*.sh\" -exec /bin/chmod 755 {} \\;",],
   }
 
   # Checks and create needed folders
   $overwrite_idp_install = empty($::idpmetadata)
 
   file {
-    '/usr/local/src/shibboleth-identityprovider':
+    '/usr/local/src/shibboleth-identity-provider':
       ensure  => link,
-      target  => "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}",
-      require => Download_file["/usr/local/src/shibboleth-identityprovider-${shibbolethversion}"];
+      target  => "/usr/local/src/shibboleth-identity-provider-${shibbolethversion}",
+      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
 
     '/opt/shibboleth-idp/':
       ensure => directory;
 
-    '/opt/shibboleth-idp/conf/':
-      ensure  => directory,
-      require => File['/opt/shibboleth-idp/'];
-
-    '/usr/local/src/shibboleth-identityprovider/src/installer/resources/build.xml':
-      ensure  => present,
-      content => template("shib2idp/build.xml.erb"),
-      require => Download_file["/usr/local/src/shibboleth-identityprovider-${shibbolethversion}"];
-
-    '/usr/local/src/shibboleth-identityprovider/lib/ldaptive.jar':
-      ensure  => present,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0644',
-      source  => "puppet:///modules/shib2idp/jars/ldaptive.jar",
-      require => Download_file["/usr/local/src/shibboleth-identityprovider-${shibbolethversion}"];
-      
-    '/usr/local/src/shibboleth-identityprovider/lib/garr-ldaptive.jar':
+    '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/garr-ldaptive.jar':
       ensure  => present,
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
       source  => "puppet:///modules/shib2idp/jars/garr-ldaptive.jar",
-      require => Download_file["/usr/local/src/shibboleth-identityprovider-${shibbolethversion}"];
+      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
 
-  }
+    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes':
+      ensure  => directory,
+      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      
+    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF':
+      ensure  => directory,
+      require => File['/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes'];
+      
+    '/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF/ord.xml':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/ord.xml",
+      require => File['/usr/local/src/shibboleth-identity-provider/webapp/META-INF/classes/META-INF'];
+      
+    '/usr/local/src/shibboleth-identity-provider/webapp/WEB-INF/lib/HikariCP-java6-2.3.6.jar':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/jars/HikariCP-java6-2.3.6.jar",
+      require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+      
+    "/var/lib/${curtomcat}/common/jstl-1.2.jar":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/jars/jstl-1.2.jar",
+      require => Class['shib2common::java::package', 'tomcat'];
 
-  # If has to, installs uApprove
-  if ($install_uapprove) {
-    Download_file <| title == "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}" |> -> Class['shib2idp::idp::uapprove']
-    Class['shib2idp::idp::uapprove'] ~> Shibboleth_install <| title == 'execute_install' |>
+    "/var/lib/${curtomcat}/common/xml-apis-1.4.01.jar":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/jars/xml-apis-1.4.01.jar",
+      require => Class['shib2common::java::package', 'tomcat'];
 
-    class { 'shib2idp::idp::uapprove':
-      rootldappw        => $rootldappw,
-      shibbolethversion => $shibbolethversion,
-      uapprove_version  => $uapprove_version,
-      install_uapprove  => $install_uapprove,
-      nagiosserver      => $nagiosserver,
-      require           => File['/opt/shibboleth-idp/', '/opt/shibboleth-idp/conf/'],
-    }
+    "/usr/share/${curtomcat}/lib/ecj-3.7.1.jar":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/jars/ecj-3.7.1.jar",
+      require => Class['shib2common::java::package', 'tomcat'];
+
+    ["/usr/share/${curtomcat}/lib/ecj.jar", "/usr/share/${curtomcat}/lib/eclipse-ecj.jar"]:
+      ensure  => link,
+      target  => "/usr/share/${curtomcat}/lib/ecj-3.7.1.jar",
+      require => File["/usr/share/${curtomcat}/lib/ecj-3.7.1.jar"];
+
+    "/etc/${curtomcat}/web.xml":
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => "puppet:///modules/shib2idp/web.xml",
+      require => Class['shib2common::java::package', 'tomcat'];
+   
+    ["/var/lib/${curtomcat}/common/xercesImpl-2.11.0.jar"]:
+      ensure  => link,
+      target  => "/usr/share/java/xercesImpl-2.11.0.jar",
+      require => [Package['libxerces2-java'], Class['shib2common::java::package', 'tomcat']];
+
+    ['/usr/share/java/ecj.jar', '/usr/share/java/eclipse-ecj.jar', "/usr/share/${curtomcat}/lib/servlet-api.jar"]:
+      ensure  => absent,
+      require => Class['shib2common::java::package', 'tomcat'];
   }
 
   # Install the Shibboleth style
-  Download_file <| title == "/usr/local/src/shibboleth-identityprovider-${shibbolethversion}" |> -> Class['shib2idp::idp::styles']
+  Download_file <| title == "/usr/local/src/shibboleth-identity-provider-${shibbolethversion}" |> -> Class['shib2idp::idp::styles']
   Class['shib2idp::idp::styles'] ~> Shibboleth_install <| title == 'execute_install' |>
 
   class { 'shib2idp::idp::styles':
     install_ldap_var => $install_ldap,
     custom_styles => $custom_styles,
     metadata_information => $metadata_information,
-    install_uapprove => $install_uapprove,
-    require => File['/opt/shibboleth-idp/', '/opt/shibboleth-idp/conf/'],
+    require => File['/opt/shibboleth-idp/'],
   }
 
   # Install the Shibboleth IdP
@@ -154,35 +186,21 @@ class shib2idp::idp (
     javahome         => $shib2idp::prerequisites::java_home,
     tomcathome       => $tomcat::tomcat_home,
     curtomcat        => $curtomcat,
-    require          => [Class['shib2common::java::package', 'tomcat'], File['/usr/local/src/shibboleth-identityprovider/src/installer/resources/build.xml']],
+    idpscope         => $domain_name,
+    require          => Class['shib2common::java::package', 'tomcat'],
   }
-
-  if ($install_uapprove) {
-    file {
-      "/opt/shibboleth-idp/conf/uApprove.xml":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => "puppet:///modules/shib2idp/uapprove.xml",
-        require => [File['/opt/shibboleth-idp/conf/'], Shibboleth_install['execute_install']];
-
-      "/opt/shibboleth-idp/conf/uApprove.properties":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        content => template("shib2idp/uapprove.properties.erb"),
-        require => [File['/opt/shibboleth-idp/conf/'], Shibboleth_install['execute_install']];
-
-      "/opt/shibboleth-idp/conf/sql-statements.properties":
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => "puppet:///modules/shib2idp/sql-statements.properties",
-        require => [File['/opt/shibboleth-idp/conf/'], Shibboleth_install['execute_install']];
-    }
+  
+  augeas { 'idp.properties':
+    context => "/files/opt/shibboleth-idp/conf/idp.properties",
+    changes => [
+      "set idp.sealer.storePassword ${keystorepassword}",
+      "set idp.sealer.keyPassword ${keystorepassword}",
+      "set idp.consent.StorageService shibboleth.JPAStorageService",
+      "set idp.ui.fallbackLanguages it,en,fr,es,de",
+      "set idp.xml.securityManager org.apache.xerces.util.SecurityManager",
+      "set idp.scope ${domain_name}"],
+    onlyif  => "get idp.sealer.storePassword != '${keystorepassword}'",
+    require => Shibboleth_install['execute_install'],
   }
 
   # Configure the Shibboleth IdP

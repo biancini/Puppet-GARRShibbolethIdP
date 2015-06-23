@@ -114,21 +114,43 @@ $lang = $lang[0];
                                                 <td><center>
         <?php
         if (isset($_SESSION['pw_message'])) {
-                print "<table calss=\"sysmg\"><tbody>";
-                print "<tr><td class=\"icon\" rowspan=\"2\"><img src=\"../phpldapadmin/images/default/info-big.png\" alt=\"info\"></td>";
-                
-                print "<script language='javascript'>";       
-				print "if (userLang == 'it-IT') {";
-                print "document.write('<td class=\"head\">Cambio Password</td></tr>');";
-                print "document.write('<tr><td class=\"body\">Password cambiata! DN: <b>" . $_SESSION['pw_message'] . "</b> ha la password cambiata.</td</tr>');";
-                print "}";
-                print "else {";
-                print "document.write('<td class=\"head\">Password Change</td></tr>');";
-                print "document.write('<tr><td class=\"body\">Password changed! DN: <b>" . $_SESSION['pw_message'] . "</b> has a new password.</td</tr>');";
-                print "}";
-                print "</script>";
-                
-                print "</tbody></table>";
+                if (isset($_SESSION['pw_status']) && $_SESSION['pw_status'] == 'ok') {
+                        print "<table calss=\"sysmg\"><tbody>";
+                        print "<tr><td class=\"icon\" rowspan=\"2\"><img src=\"../phpldapadmin/images/default/info-big.png\" alt=\"info\"></td>";
+
+                        print "<script language='javascript'>";
+                                print "if (userLang == 'it-IT') {";
+                        print "document.write('<td class=\"head\">Cambio Password</td></tr>');";
+                        print "document.write('<tr><td class=\"body\">Password cambiata! DN: <b>" . $_SESSION['pw_message'] . "</b> ha la password cambiata.</td</tr>');";
+                        print "}";
+                        print "else {";
+                        print "document.write('<td class=\"head\">Password Change</td></tr>');";
+                        print "document.write('<tr><td class=\"body\">Password changed! DN: <b>" . $_SESSION['pw_message'] . "</b> has a new password.</td</tr>');";
+                        print "}";
+                        print "</script>";
+
+                        print "</tbody></table>";
+                }
+                else {
+                        print "<table calss=\"sysmg\"><tbody>";
+                        print "<tr><td class=\"icon\" rowspan=\"2\"><img src=\"../phpldapadmin/images/default/error-big.png\" alt=\"error\"></td>";
+
+                        print "<script language='javascript'>";
+                                print "if (userLang == 'it-IT') {";
+                        print "document.write('<td class=\"head\">Cambio Password</td></tr>');";
+                        print "document.write('<tr><td class=\"error\">".$_SESSION['pw_message']['it']."</td</tr>');";
+                        print "}";
+                        print "else {";
+                        print "document.write('<td class=\"head\">Password Change</td></tr>');";
+                        print "document.write('<tr><td class=\"error\">".$_SESSION['pw_message']['en']."</td</tr>');";
+                        print "}";
+                        print "</script>";
+
+                        print "</tbody></table>";
+
+                }
+
+                unset($_SESSION['pw_status']);
                 unset($_SESSION['pw_message']);
         }
         ?>
@@ -319,7 +341,7 @@ $lang = $lang[0];
                                 </table>
                         </div></td>
                 </tr>
-                <tr class="foot"><td><small>&nbsp;</small></td><td colspan="4"><div id="ajFOOT">1.2.0.5</div><a href="https://sourceforge.net/projects/phpldapadmin"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=61828&type=8" border="0" alt="SourceForge.net Logo"></a></td></tr>
+                <tr class="foot"><td><small>&nbsp;</small></td><td colspan="4"><div id="ajFOOT">1.2.0.5</div><a href="//sourceforge.net/projects/phpldapadmin"><img src="//sflogo.sourceforge.net/sflogo.php?group_id=61828&type=8" border="0" alt="SourceForge.net Logo"></a></td></tr>
         </tbody>
         </table>
 </body>
