@@ -175,6 +175,30 @@ class shib2idp::idp (
     metadata_information => $metadata_information,
     require => File['/opt/shibboleth-idp/'],
   }
+  
+  # Copy certs for metadata (if present)
+  if file_exists("../../../files/certs/${hostname}-metadata.crt") == 1 {
+    File['/opt/shibboleth-idp/credentials/idp.crt'] -> Shibboleth_install <| title == 'execute_install' |>
+    File['/opt/shibboleth-idp/credentials/idp.key'] -> Shibboleth_install <| title == 'execute_install' |>
+  
+    file {
+      '/opt/shibboleth-idp/credentials/idp.crt':
+        ensure  => present,
+        owner   => $curtomcat,
+        group   => $curtomcat,
+        mode    => '0644',
+        source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.crt",
+        require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+        
+      '/opt/shibboleth-idp/credentials/idp.key':
+        ensure  => present,
+        owner   => $curtomcat,
+        group   => $curtomcat,
+        mode    => '0600',
+        source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.key",
+        require => Download_file["/usr/local/src/shibboleth-identity-provider-${shibbolethversion}"];
+    }
+  }
 
   # Install the Shibboleth IdP
   Shibboleth_install <| title == 'execute_install' |> ~> Service["${curtomcat}"]
