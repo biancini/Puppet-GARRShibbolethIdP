@@ -1,12 +1,15 @@
 #!/bin/sh
-LDAPBK=ldap-$( date +%y%m%d-%H%M ).ldif
+LDAPBK=ldap-$( date +%y%m%d-%H%M ).tar.gz
+#LDAPBK=ldap-$( date +%y%m%d-%H%M ).ldif
 BACKUPDIR=/opt/ldap-backups
 
 if [ ! -d $BACKUPDIR ]; then
   mkdir $BACKUPDIR
 fi
 
-/usr/sbin/slapcat -v -b "<%= @basedn %>" -l $BACKUPDIR/$LDAPBK
-gzip -9 $BACKUPDIR/$LDAPBK
+#/usr/sbin/slapcat -v -b "<%= @basedn %>" -l $BACKUPDIR/$LDAPBK
+#gzip -9 $BACKUPDIR/$LDAPBK
+tar cvzf $BACKUPDIR/$LDAPBK /var/lib/ldap
 
+# Remove old backups
 find $BACKUPDIR -type f -mtime +30 -exec rm {} \;
