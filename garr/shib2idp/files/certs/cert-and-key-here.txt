@@ -1,0 +1,4 @@
+Insert here your
+ 
+- $hostname-metadata.crt 
+- $hostname-metadata.key
