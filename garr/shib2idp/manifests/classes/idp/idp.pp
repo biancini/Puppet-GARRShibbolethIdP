@@ -178,29 +178,29 @@ class shib2idp::idp (
   
   # Copy certs for metadata (if present)
   if file_exists("../../../../files/certs/${hostname}-metadata.crt") == 1 {
-    File['/opt/shibboleth-idp/credentials/idp.crt'] -> Shibboleth_install <| title == 'execute_install' |>
-    File['/opt/shibboleth-idp/credentials/idp.key'] -> Shibboleth_install <| title == 'execute_install' |>
-  
+    File['/opt/shibboleth-idp/credentials/idp-encryption.crt', '/opt/shibboleth-idp/credentials/idp-signing.crt'] -> Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']
+    File['/opt/shibboleth-idp/credentials/idp-encryption.key', '/opt/shibboleth-idp/credentials/idp-signing.key'] -> Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']
+    
     file {
       '/opt/shibboleth-idp/credentials':
         ensure  => directory,
         require => File['/opt/shibboleth-idp'];
     
-      '/opt/shibboleth-idp/credentials/idp.crt':
+      ['/opt/shibboleth-idp/credentials/idp-encryption.crt', '/opt/shibboleth-idp/credentials/idp-signing.crt']:
         ensure  => present,
         owner   => $curtomcat,
         group   => $curtomcat,
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.crt",
-        require => File['/opt/shibboleth-idp/credentials'];
+        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install <| title == 'execute_install' |>];
         
-      '/opt/shibboleth-idp/credentials/idp.key':
+      ['/opt/shibboleth-idp/credentials/idp-encryption.key', '/opt/shibboleth-idp/credentials/idp-signing.key']:
         ensure  => present,
         owner   => $curtomcat,
         group   => $curtomcat,
         mode    => '0600',
         source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.key",
-        require => File['/opt/shibboleth-idp/credentials'];
+        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install <| title == 'execute_install' |>];
     }
   }
 
