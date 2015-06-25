@@ -192,7 +192,7 @@ class shib2idp::idp (
         group   => $curtomcat,
         mode    => '0644',
         source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.crt",
-        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install <| title == 'execute_install' |>];
+        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install['execute_install']];
         
       ['/opt/shibboleth-idp/credentials/idp-encryption.key', '/opt/shibboleth-idp/credentials/idp-signing.key']:
         ensure  => present,
@@ -200,7 +200,7 @@ class shib2idp::idp (
         group   => $curtomcat,
         mode    => '0600',
         source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.key",
-        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install <| title == 'execute_install' |>];
+        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install['execute_install']];
     }
   }
 
