@@ -177,7 +177,7 @@ class shib2idp::idp (
   }
   
   # Copy certs for metadata (if present)
-  if file_exists("../../../../files/certs/${hostname}-metadata.crt") == 1 {
+  if file_exists("puppet:///modules/shib2idp/certs/${hostname}-metadata.crt") == 1 {
     File['/opt/shibboleth-idp/credentials/idp-encryption.crt', '/opt/shibboleth-idp/credentials/idp-signing.crt'] -> Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']
     File['/opt/shibboleth-idp/credentials/idp-encryption.key', '/opt/shibboleth-idp/credentials/idp-signing.key'] -> Idp_metadata['/opt/shibboleth-idp/metadata/idp-metadata.xml']
     
@@ -200,7 +200,16 @@ class shib2idp::idp (
         group   => $curtomcat,
         mode    => '0600',
         source  => "puppet:///modules/shib2idp/certs/${hostname}-metadata.key",
-        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install['execute_install']];
+        require => [File['/opt/shibboleth-idp/credentials'], Shibboleth_install['execute_install']],
+        notify  => Exec['generate-backchannel-p12'],
+    }
+    
+    exec { 'generate-backchannel-p12':
+      command     => '\openssl pkcs12 -export -in idp-encryption.crt -inkey idp-encryption.key -out idp-backchannel.p12',
+      cwd         => '/opt/shibboleth-idp/credentials',
+      path        => ['/bin', '/usr/bin'],
+      require     => Shibboleth_install['execute_install'],
+      refreshonly => true,
     }
   }
 
