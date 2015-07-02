@@ -205,7 +205,7 @@ class shib2idp::idp (
     }
     
     exec { 'generate-backchannel-p12':
-      command     => '\openssl pkcs12 -export -in idp-encryption.crt -inkey idp-encryption.key -out idp-backchannel.p12',
+      command     => 'openssl pkcs12 -export -in idp-encryption.crt -inkey idp-encryption.key -out idp-backchannel.p12',
       cwd         => '/opt/shibboleth-idp/credentials',
       path        => ['/bin', '/usr/bin'],
       require     => Shibboleth_install['execute_install'],
