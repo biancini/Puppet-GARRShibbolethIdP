@@ -1,12 +1,14 @@
 #!/bin/sh
-MYSQLBK=mysql-$( date +%y%m%d-%H%M ).sql
+DATE=$( date +%y%m%d-%H%M )
 BACKUPDIR=/opt/mysql-backups
 
 if [ ! -d $BACKUPDIR ]; then
   mkdir $BACKUPDIR
 fi
 
-mysqldump --all-databases > $BACKUPDIR/$MYSQLBK
-gzip -9 $BACKUPDIR/$MYSQLBK
+mysqldump --all-databases > $BACKUPDIR/mysql-backup.sql
+tar -C $BACKUPDIR -czvf $BACKUPDIR/mysql-$DATE.tar.gz mysql-backup.sql --remove-files
 
+# Remove OLD backup files
 find $BACKUPDIR -type f -mtime +30 -exec rm {} \;
+
