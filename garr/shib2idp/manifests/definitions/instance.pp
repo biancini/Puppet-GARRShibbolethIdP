@@ -111,7 +111,7 @@ define shib2idp::instance (
   $custom_styles           = undef,
   $phpldap_easy_insert     = undef,
   $install_raptor          = undef,
-  $restore_all             = undef,
+  $restore                 = undef,
 ) {
   
   class { 'shib2idp::prerequisites':
@@ -212,7 +212,7 @@ define shib2idp::instance (
     }
   }
 
-  if ($restore_all){
+  if ($restore){
     file { 
       'retrieved-ldap-backup':
          path    => '/tmp/ldap.tar.gz',
