@@ -139,6 +139,7 @@ define shib2idp::instance (
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
     custom_styles        => $custom_styles,
+    restore              => $restore,
   }
   
   # Install monitoring tools
@@ -211,70 +212,6 @@ define shib2idp::instance (
       mode    => '0664',
     }
   }
-
-  if ($restore){
-    file { 
-      'retrieved-ldap-backup':
-         path    => '/tmp/ldap.tar.gz',
-         ensure  => present,
-         owner   => 'root',
-         group   => 'root',
-         mode    => '0644',
-         source => "puppet:///modules/shib2idp/restore/${hostname}-ldap.tar.gz";
-
-      'retrieved-mysql-backup':
-         path    => '/tmp/mysql.tar.gz',
-         ensure  => present,
-         owner   => 'root',
-         group   => 'root',
-         mode    => '0644',
-         source => "puppet:///modules/shib2idp/restore/${hostname}-mysql.tar.gz",
-    }
-
-    exec { 
-      'slapd-stop':
-         command => "service slapd stop",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => File['retrieved-ldap-backup'];
-        
-      'restore-ldap':
-         command => "tar xzf ldap.tar.gz --directory /",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => [Exec['slapd-stop'], File['retrieved-ldap-backup']];
-   
-      'remove-ldap-backup':
-         command => "rm -f /tmp/ldap.tar.gz",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => Exec['restore-ldap'];
-
-      'slapd-start':
-         command => "service slapd start",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => Exec['restore-ldap'];
-
-      'extract-mysql-backup':
-         command => "tar xzf mysql.tar.gz",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => File['retrieved-mysql-backup'];
-
-      'restore-mysql-db':
-         command => "mysql -u root -p${rootldappw} < mysql-backup.sql",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => Exec['extract-mysql-backup'];
-
-      'remove-mysql-backup':
-         command => "rm -f mysql.tar.gz",
-         cwd     => "/tmp",
-         path    => ["/bin", "/usr/bin"],
-         require => Exec['restore-mysql-db'];
-    }
- }
 
   # if ($install_ldap == true) {
   #  Exec['shib2-tomcat-restart'] ~> Verify_user<| title == 'uid=test,ou=people' |>
