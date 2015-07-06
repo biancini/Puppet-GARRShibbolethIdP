@@ -40,6 +40,7 @@ class shib2idp::idp::finalize (
   $nagiosserver = undef,
   $idpfqdn      = 'idp.example.org',
   $test_federation = true,
+  $restore      = false,
 ) {
 
   $test_federation_var = $test_federation
@@ -181,40 +182,81 @@ class shib2idp::idp::finalize (
         notify  => Service[$ldap::params::lp_openldap_service];
     }
 
-    if $rubyversion == "1.8.7" {
-      execute_ldap {
-        'ldapadd-ppolicies-ou':
-	        rootdn      => "${rootdn},${basedn}",
-	        rootpw      => $rootldappw,
-	        ldif_search => "ou=policies,${basedn}",
-	        ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
-	        require     => [Service[$ldap::params::lp_openldap_service], Package['libldap-ruby1.8']];
-      
-        'ldapadd-ppolicies-entity':
-          rootdn      => "${rootdn},${basedn}",
-          rootpw      => $rootldappw,
-          ldif_search => "cn=default,ou=policies,${basedn}",
-          ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
-          require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
+    if ($restore){
+      file { 
+         'retrieved-ldap-backup':
+            path    => '/tmp/ldap.tar.gz',
+            ensure  => present,
+            owner   => 'root',
+            group   => 'root',
+            mode    => '0644',
+            source  => "puppet:///modules/shib2idp/restore/${hostname}-ldap.tar.gz",
+            require => Class['ldap'],
       }
+
+      exec { 
+         'slapd-stop':
+            command => "service slapd stop",
+            cwd     => "/tmp",
+            path    => ["/bin", "/usr/bin"],
+            require => File['retrieved-ldap-backup'];
+        
+         'restore-ldap':
+            command => "tar xzf ldap.tar.gz --directory /",
+            cwd     => "/tmp",
+            path    => ["/bin", "/usr/bin"],
+            require => [Exec['slapd-stop'], File['retrieved-ldap-backup']];
+   
+         'remove-ldap-backup':
+            command => "rm -f /tmp/ldap.tar.gz",
+            cwd     => "/tmp",
+            path    => ["/bin", "/usr/bin"],
+            require => Exec['restore-ldap'];
+
+         'slapd-start':
+            command => "service slapd start",
+            cwd     => "/tmp",
+            path    => ["/bin", "/usr/bin"],
+            require => Exec['restore-ldap'];
+     }
     }
-    # Ruby on Ubuntu 14.04 == 1.9.3
     else{
-      execute_ldap {
-        'ldapadd-ppolicies-ou':
-          rootdn      => "${rootdn},${basedn}",
-          rootpw      => $rootldappw,
-          ldif_search => "ou=policies,${basedn}",
-          ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
-          require     => [Service[$ldap::params::lp_openldap_service], Package['ruby-ldap']];
+      if $rubyversion == "1.8.7" {
+         execute_ldap {
+            'ldapadd-ppolicies-ou':
+	            rootdn      => "${rootdn},${basedn}",
+	            rootpw      => $rootldappw,
+	            ldif_search => "ou=policies,${basedn}",
+	            ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+	            require     => [Service[$ldap::params::lp_openldap_service], Package['libldap-ruby1.8']];
+      
+            'ldapadd-ppolicies-entity':
+               rootdn      => "${rootdn},${basedn}",
+               rootpw      => $rootldappw,
+               ldif_search => "cn=default,ou=policies,${basedn}",
+               ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+               require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['libldap-ruby1.8'], File['/usr/lib/ldap/check_password.so']],
+         }
+      }
+
+      # Ruby on Ubuntu 14.04 == 1.9.3
+      else{
+         execute_ldap {
+            'ldapadd-ppolicies-ou':
+               rootdn      => "${rootdn},${basedn}",
+               rootpw      => $rootldappw,
+               ldif_search => "ou=policies,${basedn}",
+               ldif        => template("shib2idp/ppolicy_ou.ldif.erb"),
+               require     => [Service[$ldap::params::lp_openldap_service], Package['ruby-ldap']];
           
-        'ldapadd-ppolicies-entity':
-	         rootdn      => "${rootdn},${basedn}",
-	         rootpw      => $rootldappw,
-	         ldif_search => "cn=default,ou=policies,${basedn}",
-	         ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
-	         require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['ruby-ldap'], File['/usr/lib/ldap/check_password.so']];
-	    }
+            'ldapadd-ppolicies-entity':
+	            rootdn      => "${rootdn},${basedn}",
+	            rootpw      => $rootldappw,
+	            ldif_search => "cn=default,ou=policies,${basedn}",
+	            ldif        => template("shib2idp/ppolicy_entity.ldif.erb"),
+	            require     => [Execute_ldap['ldapadd-ppolicies-ou'], Package['ruby-ldap'], File['/usr/lib/ldap/check_password.so']];
+	      }
+      }
     }
 
     $ldap_host_var      = '127.0.0.1:389'
@@ -284,33 +326,70 @@ class shib2idp::idp::finalize (
     url             => "https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar",
     require => Class['tomcat', 'mysql::bindings::java'],
   }
-  
-  mysql_database { ['userdb', 'storageservice']:
-    ensure  => 'present',
-    require => Class['mysql::server'],
+
+  if($restore){
+
+    file {
+      'retrieved-mysql-backup':
+         path    => '/tmp/mysql.tar.gz',
+         ensure  => present,
+         owner   => 'root',
+         group   => 'root',
+         mode    => '0644',
+         source  => "puppet:///modules/shib2idp/restore/${hostname}-mysql.tar.gz",
+         require => Class['mysql::server'],
+    }
+
+    exec {
+      'extract-mysql-backup':
+         command => "tar xzf mysql.tar.gz",
+         cwd     => "/tmp",
+         path    => ["/bin", "/usr/bin"],
+         require => File['retrieved-mysql-backup'];
+
+      'restore-mysql-db':
+         command => "mysql -u root -p${rootldappw} < mysql-backup.sql",
+         cwd     => "/tmp",
+         path    => ["/bin", "/usr/bin"],
+         require => Exec['extract-mysql-backup'];
+
+      'remove-mysql-backup':
+         command => "rm -f mysql.tar.gz",
+         cwd     => "/tmp",
+         path    => ["/bin", "/usr/bin"],
+         require => Exec['restore-mysql-db'];
+    }
   }
 
-  execute_mysql {
-    'userdb-table-shibpid':
-      user              => 'root',
-      password          => $rootpw,
-      dbname            => 'userdb',
-      query_check_empty => 'SHOW TABLES LIKE "shibpid"',
-      sql               => [join(['CREATE TABLE shibpid (',
-                                  'localEntity VARCHAR(255) NOT NULL,',
-                                  'peerEntity VARCHAR(255) NOT NULL,',
-                                  'principalName VARCHAR(255) NOT NULL DEFAULT \'\',',
-                                  'localId VARCHAR(255) NOT NULL,',
-                                  'persistentId VARCHAR(255) NOT NULL,',
-                                  'peerProvidedId VARCHAR(255) DEFAULT NULL,',
-                                  'creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,',
-                                  'deactivationDate TIMESTAMP NULL DEFAULT NULL,',
-                                  'KEY persistentId (persistentId),',
-                                  'KEY persistentId_2 (persistentId, deactivationDate),',
-                                  'KEY localEntity (localEntity(16), peerEntity(16), localId),',
-                                  'KEY localEntity_2 (localEntity(16), peerEntity(16), localId, deactivationDate)',
-                                  ')'], ' ')],
-      require           => [Package['ruby-mysql'], MySql_Database['userdb']];
+  else{
+  
+    mysql_database { ['userdb', 'storageservice']:
+      ensure  => 'present',
+      require => Class['mysql::server'],
+    }
+
+    execute_mysql {
+      'userdb-table-shibpid':
+         user              => 'root',
+         password          => $rootpw,
+         dbname            => 'userdb',
+         query_check_empty => 'SHOW TABLES LIKE "shibpid"',
+         sql               => [join(['CREATE TABLE shibpid (',
+                                     'localEntity VARCHAR(255) NOT NULL,',
+                                     'peerEntity VARCHAR(255) NOT NULL,',
+                                     'principalName VARCHAR(255) NOT NULL DEFAULT \'\',',
+                                     'localId VARCHAR(255) NOT NULL,',
+                                     'persistentId VARCHAR(255) NOT NULL,',
+                                     'peerProvidedId VARCHAR(255) DEFAULT NULL,',
+                                     'creationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,',
+                                     'deactivationDate TIMESTAMP NULL DEFAULT NULL,',
+                                     'KEY persistentId (persistentId),',
+                                     'KEY persistentId_2 (persistentId, deactivationDate),',
+                                     'KEY localEntity (localEntity(16), peerEntity(16), localId),',
+                                     'KEY localEntity_2 (localEntity(16), peerEntity(16), localId, deactivationDate)',
+                                     ')'], ' ')],
+         require           => [Package['ruby-mysql'], MySql_Database['userdb']];
+    }
   }
   
   $scope = $domain_name

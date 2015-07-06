@@ -69,6 +69,7 @@ node 'puppet-client.mi.garr.it' {
     test_federation              => true,
     custom_styles                => true,
     phpldap_easy_insert          => true,
+    restore                      => false,
   }
 
   #shib2ds::instance { "${hostname}-ds":

@@ -111,6 +111,7 @@ define shib2idp::instance (
   $custom_styles           = undef,
   $phpldap_easy_insert     = undef,
   $install_raptor          = undef,
+  $restore                 = undef,
 ) {
   
   class { 'shib2idp::prerequisites':
@@ -138,6 +139,7 @@ define shib2idp::instance (
     nagiosserver         => $nagiosserver,
     test_federation      => $test_federation,
     custom_styles        => $custom_styles,
+    restore              => $restore,
   }
   
   # Install monitoring tools
