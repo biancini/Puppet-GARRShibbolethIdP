@@ -50,12 +50,21 @@ class shib2idp::management::phpldap (
     $admin_email = "support@${domain_name}"
   }
   
+  file { '/usr/bin/chechHtpasswd':
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    source  => "puppet:///modules/shib2idp/checkHtpasswd.sh",
+    require => Package['phpldapadmin'],
+  }
+  
   exec { 'add-user-htaccess':
     command => "htpasswd -bc .htpasswd ${admin_username} ${rootldappw}",
-    unless  => "grep ${admin_username} .htpasswd",
+    unless  => "checkHtpasswd .htpasswd ${admin_username} ${rootldappw}",
     cwd     => "/usr/share/phpldapadmin",
     path    => ["/bin", "/usr/bin"],
-    require => Package['phpldapadmin'],
+    require => File['/usr/bin/chechHtpasswd'],
   }
   
   file {

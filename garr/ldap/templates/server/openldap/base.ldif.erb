@@ -13,7 +13,8 @@ objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: <%= @rootdn.gsub!(/^(..)=/, '') %>
 description: LDAP administrator
-userPassword: <%= @rootpw %>
+userPassword: rabinfollo
+#userPassword: <%= @rootpw %>
 
 dn: ou=people,<%= @basedn %>
 objectClass: organizationalUnit
