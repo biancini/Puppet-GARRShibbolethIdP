@@ -50,7 +50,7 @@ class shib2idp::management::phpldap (
     $admin_email = "support@${domain_name}"
   }
   
-  file { '/usr/bin/chechHtpasswd':
+  file { '/usr/bin/checkHtpasswd':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
@@ -64,7 +64,7 @@ class shib2idp::management::phpldap (
     unless  => "checkHtpasswd .htpasswd ${admin_username} ${rootldappw}",
     cwd     => "/usr/share/phpldapadmin",
     path    => ["/bin", "/usr/bin"],
-    require => File['/usr/bin/chechHtpasswd'],
+    require => File['/usr/bin/checkHtpasswd'],
   }
   
   file {
