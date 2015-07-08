@@ -101,7 +101,7 @@ $IDP_CERTIFICATE_ENCRYPT
     <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
 
         <Extensions>
-            <shibmd:Scope regexp="false">mi.garr.it</shibmd:Scope>
+            <shibmd:Scope regexp="false"><%= @domain_name %></shibmd:Scope>
         </Extensions>
 
         <KeyDescriptor use="signing">
