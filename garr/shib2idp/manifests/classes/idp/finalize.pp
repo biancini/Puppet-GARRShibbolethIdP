@@ -453,6 +453,14 @@ class shib2idp::idp::finalize (
       mode    => '0664',
       content => template('shib2idp/global.xml.erb'),
       require => Shibboleth_install['execute_install'];
+      
+    "/opt/shibboleth-idp/conf/authn/general-authn.xml":
+      ensure  => present,
+      owner   => $curtomcat,
+      group   => $curtomcat,
+      mode    => '0600',
+      source  => "puppet:///modules/shib2idp/general-authn.xml",
+      require => Shibboleth_install['execute_install'];
   }
 
   idp_metadata { '/opt/shibboleth-idp/metadata/idp-metadata.xml':
