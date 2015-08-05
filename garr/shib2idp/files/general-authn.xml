@@ -80,11 +80,13 @@
             <property name="supportedPrincipals">
                 <util:list>
                     <bean parent="shibboleth.SAML2AuthnContextClassRef"
-                        c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:Password" />
-                    <bean parent="shibboleth.SAML2AuthnContextClassRef"
                         c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport" />
                     <bean parent="shibboleth.SAML2AuthnContextClassRef"
+                        c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:Password" />
+                    <bean parent="shibboleth.SAML2AuthnContextClassRef"
                         c:classRef="urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified" />
+                    <bean parent="shibboleth.SAML1AuthenticationMethod"
+                        c:method="urn:oasis:names:tc:SAML:1.0:am:password" />
                 </util:list>
             </property>
         </bean>
